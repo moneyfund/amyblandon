@@ -1,1 +1,1 @@
-import InsuranceQuoteForm from'../../components/insurance/InsuranceQuoteForm';export default function InsuranceQuote(){return <section><h1>Insurance quote request</h1><InsuranceQuoteForm/></section>}
+import InsuranceQuoteForm from'../../components/insurance/InsuranceQuoteForm';export default function InsuranceQuote(){return <section className="page-hero"><h1>Solicitud de cotización</h1><p>Comparte tus datos y te contactaré para revisar opciones de protección.</p><InsuranceQuoteForm/></section>}

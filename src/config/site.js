@@ -1,0 +1,2 @@
+export const defaultLanguage=import.meta.env.VITE_DEFAULT_LANGUAGE||'en';
+export const siteConfig={brand:'Amy Blandon',tagline:'Real estate guidance and insurance advisory',phone:'(000) 000-0000',whatsapp:'10000000000',email:'hello@example.com',serviceArea:'Configurable service areas',address:'Office address pending',socials:{instagram:'#',facebook:'#',linkedin:'#'},stats:[['0','Real client numbers pending'],['Demo','Content mode'],['2','Service paths'],['24h','Response goal placeholder']],insuranceTypes:['life','health','home','auto','commercial','family']};

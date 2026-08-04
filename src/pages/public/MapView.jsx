@@ -45,7 +45,7 @@ export default function MapView({ embedded = false, properties }) {
   return (
     <section className={embedded ? 'mapWrap embedded' : 'mapWrap'}>
       <div className="filters">
-        <input placeholder="Search location" />
+        <input placeholder="Buscar ubicación" />
       </div>
       <MapContainer center={[28.5, -81.3]} zoom={7} scrollWheelZoom={false}>
         <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

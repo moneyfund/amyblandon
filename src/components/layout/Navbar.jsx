@@ -1,2 +1,14 @@
-import{useState}from'react';import{Menu,X,MessageCircle}from'lucide-react';import{NavLink}from'react-router-dom';import logo from'../../assets/images/brand-logo.svg';import{whatsappLink}from'../../utils/whatsapp';
-export default function Navbar(){const[open,setOpen]=useState(false);const links=[['/','Inicio'],['/properties','Propiedades'],['/about','Sobre Mi'],['/insurance','Seguros'],['/contact','Contacto']];return <header className="site-header"><div className="header-inner"><NavLink to="/" className="brand-logo" onClick={()=>setOpen(false)}><img src={logo} alt="Amy Blandón"/></NavLink><button className="menu-toggle" aria-label="Menú" onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>}<span>Menú</span></button><nav className={open?'main-nav open':'main-nav'}>{links.map(([to,label])=><NavLink key={to} to={to} onClick={()=>setOpen(false)}>{label}</NavLink>)}<a className="whatsapp-link" href={whatsappLink('Hola Amy, quiero recibir asesoría.')}><MessageCircle size={18}/>+505 8832 4439</a></nav></div></header>}
+import { useEffect, useState } from 'react';
+import { Menu, Phone, X } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+import BrandLogo from './BrandLogo';
+import { amyContact, homePageContent } from '../../content/homePage.es';
+import { whatsappLink } from '../../utils/whatsapp';
+
+export default function Navbar() {
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => { const onScroll = () => setScrolled(window.scrollY > 8); onScroll(); window.addEventListener('scroll', onScroll, { passive: true }); return () => window.removeEventListener('scroll', onScroll); }, []);
+  useEffect(() => { document.body.classList.toggle('nav-open', open); return () => document.body.classList.remove('nav-open'); }, [open]);
+  return <header className={`public-navbar ${scrolled ? 'public-navbar--scrolled' : ''}`}><div className="public-navbar__inner"><BrandLogo/><nav id="public-menu" className={`public-navbar__menu ${open ? 'is-open' : ''}`}>{homePageContent.nav.map(item => <NavLink key={item.to} to={item.to} onClick={() => setOpen(false)}>{item.label}</NavLink>)}<a className="public-navbar__phone" href={whatsappLink(amyContact.whatsappMessage, amyContact.phone)} onClick={() => setOpen(false)}><Phone size={15}/>{amyContact.phone}</a></nav><button className="public-navbar__toggle" type="button" aria-label={open ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={open} aria-controls="public-menu" onClick={() => setOpen(v => !v)}>{open ? <X size={24}/> : <Menu size={24}/>}<span>Menú</span></button></div></header>;
+}

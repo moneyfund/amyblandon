@@ -1,0 +1,2 @@
+import RevealOnScroll from '../common/RevealOnScroll';import { homePageContent } from '../../content/homePage.es';import { siteImages } from '../../config/siteImages';
+export default function StrategicBanner(){return <section className="home-strategic" style={{'--strategic-image':`url(${siteImages.strategicBanner})`}}><RevealOnScroll><p>{homePageContent.strategicBanner.kicker}</p><h2>{homePageContent.strategicBanner.title}</h2></RevealOnScroll></section>}

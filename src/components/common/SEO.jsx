@@ -1,0 +1,1 @@
+export default function SEO({title='Amy Blandon',description='Real estate and insurance advisory platform.'}){document.title=title;document.querySelector('meta[name="description"]')?.setAttribute('content',description);return null}

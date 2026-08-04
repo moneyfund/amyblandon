@@ -1,0 +1,2 @@
+import{createContext,useContext,useMemo,useState}from'react';import{defaultLanguage}from'../config/site';import{translations}from'../data/translations';
+const C=createContext();export function LanguageProvider({children}){const[language,setLang]=useState(localStorage.getItem('amy_lang')||defaultLanguage);const setLanguage=l=>{localStorage.setItem('amy_lang',l);setLang(l)};const t=useMemo(()=>translations[language]||translations.en,[language]);return <C.Provider value={{language,setLanguage,t}}>{children}</C.Provider>};export const useLanguage=()=>useContext(C);

@@ -1,0 +1,1 @@
+import{Link}from'react-router-dom';export default function Button({to,href,children,variant='primary',...p}){const cls=`btn ${variant}`;if(to)return <Link className={cls} to={to}>{children}</Link>;if(href)return <a className={cls} href={href} {...p}>{children}</a>;return <button className={cls} {...p}>{children}</button>}

@@ -1,0 +1,1 @@
+import{useState}from'react';const key='amy_favorites';export function useFavorites(){const[ids,setIds]=useState(()=>JSON.parse(localStorage.getItem(key)||'[]'));const save=v=>{setIds(v);localStorage.setItem(key,JSON.stringify(v))};return{ids,isFavorite:id=>ids.includes(id),toggle:id=>save(ids.includes(id)?ids.filter(x=>x!==id):[...ids,id])}}

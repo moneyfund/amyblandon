@@ -1,1 +1,8 @@
-import{collection,addDoc,serverTimestamp}from'firebase/firestore';import{db,firebaseEnabled}from'../firebase/firebase';export async function submitToCollection(name,data){const clean=Object.fromEntries(Object.entries(data).map(([k,v])=>[k,typeof v==='string'?v.trim():v]));if(!firebaseEnabled){console.info('Demo submission',name,clean);return{id:crypto.randomUUID(),demo:true}}return addDoc(collection(db,name),{...clean,status:'new',createdAt:serverTimestamp()})}
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { db, firebaseEnabled } from '../firebase/firebase';
+import { createInquiry } from './inquiryService';
+export async function submitToCollection(name, data) {
+  if (name === 'contacts' || name === 'inquiries') return createInquiry({ ...data, source: name });
+  if (!firebaseEnabled) return { id: crypto.randomUUID(), ...data };
+  return addDoc(collection(db, name), { ...data, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+}

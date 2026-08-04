@@ -1,2 +1,30 @@
-import{GoogleAuthProvider,signInWithPopup,signInWithEmailAndPassword,signOut,onAuthStateChanged,setPersistence,browserLocalPersistence}from'firebase/auth';import{doc,getDoc}from'firebase/firestore';import{auth,db,firebaseEnabled}from'../firebase/firebase';
-export const adminEmails=(import.meta.env.VITE_ADMIN_EMAILS||'').split(',').map(e=>e.trim().toLowerCase()).filter(Boolean);const demoAuthError=()=>Promise.reject(new Error('Firebase is not configured. Admin login is unavailable in demo mode.'));export async function loginEmail(email,password){if(!firebaseEnabled)return demoAuthError();await setPersistence(auth,browserLocalPersistence);return signInWithEmailAndPassword(auth,email,password)}export async function loginGoogle(){if(!firebaseEnabled)return demoAuthError();await setPersistence(auth,browserLocalPersistence);return signInWithPopup(auth,new GoogleAuthProvider())}export const logout=()=>firebaseEnabled?signOut(auth):Promise.resolve();export const listenAuth=cb=>{if(!firebaseEnabled){cb(null);return()=>{}}return onAuthStateChanged(auth,cb)};export async function isAdmin(user){if(!user)return false;if(adminEmails.includes(user.email?.toLowerCase()))return true;if(!firebaseEnabled)return false;const snap=await getDoc(doc(db,'users',user.uid));return snap.exists()&&snap.data().role==='admin'}
+import { GoogleAuthProvider, browserLocalPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import { auth, firebaseEnabled } from '../firebase/firebase';
+import { getUserProfile } from './userService';
+
+const unavailable = () => Promise.reject(new Error('Firebase no está configurado. El acceso administrativo permanece protegido.'));
+
+export async function loginEmail(email, password) {
+  if (!firebaseEnabled) return unavailable();
+  await setPersistence(auth, browserLocalPersistence);
+  return signInWithEmailAndPassword(auth, email, password);
+}
+
+export async function loginGoogle() {
+  if (!firebaseEnabled) return unavailable();
+  await setPersistence(auth, browserLocalPersistence);
+  return signInWithPopup(auth, new GoogleAuthProvider());
+}
+
+export const logout = () => (firebaseEnabled ? signOut(auth) : Promise.resolve());
+export const listenAuth = (cb) => {
+  if (!firebaseEnabled) { cb(null); return () => {}; }
+  return onAuthStateChanged(auth, cb);
+};
+
+export async function getAdminAccess(user) {
+  if (!user) return { allowed: false, profile: null, reason: 'anonymous' };
+  const profile = await getUserProfile(user.uid);
+  const allowed = profile?.role === 'admin' && profile?.active === true;
+  return { allowed, profile, reason: allowed ? 'allowed' : 'unauthorized' };
+}

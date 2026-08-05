@@ -1,16 +1,18 @@
 name: One-time recoverable errors Pages rebuild
 
 on:
-  push:
+  pull_request:
     branches:
-      - fix/recoverable-errors-and-property-map-20260804
+      - main
+    types:
+      - opened
+      - synchronize
 
 permissions:
   contents: write
 
 jobs:
   rebuild:
-    if: ${{ !contains(github.event.head_commit.message, '[pages-build]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -21,12 +23,24 @@ jobs:
           fetch-depth: 0
           ref: fix/recoverable-errors-and-property-map-20260804
 
+      - name: Skip generated build commit
+        id: guard
+        shell: bash
+        run: |
+          if git log -1 --pretty=%B | grep -Fq '[pages-build]'; then
+            echo 'skip=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'skip=false' >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Set up Node.js
+        if: steps.guard.outputs.skip != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
       - name: Install dependencies and repair lockfile if necessary
+        if: steps.guard.outputs.skip != 'true'
         shell: bash
         run: |
           set -e
@@ -38,10 +52,12 @@ jobs:
           npx vite --version
 
       - name: Run lint
+        if: steps.guard.outputs.skip != 'true'
         shell: bash
         run: npm run lint
 
       - name: Build application and GitHub Pages
+        if: steps.guard.outputs.skip != 'true'
         shell: bash
         run: |
           set -e
@@ -52,6 +68,7 @@ jobs:
           touch docs/.nojekyll
 
       - name: Verify recoverable error and safe map bundle
+        if: steps.guard.outputs.skip != 'true'
         shell: bash
         run: |
           set -e
@@ -67,6 +84,7 @@ jobs:
           echo "Generated CSS: $CSS_FILE"
 
       - name: Commit generated build
+        if: steps.guard.outputs.skip != 'true'
         shell: bash
         run: |
           set -e

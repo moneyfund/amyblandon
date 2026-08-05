@@ -103,7 +103,7 @@ jobs:
           grep -q 'URL de TikTok' "$JS_FILE"
           grep -q 'Powered by Xarcon' "$JS_FILE"
           grep -q 'public-footer__social' "$CSS_FILE"
-          grep -q 'Visitar Facebook de Amy Blandon' "$JS_FILE"
+          grep -q 'Redes sociales' "$JS_FILE"
           grep -q 'amyblandon.firebaseapp.com' "$JS_FILE"
 
       - name: Commit source and generated build

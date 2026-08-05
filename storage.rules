@@ -1,10 +1,20 @@
 rules_version = '2';
+
 service firebase.storage {
   match /b/{bucket}/o {
     function signedIn() { return request.auth != null; }
-    function admin() { return signedIn() && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin' && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.active == true; }
-    match /properties/{propertyId}/images/{fileName} { allow read: if true; allow write, delete: if admin() && request.resource.size < 8 * 1024 * 1024 && request.resource.contentType.matches('image/(jpeg|jpg|png|webp)'); }
-    match /private/{allPaths=**} { allow read, write: if admin(); }
+    // Bootstrap temporal: retirar este acceso por correo cuando users/{uid} esté confirmado.
+    function isBootstrapAdmin() { return signedIn() && request.auth.token.email != null && request.auth.token.email == "norvingarcia220@gmail.com"; }
+    function hasAdminDocument() { return signedIn() && firestore.exists(/databases/(default)/documents/users/$(request.auth.uid)) && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == "admin" && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.active == true; }
+    function isAdmin() { return isBootstrapAdmin() || hasAdminDocument(); }
+    function validImage() { return request.resource.size <= 10 * 1024 * 1024 && request.resource.contentType in ['image/jpeg', 'image/png', 'image/webp']; }
+
+    match /properties/{propertyId}/images/{fileName} { allow read: if true; allow create, update: if isAdmin() && validImage(); allow delete: if isAdmin(); }
+    match /properties/{propertyId}/documents/{fileName} { allow read, write: if isAdmin(); }
+    match /site-content/{fileName} { allow read: if true; allow create, update: if isAdmin() && validImage(); allow delete: if isAdmin(); }
+    match /profiles/{uid}/{fileName} { allow read: if signedIn() && (request.auth.uid == uid || isAdmin()); allow create, update: if signedIn() && (request.auth.uid == uid || isAdmin()) && validImage(); allow delete: if signedIn() && (request.auth.uid == uid || isAdmin()); }
+    match /valuations/{valuationId}/{fileName} { allow read, write: if isAdmin(); }
+    match /clients/{clientId}/{fileName} { allow read, write: if isAdmin(); }
     match /{allPaths=**} { allow read, write: if false; }
   }
 }

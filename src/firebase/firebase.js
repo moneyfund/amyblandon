@@ -1,2 +1,12 @@
-import{initializeApp}from'firebase/app';import{getAuth}from'firebase/auth';import{getFirestore}from'firebase/firestore';import{getStorage}from'firebase/storage';
-const cfg={apiKey:import.meta.env.VITE_FIREBASE_API_KEY,authDomain:import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,projectId:import.meta.env.VITE_FIREBASE_PROJECT_ID,storageBucket:import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,messagingSenderId:import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,appId:import.meta.env.VITE_FIREBASE_APP_ID};export const firebaseEnabled=Object.values(cfg).every(Boolean);export const app=firebaseEnabled?initializeApp(cfg):null;export const auth=app?getAuth(app):null;export const db=app?getFirestore(app):null;export const storage=app?getStorage(app):null;
+import { getApp, getApps, initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
+import { firebaseConfig, hasRequiredFirebaseConfig } from './firebaseConfig';
+
+export const firebaseEnabled = hasRequiredFirebaseConfig;
+export const firebaseProjectId = firebaseConfig.projectId || '';
+export const app = firebaseEnabled ? (getApps().length ? getApp() : initializeApp(firebaseConfig)) : undefined;
+export const auth = firebaseEnabled ? getAuth(app) : undefined;
+export const db = firebaseEnabled ? getFirestore(app) : undefined;
+export const storage = firebaseEnabled ? getStorage(app) : undefined;

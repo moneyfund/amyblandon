@@ -20,6 +20,9 @@ export default function AdminLayout() {
   const { user, profile } = useAuth();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const publicUrl = window.location.hostname.endsWith('github.io')
+    ? `${window.location.origin}${import.meta.env.BASE_URL}#/`
+    : `${window.location.origin}/`;
 
   const signOut = async () => {
     await logout();
@@ -42,7 +45,7 @@ export default function AdminLayout() {
           ))}
         </nav>
 
-        <a className="link-button" href="/#/" target="_blank" rel="noreferrer">
+        <a className="link-button" href={publicUrl} target="_blank" rel="noreferrer">
           <ExternalLink size={16} /> Ver web pública
         </a>
         <button className="link-button" type="button" onClick={signOut}>

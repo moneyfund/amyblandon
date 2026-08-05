@@ -6,6 +6,7 @@ on:
       - main
     types:
       - opened
+      - synchronize
 
 permissions:
   contents: write
@@ -22,28 +23,42 @@ jobs:
           fetch-depth: 0
           ref: fix/firebase-pages-build-20260804
 
+      - name: Avoid rebuilding the generated build commit
+        id: guard
+        shell: bash
+        run: |
+          if git log -1 --pretty=%B | grep -Fq '[pages-build]'; then
+            echo 'skip=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'skip=false' >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Set up Node.js
+        if: steps.guard.outputs.skip != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
 
-      - name: Install dependencies
+      - name: Install dependencies and regenerate invalid lockfile
+        if: steps.guard.outputs.skip != 'true'
         shell: bash
         run: |
           set -e
           if ! npm ci --no-audit --no-fund; then
-            echo "npm ci failed; regenerating dependencies with npm install"
+            echo "npm ci failed; deleting the malformed lockfile and regenerating it"
             rm -rf node_modules
+            rm -f package-lock.json
             npm install --no-audit --no-fund
           fi
           npx vite --version
 
       - name: Run lint without blocking the required build
+        if: steps.guard.outputs.skip != 'true'
         shell: bash
         run: npm run lint || echo "::warning::Lint reported issues; production build will determine whether compilation is valid."
 
       - name: Build application and GitHub Pages output
+        if: steps.guard.outputs.skip != 'true'
         shell: bash
         run: |
           set -e
@@ -54,6 +69,7 @@ jobs:
           touch docs/.nojekyll
 
       - name: Verify Firebase-enabled production bundle
+        if: steps.guard.outputs.skip != 'true'
         shell: bash
         run: |
           set -e
@@ -81,6 +97,7 @@ jobs:
           echo "Generated CSS: $CSS_FILE"
 
       - name: Commit generated Pages build
+        if: steps.guard.outputs.skip != 'true'
         shell: bash
         run: |
           set -e

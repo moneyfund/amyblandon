@@ -10,6 +10,7 @@ const authMessages = {
   'auth/too-many-requests': 'Demasiados intentos. Espera unos minutos antes de volver a intentar.',
   'auth/popup-closed-by-user': 'La ventana de Google se cerró antes de completar el ingreso.',
   'auth/unauthorized-domain': 'Este dominio no está autorizado en Firebase Authentication.',
+  'auth/operation-not-allowed': 'Este método de acceso todavía no está habilitado en Firebase Authentication.',
   'auth/network-request-failed': 'No se pudo conectar con Firebase. Revisa tu conexión.',
 };
 
@@ -54,25 +55,74 @@ export async function ensureBootstrapAdminDocument(user) {
 export async function getAdminAccess(user) {
   if (!user) return { allowed: false, source: 'none', reason: 'anonymous', profile: null };
   if (!firebaseEnabled) return { allowed: false, source: 'none', reason: 'firebase-disabled', profile: null };
+
+  const bootstrapAdmin = isBootstrapAdminEmail(user.email);
+  const userRef = doc(db, 'users', user.uid);
+
+  // El administrador bootstrap se valida primero por la cuenta autenticada.
+  // Esto evita que unas reglas de Firestore todavía no publicadas bloqueen el acceso inicial al panel.
+  if (bootstrapAdmin) {
+    let profile = null;
+    let readError = null;
+
+    try {
+      const snap = await getDoc(userRef);
+      if (snap.exists()) {
+        profile = { id: snap.id, ...snap.data() };
+        const explicitlyAllowed = profile.role === 'admin' && profile.active === true;
+        const explicitlyRevoked = profile.active === false || (profile.role && profile.role !== 'admin');
+
+        if (explicitlyAllowed) {
+          return { allowed: true, source: 'firestore', reason: 'admin-document', profile };
+        }
+
+        // Un documento existente permite revocar expresamente incluso al correo bootstrap.
+        if (explicitlyRevoked) {
+          return { allowed: false, source: 'none', reason: 'inactive-or-not-admin', profile };
+        }
+      }
+    } catch (error) {
+      readError = error;
+      if (import.meta.env.DEV) console.warn('No se pudo leer inicialmente el perfil bootstrap; se usará la autorización temporal.', error);
+    }
+
+    let legacyProfile = null;
+    try {
+      const legacyRef = doc(db, 'users', primaryBootstrapAdminEmail);
+      const legacySnap = await getDoc(legacyRef);
+      if (legacySnap.exists()) legacyProfile = { id: legacySnap.id, ...legacySnap.data(), usesEmailDocumentId: true };
+    } catch (legacyError) {
+      if (import.meta.env.DEV) console.warn('No se pudo leer el documento administrador con correo como ID.', legacyError);
+    }
+
+    const write = await ensureBootstrapAdminDocument(user);
+    return {
+      allowed: true,
+      source: 'bootstrap',
+      reason: write.ok
+        ? 'bootstrap-document-ensured'
+        : (readError?.code === 'permission-denied' || write.reason === 'permission-denied'
+          ? 'bootstrap-authorized-rules-pending'
+          : write.reason),
+      profile: profile || legacyProfile || {
+        id: user.uid,
+        name: user.displayName || 'Norvin García',
+        email: normalizeEmail(user.email),
+        role: 'admin',
+        active: true,
+        temporaryBootstrap: true,
+      },
+      bootstrapWrite: write,
+      readError,
+    };
+  }
+
   try {
-    const userRef = doc(db, 'users', user.uid);
     const snap = await getDoc(userRef);
     if (snap.exists()) {
       const profile = { id: snap.id, ...snap.data() };
       const allowed = profile.role === 'admin' && profile.active === true;
       return { allowed, source: allowed ? 'firestore' : 'none', reason: allowed ? 'admin-document' : 'inactive-or-not-admin', profile };
-    }
-    if (isBootstrapAdminEmail(user.email)) {
-      const legacyRef = doc(db, 'users', primaryBootstrapAdminEmail);
-      let legacyProfile = null;
-      try {
-        const legacySnap = await getDoc(legacyRef);
-        if (legacySnap.exists()) legacyProfile = { id: legacySnap.id, ...legacySnap.data(), usesEmailDocumentId: true };
-      } catch (legacyError) {
-        if (import.meta.env.DEV) console.warn('No se pudo leer el documento administrador con correo como ID.', legacyError);
-      }
-      const write = await ensureBootstrapAdminDocument(user);
-      return { allowed: true, source: 'bootstrap', reason: write.ok ? 'bootstrap-document-ensured' : write.reason, profile: legacyProfile, bootstrapWrite: write };
     }
     return { allowed: false, source: 'none', reason: 'missing-admin-document', profile: null };
   } catch (error) {

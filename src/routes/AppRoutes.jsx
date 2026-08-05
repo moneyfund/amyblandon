@@ -58,9 +58,9 @@ export default function AppRoutes() {
           <Route path="content" element={<ContentAdmin />} />
           <Route path="inquiries" element={<InquiriesAdmin />} />
           <Route path="settings" element={<SettingsAdmin />} />
-          <Route path="clients" element={<ComingSoon title="Clientes" />} />
-          <Route path="property-leads" element={<ComingSoon title="Captaciones" />} />
-          <Route path="valuations" element={<ComingSoon title="Avalúos" />} />
+          <Route path="clients" element={<ComingSoon title="Gestión de clientes" />} />
+          <Route path="property-leads" element={<ComingSoon title="Captación de propiedades" />} />
+          <Route path="valuations" element={<ComingSoon title="Avalúos de propiedades" />} />
         </Route>
       </Route>
     </Routes>

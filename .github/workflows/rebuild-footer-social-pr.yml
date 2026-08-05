@@ -1,0 +1,121 @@
+name: Footer social links PR build
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: feat/footer-social-links-xarcon-20260805
+
+      - name: Skip generated build commit
+        id: guard
+        shell: bash
+        run: |
+          if git log -1 --pretty=%B | grep -Fq '[pages-build]'; then
+            echo 'skip=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'skip=false' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Apply contact editor and footer styles
+        if: steps.guard.outputs.skip != 'true'
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          admin = Path('src/pages/admin/AdminPages.jsx')
+          text = admin.read_text(encoding='utf-8')
+          old_contact = "contact: ['phone', 'whatsapp', 'email', 'address', 'schedule', 'facebook', 'instagram'],"
+          new_contact = "contact: ['phone', 'whatsapp', 'email', 'address', 'schedule', 'facebook', 'instagram', 'tiktok'],"
+          if old_contact not in text and new_contact not in text:
+              raise SystemExit('No se encontró la lista de campos de contacto esperada.')
+          text = text.replace(old_contact, new_contact)
+
+          old_fields = '''        {contentSections[tab].map((field) => (\n          <label key={field}>\n            {contentFieldLabels[field] || field}\n            <textarea\n              value={data[field] || ''}\n              onChange={(event) => setData((current) => ({ ...current, [field]: event.target.value }))}\n            />\n          </label>\n        ))}'''
+          new_fields = '''        {contentSections[tab].map((field) => {\n          const isSocialUrl = ['facebook', 'instagram', 'tiktok'].includes(field);\n          return (\n            <label key={field}>\n              {contentFieldLabels[field] || field}\n              {isSocialUrl ? (\n                <>\n                  <input\n                    type="url"\n                    value={data[field] || ''}\n                    onChange={(event) => setData((current) => ({ ...current, [field]: event.target.value }))}\n                    placeholder={`https://${field}.com/usuario`}\n                  />\n                  <small className="admin-help">Pega el enlace completo del perfil, incluyendo https://</small>\n                </>\n              ) : (\n                <textarea\n                  value={data[field] || ''}\n                  onChange={(event) => setData((current) => ({ ...current, [field]: event.target.value }))}\n                />\n              )}\n            </label>\n          );\n        })}'''
+          if old_fields not in text and new_fields not in text:
+              raise SystemExit('No se encontró el bloque de campos de contenido esperado.')
+          text = text.replace(old_fields, new_fields)
+          admin.write_text(text, encoding='utf-8')
+
+          css = Path('src/styles/public-layout.css')
+          text = css.read_text(encoding='utf-8')
+          if '.public-footer__social{' not in text:
+              text += '''\n.public-footer__social{display:flex;align-items:center;gap:10px;margin-top:22px}\n.public-footer__social a{width:35px;height:35px;border:1px solid rgba(201,154,68,.64);border-radius:50%;display:grid;place-items:center;color:var(--amy-gold);background:rgba(201,154,68,.035);transition:transform .22s ease,background-color .22s ease,color .22s ease,border-color .22s ease,box-shadow .22s ease}\n.public-footer__social a:hover{transform:translateY(-3px);background:var(--amy-gold);border-color:var(--amy-gold);color:var(--amy-navy-deep);box-shadow:0 10px 24px rgba(201,154,68,.22)}\n.public-footer__social svg{width:16px;height:16px;display:block;fill:currentColor;stroke:currentColor;stroke-width:1.8}\n.public-footer__social svg rect,.public-footer__social svg circle{fill:none}\n.public-footer__social svg .social-icon-dot{fill:currentColor;stroke:none}\n@media(max-width:820px){.public-footer__social{justify-content:flex-start}.public-footer__social a{width:38px;height:38px}}\n@media(prefers-reduced-motion:reduce){.public-footer__social a{transition:none}.public-footer__social a:hover{transform:none}}\n'''
+          css.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Set up Node.js
+        if: steps.guard.outputs.skip != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        if: steps.guard.outputs.skip != 'true'
+        shell: bash
+        run: |
+          set -e
+          if ! npm ci --no-audit --no-fund; then
+            rm -rf node_modules
+            rm -f package-lock.json
+            npm install --no-audit --no-fund
+          fi
+
+      - name: Lint and build GitHub Pages
+        if: steps.guard.outputs.skip != 'true'
+        shell: bash
+        run: |
+          set -e
+          npm run lint
+          npm run build
+          rm -rf docs/assets
+          rm -f docs/index.html
+          npm run build:pages
+          touch docs/.nojekyll
+
+      - name: Verify generated social footer
+        if: steps.guard.outputs.skip != 'true'
+        shell: bash
+        run: |
+          set -e
+          JS_FILE=$(find docs/assets -maxdepth 1 -type f -name 'index-*.js' | head -n 1)
+          CSS_FILE=$(find docs/assets -maxdepth 1 -type f -name 'index-*.css' | head -n 1)
+          test -n "$JS_FILE"
+          test -n "$CSS_FILE"
+          grep -q 'URL de TikTok' "$JS_FILE"
+          grep -q 'Powered by Xarcon' "$JS_FILE"
+          grep -q 'public-footer__social' "$CSS_FILE"
+          grep -q 'Visitar Facebook de Amy Blandon' "$JS_FILE"
+          grep -q 'amyblandon.firebaseapp.com' "$JS_FILE"
+
+      - name: Commit source and generated build
+        if: steps.guard.outputs.skip != 'true'
+        shell: bash
+        run: |
+          set -e
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A src docs package-lock.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m '[pages-build] Publicar redes sociales y crédito Xarcon'
+          git push origin HEAD:feat/footer-social-links-xarcon-20260805

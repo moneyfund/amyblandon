@@ -5,6 +5,8 @@ import { deleteStorageFile, uploadPropertyImage } from '../../services/storageSe
 import { getSiteContent, saveSiteContent } from '../../services/siteContentService';
 import { getInquiries, updateInquiryStatus } from '../../services/inquiryService';
 import { useAuth } from '../../contexts/AuthContext';
+import { runFirebaseDiagnostic } from '../../services/firebaseDiagnosticService';
+import { firebaseProjectId } from '../../firebase/firebase';
 import { slugify } from '../../utils/format';
 
 const empty = { title: '', slug: '', internalCode: '', description: '', price: '', currency: 'USD', operationType: 'sale', propertyType: 'house', status: 'available', publicationStatus: 'draft', department: '', city: '', sector: '', publicAddress: '', privateAddress: '', latitude: '', longitude: '', landArea: '', constructionArea: '', bedrooms: '', bathrooms: '', parkingSpaces: '', features: [], services: [], coverImage: '', images: [], videoUrl: '', featured: false, displayOrder: 0 };
@@ -19,3 +21,14 @@ export function PropertyEditor() { const { id } = useParams(); const { user } = 
 export function ContentAdmin() { const sections = { home: ['heroTitle', 'heroSubtitle', 'heroLabel', 'aboutTitle', 'aboutText', 'strategicTitle', 'strategicLabel'], about: ['title', 'subtitle', 'biography', 'mission', 'values'], contact: ['phone', 'whatsapp', 'email', 'address', 'schedule', 'facebook', 'instagram'] }; const [tab, setTab] = useState('home'), [data, setData] = useState({}), [ok, setOk] = useState(''); useEffect(() => { getSiteContent(tab).then(setData); }, [tab]); return <><h1>Contenido web</h1><div className="quick-actions">{Object.keys(sections).map(s => <button className="btn" onClick={() => setTab(s)}>{s.toUpperCase()}</button>)}</div><form className="admin-form" onSubmit={e => { e.preventDefault(); saveSiteContent(tab, data).then(() => setOk('Contenido guardado.')); }}>{sections[tab].map(k => <label key={k}>{k}<textarea value={data[k] || ''} onChange={e => setData({ ...data, [k]: e.target.value })} /></label>)}<button className="btn primary">Guardar</button>{ok && <p className="success">{ok}</p>}</form></>; }
 
 export function InquiriesAdmin() { const [items, setItems] = useState([]); const load = () => getInquiries().then(setItems); useEffect(load, []); return <><h1>Consultas</h1><div className="admin-table"><table><thead><tr><th>Nombre</th><th>Contacto</th><th>Propiedad</th><th>Fecha</th><th>Estado</th><th>Notas</th><th>Acciones</th></tr></thead><tbody>{items.map(i => <tr key={i.id}><td>{i.name}</td><td>{i.email}<br />{i.phone}</td><td>{i.propertyId || 'General'}</td><td>{fmt(i.createdAt)}</td><td>{i.status}</td><td>{i.notes}</td><td>{['contacted', 'resolved', 'archived'].map(s => <button key={s} onClick={() => updateInquiryStatus(i.id, s).then(load)}>{s}</button>)}</td></tr>)}</tbody></table>{!items.length && <p className="empty">No hay consultas registradas.</p>}</div></>; }
+
+
+export function SettingsAdmin() {
+  const { user, adminAccess, authStatus } = useAuth();
+  const [diagnostic, setDiagnostic] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const test = async () => { setLoading(true); setDiagnostic(await runFirebaseDiagnostic(user)); setLoading(false); };
+  useEffect(() => { test(); }, [user?.uid]);
+  const row = (label, value) => <p><strong>{label}:</strong> {value || '—'}</p>;
+  return <><h1>Configuración</h1><section className="admin-card"><h2>Estado de Firebase</h2>{row('Proyecto', diagnostic?.projectId || firebaseProjectId)}{row('Aplicación', diagnostic?.appConnected ? 'Conectada' : 'No conectada')}{row('Authentication', diagnostic?.authAvailable ? 'Disponible' : 'No disponible')}{row('Firestore', diagnostic?.firestore)}{row('Storage', diagnostic?.storage)}{row('Usuario', diagnostic?.userEmail)}{row('UID', diagnostic?.uid)}{row('Rol', diagnostic?.role)}{row('Estado de acceso', authStatus)}{row('Documento users/{uid}', diagnostic?.userDocument)}{adminAccess?.bootstrapWrite?.reason === 'permission-denied' && <p className="notice">No se pudo crear users/{`{uid}`}: deben publicarse las reglas de Firestore incluidas en este repositorio.</p>}{diagnostic?.permissionError && <p className="error">{diagnostic.permissionError}</p>}{diagnostic?.legacyEmailDocument && <p className="notice">{diagnostic.migrationMessage} UID correcto: {diagnostic.uid}</p>}<button className="btn primary" onClick={test} disabled={loading}>{loading ? 'Probando...' : 'Probar conexión'}</button></section></>;
+}

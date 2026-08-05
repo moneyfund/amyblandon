@@ -1,16 +1,43 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
-    function admin() { return signedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.active == true; }
-    match /users/{uid} { allow read: if signedIn() && (request.auth.uid == uid || admin()); allow create, update, delete: if admin(); }
-    match /properties/{id} { allow read: if resource.data.publicationStatus == 'published' || admin(); allow create, update, delete: if admin(); }
-    match /siteContent/{id} { allow read: if true; allow write: if admin(); }
-    match /inquiries/{id} { allow create: if true; allow read, update, delete: if admin(); }
-    match /clients/{id} { allow read, write: if admin(); }
-    match /propertyLeads/{id} { allow create: if true; allow read, update, delete: if admin(); }
-    match /valuations/{id} { allow create: if true; allow read, update, delete: if admin(); }
-    match /activityLogs/{id} { allow read, write: if admin(); }
+
+    // Bootstrap temporal: retirar este acceso por correo cuando users/{uid} esté confirmado.
+    function isBootstrapAdmin() {
+      return signedIn()
+        && request.auth.token.email != null
+        && request.auth.token.email == "norvingarcia220@gmail.com";
+    }
+
+    function hasAdminDocument() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin"
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.active == true;
+    }
+
+    function isAdmin() { return isBootstrapAdmin() || hasAdminDocument(); }
+
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if request.auth.uid == uid && isBootstrapAdmin() && request.resource.data.role == "admin" && request.resource.data.active == true;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /properties/{propertyId} {
+      allow read: if resource.data.publicationStatus == "published" || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /siteContent/{contentId} { allow read: if true; allow create, update, delete: if isAdmin(); }
+    match /inquiries/{inquiryId} { allow create: if true; allow read, update, delete: if isAdmin(); }
+    match /clients/{clientId} { allow read, write: if isAdmin(); }
+    match /propertyLeads/{leadId} { allow read, write: if isAdmin(); }
+    match /valuations/{valuationId} { allow read, write: if isAdmin(); }
+    match /activityLogs/{logId} { allow read: if isAdmin(); allow create: if isAdmin(); allow update, delete: if false; }
     match /{document=**} { allow read, write: if false; }
   }
 }

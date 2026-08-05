@@ -1,21 +1,22 @@
 name: One-time Firebase Pages rebuild
 
 on:
-  push:
+  pull_request:
     branches:
-      - fix/firebase-pages-build-20260804
+      - main
+    types:
+      - opened
 
 permissions:
   contents: write
 
 jobs:
   rebuild:
-    if: ${{ !contains(github.event.head_commit.message, '[pages-build]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
     steps:
-      - name: Checkout branch
+      - name: Checkout source branch
         uses: actions/checkout@v4
         with:
           fetch-depth: 0

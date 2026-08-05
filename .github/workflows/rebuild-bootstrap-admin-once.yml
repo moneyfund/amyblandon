@@ -1,0 +1,69 @@
+name: One-time bootstrap admin Pages rebuild
+
+on:
+  push:
+    branches:
+      - fix/bootstrap-admin-access-20260804
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    if: ${{ !contains(github.event.head_commit.message, '[pages-build]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: fix/bootstrap-admin-access-20260804
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        shell: bash
+        run: npm ci --no-audit --no-fund
+
+      - name: Build GitHub Pages output
+        shell: bash
+        run: |
+          set -e
+          npm run build
+          rm -rf docs/assets
+          rm -f docs/index.html
+          npm run build:pages
+          touch docs/.nojekyll
+
+      - name: Verify bootstrap authorization bundle
+        shell: bash
+        run: |
+          set -e
+          JS_FILE=$(find docs/assets -maxdepth 1 -type f -name 'index-*.js' | head -n 1)
+          CSS_FILE=$(find docs/assets -maxdepth 1 -type f -name 'index-*.css' | head -n 1)
+          test -n "$JS_FILE"
+          test -n "$CSS_FILE"
+          grep -q 'bootstrap-authorized-rules-pending' "$JS_FILE"
+          grep -q 'norvingarcia220@gmail.com' "$JS_FILE"
+          grep -q 'amyblandon.firebaseapp.com' "$JS_FILE"
+          echo "Generated JS: $JS_FILE"
+          echo "Generated CSS: $CSS_FILE"
+
+      - name: Commit generated build
+        shell: bash
+        run: |
+          set -e
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A docs
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit.'
+            exit 0
+          fi
+          git commit -m '[pages-build] Publish bootstrap admin access fix'
+          git push origin HEAD:fix/bootstrap-admin-access-20260804

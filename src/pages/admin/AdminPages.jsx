@@ -70,7 +70,7 @@ const contentSections = {
     'strategicLabel',
   ],
   about: ['title', 'subtitle', 'biography', 'mission', 'values'],
-  contact: ['phone', 'whatsapp', 'email', 'address', 'schedule', 'facebook', 'instagram'],
+  contact: ['phone', 'whatsapp', 'email', 'address', 'schedule', 'facebook', 'instagram', 'tiktok'],
 };
 
 const formatDate = (value) => {
@@ -756,15 +756,30 @@ export function ContentAdmin() {
       </div>
 
       <form className="admin-form" onSubmit={save}>
-        {contentSections[tab].map((field) => (
-          <label key={field}>
-            {contentFieldLabels[field] || field}
-            <textarea
-              value={data[field] || ''}
-              onChange={(event) => setData((current) => ({ ...current, [field]: event.target.value }))}
-            />
-          </label>
-        ))}
+        {contentSections[tab].map((field) => {
+          const isSocialUrl = ['facebook', 'instagram', 'tiktok'].includes(field);
+          return (
+            <label key={field}>
+              {contentFieldLabels[field] || field}
+              {isSocialUrl ? (
+                <>
+                  <input
+                    type="url"
+                    value={data[field] || ''}
+                    onChange={(event) => setData((current) => ({ ...current, [field]: event.target.value }))}
+                    placeholder={`https://${field}.com/usuario`}
+                  />
+                  <small className="admin-help">Pega el enlace completo del perfil, incluyendo https://</small>
+                </>
+              ) : (
+                <textarea
+                  value={data[field] || ''}
+                  onChange={(event) => setData((current) => ({ ...current, [field]: event.target.value }))}
+                />
+              )}
+            </label>
+          );
+        })}
         <button className="btn primary" disabled={saving}>{saving ? 'Guardando...' : 'Guardar contenido'}</button>
         {message && <p className="success">{message}</p>}
         {error && <p className="error">{error}</p>}

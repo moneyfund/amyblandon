@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 function FacebookIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -63,11 +61,3 @@ export default function SocialIcons({ links = {} }) {
     </div>
   );
 }
-
-SocialIcons.propTypes = {
-  links: PropTypes.shape({
-    facebook: PropTypes.string,
-    instagram: PropTypes.string,
-    tiktok: PropTypes.string,
-  }),
-};

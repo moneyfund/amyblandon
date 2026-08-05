@@ -60,6 +60,6 @@ export const homePageContent = {
     question: 'Cual será tu próxima inversion?',
     subscribeTitle: 'Suscribete',
     subscribeText: 'Sé parte de nuestra comunidad y recibe información valiosa sobre bienes raíces, seguros e inversiones. Aprende, mantente informado y toma mejores decisiones financieras.',
-    copyright: 'Copyright © 2026 - Amy Blandón.com | Powered by Innovart Studio'
+    copyright: 'Copyright © 2026 - Amy Blandón.com | Powered by Xarcon'
   }
 };

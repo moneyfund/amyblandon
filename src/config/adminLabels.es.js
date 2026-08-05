@@ -67,8 +67,9 @@ export const contentFieldLabels = {
   email: 'Correo electrónico',
   address: 'Dirección',
   schedule: 'Horario de atención',
-  facebook: 'Facebook',
-  instagram: 'Instagram',
+  facebook: 'URL de Facebook',
+  instagram: 'URL de Instagram',
+  tiktok: 'URL de TikTok',
 };
 
 export const labelFor = (options, value, fallback = '—') =>

@@ -1,0 +1,84 @@
+name: One-time Spanish admin Pages rebuild
+
+on:
+  push:
+    branches:
+      - fix/admin-complete-spanish-20260804
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    if: ${{ !contains(github.event.head_commit.message, '[pages-build]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: fix/admin-complete-spanish-20260804
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies and repair lockfile if needed
+        shell: bash
+        run: |
+          set -e
+          if ! npm ci --no-audit --no-fund; then
+            rm -rf node_modules
+            rm -f package-lock.json
+            npm install --no-audit --no-fund
+          fi
+          npx vite --version
+
+      - name: Run lint
+        shell: bash
+        run: npm run lint
+
+      - name: Build application and GitHub Pages
+        shell: bash
+        run: |
+          set -e
+          npm run build
+          rm -rf docs/assets
+          rm -f docs/index.html
+          npm run build:pages
+          touch docs/.nojekyll
+
+      - name: Verify Spanish admin bundle
+        shell: bash
+        run: |
+          set -e
+          JS_FILE=$(find docs/assets -maxdepth 1 -type f -name 'index-*.js' | head -n 1)
+          CSS_FILE=$(find docs/assets -maxdepth 1 -type f -name 'index-*.css' | head -n 1)
+          test -n "$JS_FILE"
+          test -n "$CSS_FILE"
+          grep -q 'Agregar propiedad' "$JS_FILE"
+          grep -q 'Tipo de operación' "$JS_FILE"
+          grep -q 'Estado de publicación' "$JS_FILE"
+          grep -q 'Guardar como borrador' "$JS_FILE"
+          grep -q 'Consultas de clientes' "$JS_FILE"
+          grep -q 'admin-form-section' "$CSS_FILE"
+          grep -q 'amyblandon.firebaseapp.com' "$JS_FILE"
+          echo "Generated JS: $JS_FILE"
+          echo "Generated CSS: $CSS_FILE"
+
+      - name: Commit generated build
+        shell: bash
+        run: |
+          set -e
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A docs package-lock.json
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit.'
+            exit 0
+          fi
+          git commit -m '[pages-build] Publicar panel administrativo en español'
+          git push origin HEAD:fix/admin-complete-spanish-20260804

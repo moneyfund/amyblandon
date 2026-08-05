@@ -78,7 +78,11 @@ export async function updatePropertyStatus(id, changes, uid) {
 }
 
 export async function duplicateProperty(property, uid) {
-  const { id, createdAt, updatedAt, publishedAt, ...copy } = property;
+  const excludedFields = new Set(['id', 'createdAt', 'updatedAt', 'publishedAt']);
+  const copy = Object.fromEntries(
+    Object.entries(property).filter(([key]) => !excludedFields.has(key)),
+  );
+
   return saveProperty({
     ...copy,
     title: `${property.title} (copia)`,

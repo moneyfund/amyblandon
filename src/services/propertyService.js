@@ -1,4 +1,15 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, serverTimestamp, updateDoc, where, query } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  serverTimestamp,
+  setDoc,
+  where,
+} from 'firebase/firestore';
 import { db, firebaseEnabled } from '../firebase/firebase';
 import { demoProperties } from '../data/demoData';
 import { deleteStorageFile } from './storageService';
@@ -24,6 +35,10 @@ const normalize = (data = {}) => ({
   features: asList(data.features),
   services: asList(data.services),
   amenities: asList(data.amenities),
+  highlightTags: asList(data.highlightTags),
+  propertyDetails: data.propertyDetails && typeof data.propertyDetails === 'object'
+    ? data.propertyDetails
+    : {},
   publicationStatus: data.publicationStatus || (data.published ? 'published' : 'draft'),
   status: data.status || 'available',
 });
@@ -64,8 +79,23 @@ export async function saveProperty(data, id, uid) {
   if (payload.publicationStatus === 'published' && !payload.publishedAt) {
     payload.publishedAt = serverTimestamp();
   }
+
   if (!firebaseEnabled) return { id: id || crypto.randomUUID(), ...payload };
-  if (id) return updateDoc(doc(db, collectionName, id), payload);
+
+  if (id) {
+    const propertyRef = doc(db, collectionName, id);
+    const existing = await getDoc(propertyRef);
+    const dataToSave = existing.exists()
+      ? payload
+      : {
+        ...payload,
+        createdBy: uid || '',
+        createdAt: serverTimestamp(),
+      };
+    await setDoc(propertyRef, dataToSave, { merge: true });
+    return { id };
+  }
+
   return addDoc(collection(db, collectionName), {
     ...payload,
     createdBy: uid || '',
@@ -88,6 +118,7 @@ export async function duplicateProperty(property, uid) {
     title: `${property.title} (copia)`,
     slug: `${property.slug || property.title}-copia-${Date.now()}`,
     publicationStatus: 'draft',
+    published: false,
     status: 'available',
     featured: false,
   }, null, uid);

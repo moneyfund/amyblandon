@@ -1,5 +1,5 @@
 sha=a80d79dfb0879df609aaa925a0293b64b545da0e
 build=success
-deploy=success
-run_id=31130681361
-recorded_at=2026-08-06T23:21:49Z
+deploy=failure
+run_id=31131060806
+recorded_at=2026-08-06T23:27:37Z

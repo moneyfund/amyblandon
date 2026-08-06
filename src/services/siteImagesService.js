@@ -59,8 +59,8 @@ export function subscribeSiteImages(onImages, onError) {
     doc(db, ...DOCUMENT_PATH),
     (snapshot) => onImages(recordsToUrls(normalizeSiteImageRecords(snapshot.exists() ? snapshot.data() : {}))),
     (error) => {
+      // El proveedor decide si conserva la última imagen válida o usa los valores predeterminados.
       onError?.(error);
-      onImages({ ...siteImages });
     },
   );
 }

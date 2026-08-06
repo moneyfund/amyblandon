@@ -10,6 +10,7 @@ import './styles/global.css';
 import './styles/reference-typography.css';
 import './styles/reference-cards-footer.css';
 import './styles/site-images.css';
+import './styles/reference-hero-layout.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

@@ -1,0 +1,1 @@
+Compilación controlada de los cambios del editor y del menú público.

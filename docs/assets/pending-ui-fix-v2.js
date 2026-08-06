@@ -28,12 +28,19 @@ const applyNavbarOrder = () => {
   const links = [...nav.querySelectorAll(':scope > a:not(.public-navbar__phone)')];
   const ordered = NAV_ITEMS.map((item) => {
     const link = links.find((candidate) => hashMatches(candidate, item.hash));
-    if (link) link.textContent = item.label;
+    if (link && link.textContent?.trim() !== item.label) link.textContent = item.label;
     return link;
   }).filter(Boolean);
 
   if (ordered.length !== NAV_ITEMS.length) return;
-  ordered.forEach((link) => nav.insertBefore(link, phone || null));
+
+  const currentOrder = links.map(getHash).join('|');
+  const desiredOrder = ordered.map(getHash).join('|');
+  if (currentOrder === desiredOrder) return;
+
+  const fragment = document.createDocumentFragment();
+  ordered.forEach((link) => fragment.appendChild(link));
+  nav.insertBefore(fragment, phone || null);
 };
 
 const hideFieldByLabel = (sectionSelector, labelText) => {

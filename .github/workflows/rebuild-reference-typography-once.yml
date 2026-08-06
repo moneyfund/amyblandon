@@ -71,13 +71,14 @@ jobs:
           CSS_FILE=$(find docs/assets -maxdepth 1 -type f -name 'index-*.css' | head -n 1)
           test -n "$JS_FILE"
           test -n "$CSS_FILE"
-          grep -q 'Plus Jakarta Sans' "$CSS_FILE"
-          ! grep -q 'Marcellus' "$CSS_FILE"
-          ! grep -q 'Montserrat' "$CSS_FILE"
-          grep -q 'font-weight:300' "$CSS_FILE"
-          grep -q 'font-size:72px' "$CSS_FILE"
-          grep -q 'font-size:48px' "$CSS_FILE"
-          grep -q 'font-size:35px' "$CSS_FILE"
+          grep -q 'Plus Jakarta Sans' src/styles/tokens.css
+          grep -q 'family=Plus+Jakarta+Sans' src/styles/global.css
+          ! grep -q 'Marcellus' src/styles/global.css
+          ! grep -q 'Montserrat' src/styles/global.css
+          grep -q 'font-weight:300' src/styles/home.css
+          grep -q '72px' src/styles/home.css
+          grep -q '48px' src/styles/reference-typography.css
+          grep -q '35px' src/styles/home.css
           grep -q 'amyblandon.firebaseapp.com' "$JS_FILE"
           echo "Generated JS: $JS_FILE"
           echo "Generated CSS: $CSS_FILE"

@@ -9,16 +9,55 @@ export function validateImage(file) {
   if (file.size > MAX_IMAGE_SIZE) throw new Error('Cada imagen debe pesar máximo 8 MB.');
 }
 
-export function uploadPropertyImage(propertyId, file, onProgress) {
+function safeFileName(name = 'imagen') {
+  return name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9._-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .toLowerCase();
+}
+
+function uploadImage(path, file, onProgress) {
   validateImage(file);
-  if (!firebaseEnabled) return Promise.resolve({ url: URL.createObjectURL(file), path: '', name: file.name, size: file.size, type: file.type });
-  const path = `properties/${propertyId}/images/${Date.now()}-${file.name}`;
+  if (!firebaseEnabled) {
+    return Promise.resolve({
+      url: URL.createObjectURL(file),
+      path: '',
+      name: file.name,
+      size: file.size,
+      type: file.type,
+    });
+  }
+
   const task = uploadBytesResumable(ref(storage, path), file, { contentType: file.type });
   return new Promise((resolve, reject) => {
-    task.on('state_changed', (snap) => onProgress?.(Math.round((snap.bytesTransferred / snap.totalBytes) * 100)), reject, async () => {
-      resolve({ url: await getDownloadURL(task.snapshot.ref), path, name: file.name, size: file.size, type: file.type });
-    });
+    task.on(
+      'state_changed',
+      (snapshot) => onProgress?.(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)),
+      reject,
+      async () => {
+        resolve({
+          url: await getDownloadURL(task.snapshot.ref),
+          path,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+        });
+      },
+    );
   });
+}
+
+export function uploadPropertyImage(propertyId, file, onProgress) {
+  const path = `properties/${propertyId}/images/${Date.now()}-${safeFileName(file.name)}`;
+  return uploadImage(path, file, onProgress);
+}
+
+export function uploadSiteImage(slotKey, file, onProgress) {
+  const path = `site-content/${slotKey}-${Date.now()}-${safeFileName(file.name)}`;
+  return uploadImage(path, file, onProgress);
 }
 
 export async function deleteStorageFile(path) {

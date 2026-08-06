@@ -1,0 +1,13 @@
+/* Ajustes publicados directamente para la interfaz administrativa actual. */
+.property-workspace__navigation a[href="#property-marketing"],
+#property-marketing {
+  display: none !important;
+}
+
+#property-commercial .property-workspace__field:has(+ .property-workspace__checks) {
+  display: none !important;
+}
+
+#property-location .property-workspace__field:has(input[placeholder="Referencia de trabajo para la administradora"]) {
+  display: none !important;
+}

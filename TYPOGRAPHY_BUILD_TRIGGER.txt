@@ -1,1 +1,1 @@
-Trigger the one-time audited typography build.
+Trigger the one-time audited typography build after enabling the push workflow.

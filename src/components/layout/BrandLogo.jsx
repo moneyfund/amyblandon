@@ -9,23 +9,18 @@ export default function BrandLogo({ to = '/', className = '', image = false }) {
     const logoSrc = images.brandLogo || defaultBrandLogo;
     return (
       <Link to={to} className={`brand-logo brand-logo--image ${className}`} aria-label="Amy Blandon, inicio">
-        <span className="brand-logo__graphic" aria-hidden="true">
+        <span className="brand-logo__mark" aria-hidden="true">
           <img
-            className="brand-logo__image brand-logo__image--base"
-            src={logoSrc}
-            alt=""
-            loading="eager"
-            decoding="async"
-          />
-          <img
-            className="brand-logo__image brand-logo__image--dark-tagline"
+            className="brand-logo__image"
             src={logoSrc}
             alt=""
             loading="eager"
             decoding="async"
           />
         </span>
-        <span className="sr-only">Amy Blandon — Asesora Inmobiliaria | Seguros | Inversiones</span>
+        <span className="brand-logo__tagline brand-logo__tagline--image">
+          Asesora Inmobiliaria | Seguros | Inversiones
+        </span>
       </Link>
     );
   }

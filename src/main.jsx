@@ -7,6 +7,7 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import AppRoutes from './routes/AppRoutes';
 import './styles/global.css';
 import './styles/reference-typography.css';
+import './styles/reference-cards-footer.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

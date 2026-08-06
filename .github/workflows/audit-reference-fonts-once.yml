@@ -1,9 +1,12 @@
 name: Audit Amy reference typography once
 
 on:
-  push:
+  pull_request:
     branches:
-      - audit/amy-reference-fonts-20260805
+      - main
+    types:
+      - opened
+      - synchronize
 
 permissions:
   contents: read
@@ -16,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: audit/amy-reference-fonts-20260805
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -28,7 +33,6 @@ jobs:
       - name: Inspect computed typography on amyblandon.com
         shell: bash
         run: |
-          # This audit reads the live reference site and prints computed typography.
           cat > /tmp/audit-fonts.mjs <<'NODE'
           import puppeteer from 'puppeteer-core';
           import fs from 'node:fs';

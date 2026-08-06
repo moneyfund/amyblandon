@@ -70,6 +70,7 @@ const contentSections = {
     'strategicLabel',
   ],
   about: ['title', 'subtitle', 'biography', 'mission', 'values'],
+  realEstate: ['heroEyebrow', 'heroTitle', 'heroText', 'ctaTitle', 'ctaText'],
   contact: ['phone', 'whatsapp', 'email', 'address', 'schedule', 'facebook', 'instagram', 'tiktok'],
 };
 

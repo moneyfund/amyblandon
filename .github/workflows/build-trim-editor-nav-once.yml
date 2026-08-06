@@ -1,46 +1,32 @@
 name: Build trim editor and navigation once
 
 on:
-  pull_request:
+  push:
     branches:
       - main
-    types:
-      - opened
-      - synchronize
 
 permissions:
   contents: write
 
 jobs:
   build:
+    if: "!contains(github.event.head_commit.message, '[pages-build]')"
     runs-on: ubuntu-latest
     timeout-minutes: 25
 
     steps:
-      - name: Checkout implementation branch
+      - name: Checkout main
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: feature/trim-editor-reorder-nav-20260806
-
-      - name: Skip generated build commit
-        id: guard
-        shell: bash
-        run: |
-          if git log -1 --pretty=%B | grep -Fq '[pages-build]'; then
-            echo 'skip=true' >> "$GITHUB_OUTPUT"
-          else
-            echo 'skip=false' >> "$GITHUB_OUTPUT"
-          fi
+          ref: main
 
       - name: Set up Node.js
-        if: steps.guard.outputs.skip != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
       - name: Install dependencies
-        if: steps.guard.outputs.skip != 'true'
         shell: bash
         run: |
           set -e
@@ -50,7 +36,6 @@ jobs:
           fi
 
       - name: Lint and build
-        if: steps.guard.outputs.skip != 'true'
         shell: bash
         run: |
           set -e
@@ -68,7 +53,6 @@ jobs:
           grep -q 'property-workspace__checks' src/styles/property-workspace-simplified.css
 
       - name: Commit generated GitHub Pages build
-        if: steps.guard.outputs.skip != 'true'
         shell: bash
         run: |
           set -e
@@ -79,4 +63,4 @@ jobs:
             exit 0
           fi
           git commit -m '[pages-build] Aplicar simplificación del editor y navegación'
-          git push origin HEAD:feature/trim-editor-reorder-nav-20260806
+          git push origin HEAD:main

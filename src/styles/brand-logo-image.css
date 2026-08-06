@@ -1,0 +1,7 @@
+.public-navbar .brand-logo--image{width:320px;min-width:320px;max-width:320px;display:inline-flex;align-items:center;justify-content:flex-start;line-height:0;text-align:left}
+.public-navbar .brand-logo__image{display:block;width:100%;height:auto;max-height:64px;object-fit:contain;object-position:left center}
+.public-navbar--scrolled .brand-logo--image{transform:scale(.92);transform-origin:left center}
+@media(max-width:1180px){.public-navbar .brand-logo--image{width:285px;min-width:285px;max-width:285px}.public-navbar .brand-logo__image{max-height:58px}}
+@media(max-width:820px){.public-navbar .brand-logo--image{width:230px;min-width:230px;max-width:230px}.public-navbar .brand-logo__image{max-height:48px}.public-navbar--scrolled .brand-logo--image{transform:none}}
+@media(max-width:480px){.public-navbar .brand-logo--image{width:min(220px,64vw);min-width:0;max-width:220px}.public-navbar .brand-logo__image{max-height:44px}}
+@media(max-width:370px){.public-navbar .brand-logo--image{width:min(198px,62vw);max-width:198px}.public-navbar .brand-logo__image{max-height:40px}}

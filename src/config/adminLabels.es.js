@@ -1,16 +1,20 @@
 export const propertyTypeOptions = [
   ['house', 'Casa'],
   ['apartment', 'Apartamento'],
+  ['condo', 'Condominio'],
+  ['villa', 'Villa'],
+  ['quinta', 'Quinta'],
+  ['beach_house', 'Casa cerca del mar'],
   ['land', 'Terreno'],
   ['lot', 'Solar'],
   ['farm', 'Finca'],
-  ['villa', 'Villa'],
   ['commercial', 'Local comercial'],
   ['warehouse', 'Bodega'],
   ['building', 'Edificio'],
   ['office', 'Oficina'],
   ['hotel', 'Hotel'],
-  ['condo', 'Condominio'],
+  ['investment', 'Proyecto de inversión'],
+  ['other', 'Otro tipo de propiedad'],
 ];
 
 export const operationTypeOptions = [

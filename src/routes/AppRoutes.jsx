@@ -7,9 +7,9 @@ import {
   Dashboard,
   AdminProperties,
   InquiriesAdmin,
-  PropertyEditor,
   SettingsAdmin,
 } from '../pages/admin/AdminPages';
+import PropertyWorkspace from '../pages/admin/PropertyWorkspace';
 import ImagesAdmin from '../pages/admin/ImagesAdmin';
 import AdminLogin from '../pages/admin/AdminLogin';
 import { ComingSoon, Unauthorized } from '../pages/admin/AdminUtilityPages';
@@ -54,14 +54,12 @@ export default function AppRoutes() {
         <Route path="admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="properties" element={<AdminProperties />} />
-          <Route path="properties/new" element={<PropertyEditor />} />
-          <Route path="properties/:id/edit" element={<PropertyEditor />} />
+          <Route path="properties/new" element={<PropertyWorkspace />} />
+          <Route path="properties/:id/edit" element={<PropertyWorkspace />} />
           <Route path="content" element={<ContentAdmin />} />
           <Route path="images" element={<ImagesAdmin />} />
           <Route path="inquiries" element={<InquiriesAdmin />} />
           <Route path="settings" element={<SettingsAdmin />} />
-          <Route path="clients" element={<ComingSoon title="Gestión de clientes" />} />
-          <Route path="property-leads" element={<ComingSoon title="Captación de propiedades" />} />
           <Route path="valuations" element={<ComingSoon title="Avalúos de propiedades" />} />
         </Route>
       </Route>

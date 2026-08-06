@@ -1,0 +1,55 @@
+/* Corrección final de proximidad visual del hero frente a amyblandon.com.
+   Amplía el título y la persona únicamente en escritorio. */
+@media (min-width: 1451px) {
+  .home-hero h1 {
+    max-width: 690px;
+    font-size: clamp(76px, 5.05vw, 88px);
+    line-height: 1.14;
+    letter-spacing: -0.025em;
+  }
+
+  .home-hero__copy {
+    padding-right: clamp(38px, 4.2vw, 78px);
+  }
+
+  .home-hero__copy > p:not(.home-kicker) {
+    max-width: 650px;
+  }
+
+  .home-hero__person {
+    left: -24%;
+    bottom: -8%;
+    width: 98%;
+    height: 110%;
+    transform: scale(1.2);
+    transform-origin: left bottom;
+  }
+}
+
+@media (min-width: 1081px) and (max-width: 1450px) {
+  .home-hero h1 {
+    max-width: 610px;
+    font-size: clamp(64px, 5vw, 74px);
+    line-height: 1.16;
+    letter-spacing: -0.022em;
+  }
+
+  .home-hero__copy {
+    padding-right: 40px;
+  }
+
+  .home-hero__person {
+    left: -27%;
+    bottom: -8%;
+    width: 104%;
+    height: 108%;
+    transform: scale(1.16);
+    transform-origin: left bottom;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero__person {
+    transition: none;
+  }
+}

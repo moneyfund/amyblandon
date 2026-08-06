@@ -21,7 +21,7 @@ export const homePageContent = {
   ],
   hero: {
     eyebrow: 'Estrategia – Experiencia – Resultados',
-    titleLines: ['Tu próxima inversión, comienza con', 'una buena decisión'],
+    titleLines: ['Tu próxima', 'inversión,', 'comienza con', 'una buena', 'decisión'],
     plainTitle: 'Tu próxima inversión, comienza con una buena decisión',
     text: 'Te acompaño a tomar decisiones inteligentes que te permitan proteger, construir y multiplicar tu patrimonio con seguridad y visión de futuro',
     button: 'Ir a WhatsApp'

@@ -2,8 +2,16 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { siteImages, siteImageSlots } from '../config/siteImages';
 import { subscribeSiteImages } from '../services/siteImagesService';
 
-const CACHE_KEY = 'amy-site-images-v1';
+const CACHE_KEY = 'amy-site-images-v2';
+const LEGACY_CACHE_KEYS = ['amy-site-images-v1'];
+const BLOCKED_IMAGE_PARTS = ['photo-1560250097-0b93528c311a'];
 const managedKeys = siteImageSlots.map(({ key }) => key);
+
+function isAllowedImageUrl(value) {
+  return typeof value === 'string'
+    && Boolean(value.trim())
+    && !BLOCKED_IMAGE_PARTS.some((blockedPart) => value.includes(blockedPart));
+}
 
 function withLegacyAliases(images) {
   return {
@@ -20,6 +28,11 @@ function emptyManagedImages() {
   }, {});
 }
 
+function clearLegacyCaches() {
+  if (typeof window === 'undefined') return;
+  LEGACY_CACHE_KEYS.forEach((key) => window.localStorage.removeItem(key));
+}
+
 function initialImages() {
   const base = withLegacyAliases({
     ...siteImages,
@@ -29,9 +42,10 @@ function initialImages() {
   if (typeof window === 'undefined') return base;
 
   try {
+    clearLegacyCaches();
     const cached = JSON.parse(window.localStorage.getItem(CACHE_KEY) || '{}');
     const validCachedImages = Object.fromEntries(
-      Object.entries(cached).filter(([, value]) => typeof value === 'string' && value.trim()),
+      Object.entries(cached).filter(([, value]) => isAllowedImageUrl(value)),
     );
     return withLegacyAliases({ ...base, ...validCachedImages });
   } catch {
@@ -42,14 +56,17 @@ function initialImages() {
 function cacheImages(images) {
   if (typeof window === 'undefined') return;
   try {
-    window.localStorage.setItem(CACHE_KEY, JSON.stringify(images));
+    const safeImages = Object.fromEntries(
+      Object.entries(images).filter(([, value]) => !value || isAllowedImageUrl(value)),
+    );
+    window.localStorage.setItem(CACHE_KEY, JSON.stringify(safeImages));
   } catch {
     // La web debe seguir funcionando aunque el navegador bloquee localStorage.
   }
 }
 
 function hasManagedImage(images) {
-  return managedKeys.some((key) => Boolean(images[key]));
+  return managedKeys.some((key) => isAllowedImageUrl(images[key]));
 }
 
 const SiteImagesContext = createContext({ images: initialImages(), loading: true });
@@ -59,9 +76,14 @@ export function SiteImagesProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    clearLegacyCaches();
+
     const unsubscribe = subscribeSiteImages(
       (nextImages) => {
-        const resolvedImages = withLegacyAliases({ ...siteImages, ...nextImages });
+        const sanitizedImages = Object.fromEntries(
+          Object.entries(nextImages).map(([key, value]) => [key, isAllowedImageUrl(value) ? value : '']),
+        );
+        const resolvedImages = withLegacyAliases({ ...siteImages, ...sanitizedImages });
         setImages(resolvedImages);
         cacheImages(resolvedImages);
         setLoading(false);

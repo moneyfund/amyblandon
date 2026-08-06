@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -64,3 +64,39 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  report:
+    if: always()
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - deploy
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Record deployment result
+        env:
+          BUILD_RESULT: ${{ needs.build.result }}
+          DEPLOY_RESULT: ${{ needs.deploy.result }}
+          DEPLOYED_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          mkdir -p .github
+          {
+            echo "sha=${DEPLOYED_SHA}"
+            echo "build=${BUILD_RESULT}"
+            echo "deploy=${DEPLOY_RESULT}"
+            echo "run_id=${RUN_ID}"
+            echo "recorded_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          } > .github/last-pages-deploy.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/last-pages-deploy.txt
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "chore: registrar resultado del despliegue de Pages"
+          git push origin HEAD:main

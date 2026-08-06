@@ -28,6 +28,7 @@ jobs:
       - name: Inspect computed typography on amyblandon.com
         shell: bash
         run: |
+          # This audit reads the live reference site and prints computed typography.
           cat > /tmp/audit-fonts.mjs <<'NODE'
           import puppeteer from 'puppeteer-core';
           import fs from 'node:fs';

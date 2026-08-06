@@ -36,7 +36,7 @@ export default function Navbar() {
 
   return <header ref={headerRef} className={`public-navbar ${scrolled ? 'public-navbar--scrolled' : ''} ${open ? 'public-navbar--open' : ''}`}>
     <div className="public-navbar__inner">
-      <BrandLogo />
+      <BrandLogo image />
       <nav id="public-menu" className={`public-navbar__menu ${open ? 'is-open' : ''}`} aria-label="Navegación principal">
         {homePageContent.nav.map(item => <NavLink key={item.to} to={item.to} end={item.to === '/'} onClick={() => setOpen(false)}>{item.label}</NavLink>)}
         <a className="public-navbar__phone" href={whatsappLink(amyContact.whatsappMessage, amyContact.phone)} onClick={() => setOpen(false)}>

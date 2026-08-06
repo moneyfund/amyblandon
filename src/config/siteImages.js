@@ -1,4 +1,7 @@
+import { defaultBrandLogo } from '../content/defaultBrandLogo';
+
 export const siteImages = {
+  brandLogo: defaultBrandLogo,
   heroBackground: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=85',
   // No se usa una persona predeterminada: Firebase debe proporcionar la imagen real del hero.
   heroPerson: '',
@@ -16,6 +19,14 @@ siteImages.hero = siteImages.heroPerson;
 siteImages.aboutAmy = siteImages.aboutHome;
 
 export const siteImageSlots = [
+  {
+    key: 'brandLogo',
+    label: 'Logo principal',
+    shortLabel: 'Logo del navbar',
+    description: 'Logo gráfico utilizado en la esquina superior izquierda de la navegación pública.',
+    recommendation: 'PNG o WEBP con fondo transparente y formato horizontal. Recomendado: 1000 × 200 px aproximadamente.',
+    preview: 'transparent',
+  },
   {
     key: 'realEstateHero',
     label: 'Hero Bienes Raíces',

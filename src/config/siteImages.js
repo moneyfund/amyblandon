@@ -5,6 +5,7 @@ export const siteImages = {
   aboutHome: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1000&q=85',
   aboutPage: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1000&q=85',
   strategicBanner: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=85',
+  realEstateHero: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=85',
   propertyOne: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1000&q=80',
   propertyTwo: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80',
   propertyThree: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=80',
@@ -15,6 +16,14 @@ siteImages.hero = siteImages.heroPerson;
 siteImages.aboutAmy = siteImages.aboutHome;
 
 export const siteImageSlots = [
+  {
+    key: 'realEstateHero',
+    label: 'Hero Bienes Raíces',
+    shortLabel: 'Hero inmobiliario',
+    description: 'Fotografía principal de Amy para la portada de la sección de Bienes Raíces.',
+    recommendation: 'JPG, PNG o WEBP vertical. Recomendado: 1200 × 1500 px o superior.',
+    preview: 'portrait',
+  },
   {
     key: 'heroBackground',
     label: 'Portada Hero 1 — Fondo',

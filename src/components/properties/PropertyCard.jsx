@@ -2,6 +2,7 @@ import { Bath, BedDouble, Car, Heart, MapPin, Ruler, Share2, Waves } from 'lucid
 import { Link, useLocation } from 'react-router-dom';
 import { money } from '../../utils/format';
 import { useFavorites } from '../../hooks/useFavorites';
+import { labelFor, operationTypeOptions, propertyTypeOptions } from '../../config/adminLabels.es';
 
 const hasValue = (value) => value !== undefined && value !== null && value !== '' && Number(value) !== 0;
 const imageUrl = (image) => typeof image === 'string' ? image : image?.url || '';
@@ -50,6 +51,10 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
       data-current-path={location.pathname}
     >
       <Link to={detailPath} className="property-image" aria-label={`Ver ${p.title || 'propiedad'}`}>
+        <span className="property-card__badges">
+          <span className="property-card__badge">{labelFor(operationTypeOptions, p.operationType || p.transactionType, 'Disponible')}</span>
+          {p.featured && <span className="property-card__badge property-card__badge--featured">Destacada</span>}
+        </span>
         {coverImage ? (
           <img src={coverImage} alt={p.title || 'Propiedad'} />
         ) : (
@@ -65,11 +70,12 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
             {p.address || p.publicAddress || [p.city, p.state].filter(Boolean).join(', ')}
           </p>
         )}
-        {features.length > 0 && (
+        {(features.length > 0 || p.propertyType) && (
           <div className="property-features">
             {features.map(({ icon: Icon, value, label }) => (
-              <span key={label}><Icon size={16} /><b>{value}</b>{label}</span>
+              <span key={label}><Icon size={16} /><b>{value}{label === 'Área total' ? ' m²' : ''}</b>{label}</span>
             ))}
+            {p.propertyType && <span><b>{labelFor(propertyTypeOptions, p.propertyType)}</b></span>}
           </div>
         )}
         <div className="property-actions">

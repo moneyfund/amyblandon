@@ -20,7 +20,7 @@ import MapView from '../pages/public/MapView';
 import Insurance from '../pages/public/Insurance';
 import InsuranceQuote from '../pages/public/InsuranceQuote';
 import SellWithAmy from '../pages/public/SellWithAmy';
-import { RealEstate, Resources, Article, Contact, NotFound } from '../pages/public/BasicPages';
+import { Resources, Article, Contact, NotFound } from '../pages/public/BasicPages';
 import About from '../pages/public/About';
 
 export default function AppRoutes() {
@@ -36,7 +36,8 @@ export default function AppRoutes() {
         <Route path="properties" element={<Navigate to="/propiedades" replace />} />
         <Route path="properties/:slug" element={<PropertyDetail />} />
         <Route path="map" element={<MapView />} />
-        <Route path="real-estate" element={<RealEstate />} />
+        <Route path="real-estate" element={<Properties />} />
+        <Route path="bienes-raices" element={<Properties />} />
         <Route path="sell-with-amy" element={<SellWithAmy />} />
         <Route path="seguros" element={<Insurance />} />
         <Route path="insurance" element={<Navigate to="/seguros" replace />} />

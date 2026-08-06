@@ -50,6 +50,7 @@ export const inquiryStatusLabels = {
 export const contentSectionLabels = {
   home: 'Página de inicio',
   about: 'Sobre mí',
+  realEstate: 'Bienes raíces',
   contact: 'Contacto',
 };
 
@@ -57,6 +58,10 @@ export const contentFieldLabels = {
   heroTitle: 'Título principal del hero',
   heroSubtitle: 'Texto descriptivo del hero',
   heroLabel: 'Etiqueta superior del hero',
+  heroEyebrow: 'Etiqueta superior del hero inmobiliario',
+  heroText: 'Texto descriptivo del hero inmobiliario',
+  ctaTitle: 'Título de la llamada a la acción final',
+  ctaText: 'Texto de la llamada a la acción final',
   aboutTitle: 'Título de la sección Sobre mí',
   aboutText: 'Texto de la sección Sobre mí',
   strategicTitle: 'Título de la franja estratégica',

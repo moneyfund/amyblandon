@@ -18,6 +18,13 @@ export const defaultSiteContent = {
     mission: 'Guiar decisiones inmobiliarias responsables.',
     values: 'Confianza, claridad, estrategia y servicio.',
   },
+  realEstate: {
+    heroEyebrow: 'SERVICIOS INMOBILIARIOS',
+    heroTitle: 'Bienes raíces con estrategia, confianza y visión',
+    heroText: 'Acompaño a compradores, vendedores e inversionistas en cada paso del proceso inmobiliario, brindando asesoría profesional, claridad en la toma de decisiones y oportunidades alineadas con sus objetivos.',
+    ctaTitle: '¿Buscas comprar, vender o invertir con respaldo profesional?',
+    ctaText: 'Conversemos sobre tu próximo paso en bienes raíces.',
+  },
   contact: {
     phone: '+505 8832 4439',
     whatsapp: '+505 8832 4439',

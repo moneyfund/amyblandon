@@ -10,6 +10,7 @@ import {
   PropertyEditor,
   SettingsAdmin,
 } from '../pages/admin/AdminPages';
+import ImagesAdmin from '../pages/admin/ImagesAdmin';
 import AdminLogin from '../pages/admin/AdminLogin';
 import { ComingSoon, Unauthorized } from '../pages/admin/AdminUtilityPages';
 import Home from '../pages/public/Home';
@@ -56,6 +57,7 @@ export default function AppRoutes() {
           <Route path="properties/new" element={<PropertyEditor />} />
           <Route path="properties/:id/edit" element={<PropertyEditor />} />
           <Route path="content" element={<ContentAdmin />} />
+          <Route path="images" element={<ImagesAdmin />} />
           <Route path="inquiries" element={<InquiriesAdmin />} />
           <Route path="settings" element={<SettingsAdmin />} />
           <Route path="clients" element={<ComingSoon title="Gestión de clientes" />} />

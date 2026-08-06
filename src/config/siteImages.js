@@ -22,9 +22,9 @@ export const siteImageSlots = [
   {
     key: 'brandLogo',
     label: 'Logo principal',
-    shortLabel: 'Logo del navbar',
-    description: 'Logo gráfico utilizado en la esquina superior izquierda de la navegación pública.',
-    recommendation: 'PNG o WEBP con fondo transparente y formato horizontal. Recomendado: 1000 × 200 px aproximadamente.',
+    shortLabel: 'Nombre AMY BLANDON',
+    description: 'Imagen utilizada únicamente para el nombre gráfico “AMY BLANDON” del navbar. El subtítulo se genera como texto desde la web y cambia de color según el fondo del navbar.',
+    recommendation: 'Sube solo “AMY BLANDON”, sin el texto inferior. PNG o WEBP con fondo transparente y formato horizontal. Recomendado: 1400 × 280 px, con el nombre ocupando casi todo el lienzo y poco margen transparente.',
     preview: 'transparent',
   },
   {

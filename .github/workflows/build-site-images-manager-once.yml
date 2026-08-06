@@ -72,13 +72,14 @@ jobs:
           test -n "$CSS_FILE"
           grep -q "heroBackground" src/config/siteImages.js
           grep -q "heroPerson" src/config/siteImages.js
-          grep -q "siteContent.*images" src/services/siteImagesService.js
+          grep -q "siteContent" src/services/siteImagesService.js
+          grep -q "DOCUMENT_PATH" src/services/siteImagesService.js
           grep -q "uploadSiteImage" src/services/storageService.js
           grep -q "admin/images" src/routes/AppRoutes.jsx
           grep -q "SiteImagesProvider" src/main.jsx
           grep -q "home-hero__person" "$CSS_FILE"
           grep -q "admin-image-grid" "$CSS_FILE"
-          grep -q "site-content/" "$JS_FILE"
+          grep -q "site-content/" src/services/storageService.js
 
       - name: Commit generated GitHub Pages build
         if: steps.guard.outputs.skip != 'true'

@@ -11,8 +11,6 @@ const links = [
   ['Contenido de la web', '/admin/content'],
   ['Imágenes', '/admin/images'],
   ['Consultas de clientes', '/admin/inquiries'],
-  ['Clientes — Próximamente', '/admin/clients'],
-  ['Captación de propiedades — Próximamente', '/admin/property-leads'],
   ['Avalúos — Próximamente', '/admin/valuations'],
   ['Configuración', '/admin/settings'],
 ];

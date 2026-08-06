@@ -1,98 +1,41 @@
-import puppeteer from 'puppeteer-core';
-import fs from 'node:fs';
-
-const executableCandidates = [
-  '/usr/bin/google-chrome',
-  '/usr/bin/google-chrome-stable',
-  '/usr/bin/chromium',
-  '/usr/bin/chromium-browser',
+const urls = [
+  'https://amyblandon.com/',
+  'https://amyblandon.com/wp-content/uploads/blocksy/css/global.css?ver=36841',
+  'https://amyblandon.com/wp-content/themes/blocksy/static/bundle/main.min.css?ver=2.1.44',
+  'https://amyblandon.com/wp-json/wp/v2/pages?per_page=100',
 ];
-const executablePath = executableCandidates.find((path) => fs.existsSync(path));
-if (!executablePath) throw new Error('No Chrome/Chromium executable found');
 
-const browser = await puppeteer.launch({
-  executablePath,
-  headless: true,
-  args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-});
+const headers = {
+  'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
+  'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,text/css;q=0.8,*/*;q=0.7',
+  'accept-language': 'es-ES,es;q=0.9,en;q=0.7',
+};
 
-const page = await browser.newPage();
-await page.setViewport({ width: 1712, height: 960, deviceScaleFactor: 1 });
-await page.goto('https://amyblandon.com/', { waitUntil: 'networkidle2', timeout: 120000 });
-await page.evaluate(() => document.fonts?.ready);
-
-const result = await page.evaluate(() => {
-  const normalize = (value) => String(value || '').replace(/\s+/g, ' ').trim();
-  const visible = (el) => {
-    if (!el) return false;
-    const s = getComputedStyle(el);
-    const r = el.getBoundingClientRect();
-    return s.display !== 'none' && s.visibility !== 'hidden' && Number(s.opacity) !== 0 && r.width > 0 && r.height > 0;
-  };
-  const describe = (el) => {
-    if (!el) return null;
-    const s = getComputedStyle(el);
-    const r = el.getBoundingClientRect();
-    return {
-      tag: el.tagName.toLowerCase(),
-      id: el.id || '',
-      className: typeof el.className === 'string' ? el.className : '',
-      text: normalize(el.innerText || el.textContent).slice(0, 220),
-      rect: { x: r.x, y: r.y, width: r.width, height: r.height },
-      display: s.display,
-      position: s.position,
-      backgroundColor: s.backgroundColor,
-      backgroundImage: s.backgroundImage,
-      color: s.color,
-      borderTop: s.borderTop,
-      borderRight: s.borderRight,
-      borderBottom: s.borderBottom,
-      borderLeft: s.borderLeft,
-      borderRadius: s.borderRadius,
-      boxShadow: s.boxShadow,
-      padding: s.padding,
-      margin: s.margin,
-      gap: s.gap,
-      justifyContent: s.justifyContent,
-      alignItems: s.alignItems,
-      textAlign: s.textAlign,
-      fontFamily: s.fontFamily,
-      fontSize: s.fontSize,
-      fontWeight: s.fontWeight,
-      lineHeight: s.lineHeight,
-    };
-  };
-  const all = [...document.querySelectorAll('body *')].filter(visible);
-  const exact = (text) => all.find((el) => normalize(el.innerText || el.textContent) === text);
-  const ancestors = (el, count = 8) => {
-    const out = [];
-    let current = el;
-    for (let i = 0; current && i < count; i += 1, current = current.parentElement) out.push(describe(current));
-    return out;
-  };
-
-  const serviceTitles = ['Bienes Raíces', 'Inversiones', 'Seguros'];
-  const services = serviceTitles.map((title) => {
-    const titleEl = exact(title);
-    return { title, titleChain: ancestors(titleEl, 10) };
-  });
-
-  const heading = exact('Para tu crecimiento financiero');
-  const footerCandidates = [...document.querySelectorAll('footer, #footer, [data-footer], [class*="footer"]')].filter(visible);
-  const footer = footerCandidates.sort((a, b) => b.getBoundingClientRect().height - a.getBoundingClientRect().height)[0];
-
-  return {
-    url: location.href,
-    heading: describe(heading),
-    headingChain: ancestors(heading, 8),
-    services,
-    footerCandidates: footerCandidates.map(describe),
-    footerChain: ancestors(footer, 8),
-    body: describe(document.body),
-    html: describe(document.documentElement),
-  };
-});
-
-console.log('=== AMY REFERENCE CARDS AND FOOTER ===');
-console.log(JSON.stringify(result, null, 2));
-await browser.close();
+for (const url of urls) {
+  try {
+    const response = await fetch(url, { headers, redirect: 'follow' });
+    const text = await response.text();
+    console.log(`=== FETCH ${url} ===`);
+    console.log(JSON.stringify({ status: response.status, finalUrl: response.url, contentType: response.headers.get('content-type'), length: text.length }));
+    console.log(text.slice(0, 600));
+    const probes = [
+      'Para tu crecimiento financiero',
+      'Bienes Raíces',
+      'gspb_text-id-gsbp-a5d0960',
+      'gspb_text-id-gsbp-bfbcf2b',
+      'footer',
+      '--theme-palette-color-4',
+      'background-color',
+    ];
+    for (const probe of probes) {
+      const index = text.indexOf(probe);
+      if (index >= 0) {
+        console.log(`--- MATCH ${probe} @ ${index} ---`);
+        console.log(text.slice(Math.max(0, index - 700), Math.min(text.length, index + 1800)));
+      }
+    }
+  } catch (error) {
+    console.log(`=== FETCH ERROR ${url} ===`);
+    console.log(String(error));
+  }
+}

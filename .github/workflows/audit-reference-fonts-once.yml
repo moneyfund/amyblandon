@@ -30,5 +30,8 @@ jobs:
       - name: Install temporary browser driver
         run: npm install --no-save --package-lock=false puppeteer-core@24
 
-      - name: Inspect computed typography on amyblandon.com
+      - name: Inspect desktop typography on amyblandon.com
         run: node ./audit-fonts.mjs
+
+      - name: Inspect mobile typography on amyblandon.com
+        run: node ./audit-fonts-mobile.mjs

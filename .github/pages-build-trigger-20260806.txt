@@ -1,1 +1,2 @@
 Compilación temporal para publicar la simplificación del editor de propiedades y el nuevo orden de navegación.
+Reintento controlado después de habilitar el evento synchronize.

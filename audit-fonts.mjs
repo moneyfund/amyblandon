@@ -47,32 +47,45 @@ const report = await page.evaluate(() => {
     };
   };
   const all = [...document.querySelectorAll('body *')].filter(visible);
-  const findExact = (text, occurrence = 0) => all.filter((el) => normalize(el.innerText || el.textContent) === text)[occurrence];
-  const findIncludes = (text, occurrence = 0) => all.filter((el) => normalize(el.innerText || el.textContent).includes(text))[occurrence];
+  const findBest = (text, exact = false, occurrence = 0) => {
+    const wanted = normalize(text).toLowerCase();
+    return all
+      .filter((el) => {
+        const value = normalize(el.innerText || el.textContent).toLowerCase();
+        return exact ? value === wanted : value.includes(wanted);
+      })
+      .sort((a, b) => {
+        const aText = normalize(a.innerText || a.textContent);
+        const bText = normalize(b.innerText || b.textContent);
+        return aText.length - bText.length || a.childElementCount - b.childElementCount || a.getBoundingClientRect().y - b.getBoundingClientRect().y;
+      })[occurrence];
+  };
 
   const targets = {
-    navigation: describe(findExact('Inicio')),
-    phoneButton: describe(findExact('+505 8832 4439')),
-    heroEyebrow: describe(findExact('Estrategia – Experiencia – Resultados')),
-    heroTitle: describe(findIncludes('Tu próxima inversión, comienza con una buena decisión')),
-    heroParagraph: describe(findIncludes('Te acompaño a tomar decisiones inteligentes que te permitan proteger')),
-    heroButton: describe(findExact('Ir a WhatsApp')),
-    servicesKicker: describe(findExact('SOLUCIONES INTEGRALES')),
-    servicesHeading: describe(findExact('Para tu crecimiento financiero')),
-    serviceTitle: describe(findExact('Bienes Raíces')),
-    serviceParagraph: describe(findIncludes('Encuentra oportunidades inmobiliarias estratégicas')),
-    aboutTitle: describe(findIncludes('ASESORA INMOBILIARIA, SEGUROS E INVERSIONES')),
-    aboutParagraph: describe(findIncludes('Mi propósito es acompañarte a tomar decisiones')),
-    strategicHeading: describe(findExact('Decisiones que hoy te dan paz, mañana te dan futuro.')),
-    propertiesHeading: describe(findExact('Featured Properties', 2) || findExact('Featured Properties')),
-    propertyPrice: describe(findExact('$800,000')),
-    propertyTitle: describe(findExact('Luxury Villa With Pool')),
-    propertyMeta: describe(findExact('Bedrooms')),
-    footerLocation: describe(findExact('Matagalpa, Nicaragua')),
-    footerQuestion: describe(findExact('Cual será tu próxima inversion?')),
-    footerSubscribe: describe(findExact('Suscribete')),
-    footerParagraph: describe(findIncludes('Sé parte de nuestra comunidad y recibe información valiosa')),
-    copyright: describe(findIncludes('Copyright © 2026')),
+    navigation: describe(findBest('Inicio', true)),
+    phoneButton: describe(findBest('+505 8832 4439', true)),
+    heroEyebrow: describe(findBest('ESTRATEGIA – EXPERIENCIA – RESULTADOS', true)),
+    heroTitle: describe(findBest('Tu próxima inversión, comienza con una buena decisión')),
+    heroParagraph: describe(findBest('Te acompaño a tomar decisiones inteligentes que te permitan proteger')),
+    heroButton: describe(findBest('Ir a WhatsApp', true)),
+    servicesKicker: describe(findBest('SOLUCIONES INTEGRALES', true)),
+    servicesHeading: describe(findBest('Para tu crecimiento financiero', true)),
+    serviceTitle: describe(findBest('Bienes Raíces', true)),
+    serviceParagraph: describe(findBest('Encuentra oportunidades inmobiliarias estratégicas')),
+    aboutLabel: describe(findBest('Sobre Mi', true, 1) || findBest('Sobre Mi', true)),
+    aboutTitle: describe(findBest('ASESORA INMOBILIARIA, SEGUROS E INVERSIONES')),
+    aboutParagraph: describe(findBest('Mi propósito es acompañarte a tomar decisiones')),
+    strategicKicker: describe(findBest('SOLUCIONES INTEGRALES', true, 1)),
+    strategicHeading: describe(findBest('Decisiones que hoy te dan paz, mañana te dan futuro.', true)),
+    propertiesHeading: describe(findBest('Featured Properties', true, 2) || findBest('Featured Properties', true)),
+    propertyPrice: describe(findBest('$800,000', true)),
+    propertyTitle: describe(findBest('Luxury Villa With Pool', true)),
+    propertyMeta: describe(findBest('Bedrooms', true)),
+    footerLocation: describe(findBest('Matagalpa, Nicaragua', true)),
+    footerQuestion: describe(findBest('Cual será tu próxima inversion?', true)),
+    footerSubscribe: describe(findBest('Suscribete', true)),
+    footerParagraph: describe(findBest('Sé parte de nuestra comunidad y recibe información valiosa')),
+    copyright: describe(findBest('Copyright © 2026')),
   };
 
   const families = new Map();

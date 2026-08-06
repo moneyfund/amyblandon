@@ -1,9 +1,12 @@
 name: Audit cards and footer once
 
 on:
-  push:
+  pull_request:
     branches:
-      - audit/cards-footer-20260805
+      - main
+    types:
+      - opened
+      - synchronize
 
 permissions:
   contents: read

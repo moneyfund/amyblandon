@@ -13,6 +13,7 @@ import './styles/site-images.css';
 import './styles/reference-hero-layout.css';
 import './styles/reference-hero-proximity.css';
 import './styles/property-workspace.css';
+import './styles/property-workspace-simplified.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

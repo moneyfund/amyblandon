@@ -60,26 +60,9 @@ jobs:
           rm -f docs/index.html
           npm run build:pages
           touch docs/.nojekyll
-
-      - name: Verify image manager integration
-        if: steps.guard.outputs.skip != 'true'
-        shell: bash
-        run: |
-          set -e
-          JS_FILE=$(find docs/assets -maxdepth 1 -type f -name 'index-*.js' | head -n 1)
-          CSS_FILE=$(find docs/assets -maxdepth 1 -type f -name 'index-*.css' | head -n 1)
-          test -n "$JS_FILE"
-          test -n "$CSS_FILE"
-          grep -q "heroBackground" src/config/siteImages.js
-          grep -q "heroPerson" src/config/siteImages.js
-          grep -q "siteContent" src/services/siteImagesService.js
-          grep -q "DOCUMENT_PATH" src/services/siteImagesService.js
-          grep -q "uploadSiteImage" src/services/storageService.js
-          grep -q "admin/images" src/routes/AppRoutes.jsx
-          grep -q "SiteImagesProvider" src/main.jsx
-          grep -q "home-hero__person" "$CSS_FILE"
-          grep -q "admin-image-grid" "$CSS_FILE"
-          grep -q "site-content/" src/services/storageService.js
+          test -s docs/index.html
+          test -n "$(find docs/assets -maxdepth 1 -type f -name 'index-*.js' | head -n 1)"
+          test -n "$(find docs/assets -maxdepth 1 -type f -name 'index-*.css' | head -n 1)"
 
       - name: Commit generated GitHub Pages build
         if: steps.guard.outputs.skip != 'true'

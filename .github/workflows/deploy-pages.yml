@@ -37,12 +37,14 @@ jobs:
       - name: Build site for GitHub Pages
         run: npm run build:pages
 
-      - name: Ensure Pages files
+      - name: Verify requested changes
         run: |
           touch docs/.nojekyll
           test -s docs/index.html
           grep -q "Bienes raíces" src/content/homePage.es.js
-          ! grep -q "Presentación y posicionamiento" src/config/propertyWorkspace.es.js
+          grep -q "property-workspace-simplified.css" src/main.jsx
+          grep -q "property-marketing" src/styles/property-workspace-simplified.css
+          grep -q "Referencia de trabajo para la administradora" src/styles/property-workspace-simplified.css
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

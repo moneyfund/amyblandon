@@ -19,24 +19,31 @@ const contentSections = {
 
 const contactGroups = [
   {
-    id: 'general',
+    id: 'shared',
     eyebrow: 'GENERAL',
-    title: 'Contacto y redes del footer',
-    text: 'Estos datos son generales para toda la web. El teléfono y WhatsApp se comparten entre ambos rubros. Las redes de este bloque son únicamente las que aparecerán en el footer general.',
-    fields: ['phone', 'whatsapp', 'email', 'address', 'schedule', 'facebook', 'instagram', 'tiktok'],
+    title: 'Contacto compartido',
+    text: 'Estos datos se comparten entre Bienes Raíces y Seguros. El mismo teléfono y WhatsApp se usan en ambos rubros.',
+    fields: ['phone', 'whatsapp', 'address', 'schedule'],
+  },
+  {
+    id: 'footer',
+    eyebrow: 'FOOTER',
+    title: 'Redes generales del footer',
+    text: 'Estas son las cuentas generales que aparecerán en el footer de toda la web. Amy puede elegir aquí las redes que considere más importantes, sin afectar las redes específicas de cada rubro.',
+    fields: ['email', 'facebook', 'instagram', 'tiktok'],
   },
   {
     id: 'real-estate',
     eyebrow: 'BR',
     title: 'Redes de Bienes Raíces',
-    text: 'Estos enlaces aparecerán exclusivamente en la sección pública de Bienes Raíces y no modificarán las redes del footer.',
+    text: 'Estos enlaces aparecerán exclusivamente dentro de la página pública de Bienes Raíces, en una sección dedicada a este rubro.',
     fields: ['realEstateEmail', 'realEstateFacebook', 'realEstateInstagram', 'realEstateTiktok'],
   },
   {
     id: 'insurance',
     eyebrow: 'SEGUROS',
     title: 'Redes de Seguros',
-    text: 'Estos enlaces aparecerán exclusivamente en la sección pública de Seguros y no modificarán las redes del footer.',
+    text: 'Estos enlaces aparecerán exclusivamente dentro de la página pública de Seguros, completamente separados de las redes de Bienes Raíces.',
     fields: ['insuranceEmail', 'insuranceFacebook', 'insuranceInstagram', 'insuranceTiktok'],
   },
 ];
@@ -76,8 +83,9 @@ function ContactField({ field, value, onChange }) {
         />
       )}
       {isUrl && <small className="admin-help">Pega el enlace completo del perfil, incluyendo https://</small>}
-      {field === 'email' && <small className="admin-help">Correo general. También puede usarse en el footer y contacto principal.</small>}
+      {field === 'email' && <small className="admin-help">Este correo pertenece al contacto general y al footer.</small>}
       {field === 'phone' && <small className="admin-help">Teléfono compartido para Bienes Raíces y Seguros.</small>}
+      {field === 'whatsapp' && <small className="admin-help">WhatsApp compartido para ambos rubros.</small>}
     </label>
   );
 }
@@ -120,7 +128,7 @@ export default function ContentAdminV2() {
         <div>
           <p className="admin-eyebrow">Web pública</p>
           <h1>Editar contenido de la web</h1>
-          <p>Administra textos, datos de contacto y redes de cada rubro desde un solo lugar.</p>
+          <p>Administra textos, contacto general y redes específicas de cada rubro desde un solo lugar.</p>
         </div>
       </div>
 

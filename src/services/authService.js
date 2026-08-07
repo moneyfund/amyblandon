@@ -1,7 +1,7 @@
 import { GoogleAuthProvider, browserLocalPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { auth, db, firebaseEnabled } from '../firebase/firebase';
-import { isBootstrapAdminEmail, normalizeEmail, primaryBootstrapAdminEmail } from '../config/adminConfig';
+import { isBootstrapAdminEmail, normalizeEmail } from '../config/adminConfig';
 
 const authMessages = {
   'auth/invalid-credential': 'El correo o la contraseña no son correctos.',
@@ -38,12 +38,18 @@ export const listenAuth = (cb) => {
   return onAuthStateChanged(auth, cb);
 };
 
+function bootstrapDisplayName(user) {
+  if (user?.displayName) return user.displayName;
+  return normalizeEmail(user?.email) === 'amyblandon171@gmail.com' ? 'Amy Blandón' : 'Norvin García';
+}
+
 export async function ensureBootstrapAdminDocument(user) {
-  if (!firebaseEnabled || !user?.uid || normalizeEmail(user.email) !== primaryBootstrapAdminEmail) return { ok: false, reason: 'not-bootstrap' };
+  if (!firebaseEnabled || !user?.uid || !isBootstrapAdminEmail(user.email)) return { ok: false, reason: 'not-bootstrap' };
   try {
+    const email = normalizeEmail(user.email);
     const ref = doc(db, 'users', user.uid);
     const snap = await getDoc(ref);
-    const base = { name: user.displayName || 'Norvin García', email: primaryBootstrapAdminEmail, role: 'admin', active: true, updatedAt: serverTimestamp() };
+    const base = { name: bootstrapDisplayName(user), email, role: 'admin', active: true, updatedAt: serverTimestamp() };
     await setDoc(ref, snap.exists() ? base : { ...base, createdAt: serverTimestamp() }, { merge: true });
     return { ok: true, reason: snap.exists() ? 'updated' : 'created' };
   } catch (error) {
@@ -57,9 +63,10 @@ export async function getAdminAccess(user) {
   if (!firebaseEnabled) return { allowed: false, source: 'none', reason: 'firebase-disabled', profile: null };
 
   const bootstrapAdmin = isBootstrapAdminEmail(user.email);
+  const normalizedUserEmail = normalizeEmail(user.email);
   const userRef = doc(db, 'users', user.uid);
 
-  // El administrador bootstrap se valida primero por la cuenta autenticada.
+  // Los administradores bootstrap se validan primero por la cuenta autenticada.
   // Esto evita que unas reglas de Firestore todavía no publicadas bloqueen el acceso inicial al panel.
   if (bootstrapAdmin) {
     let profile = null;
@@ -76,7 +83,7 @@ export async function getAdminAccess(user) {
           return { allowed: true, source: 'firestore', reason: 'admin-document', profile };
         }
 
-        // Un documento existente permite revocar expresamente incluso al correo bootstrap.
+        // Un documento existente permite revocar expresamente incluso a un correo bootstrap.
         if (explicitlyRevoked) {
           return { allowed: false, source: 'none', reason: 'inactive-or-not-admin', profile };
         }
@@ -88,7 +95,7 @@ export async function getAdminAccess(user) {
 
     let legacyProfile = null;
     try {
-      const legacyRef = doc(db, 'users', primaryBootstrapAdminEmail);
+      const legacyRef = doc(db, 'users', normalizedUserEmail);
       const legacySnap = await getDoc(legacyRef);
       if (legacySnap.exists()) legacyProfile = { id: legacySnap.id, ...legacySnap.data(), usesEmailDocumentId: true };
     } catch (legacyError) {
@@ -106,8 +113,8 @@ export async function getAdminAccess(user) {
           : write.reason),
       profile: profile || legacyProfile || {
         id: user.uid,
-        name: user.displayName || 'Norvin García',
-        email: normalizeEmail(user.email),
+        name: bootstrapDisplayName(user),
+        email: normalizedUserEmail,
         role: 'admin',
         active: true,
         temporaryBootstrap: true,

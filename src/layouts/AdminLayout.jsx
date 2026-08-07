@@ -9,7 +9,6 @@ const links = [
   ['Panel principal', '/admin'],
   ['Propiedades', '/admin/properties'],
   ['Contenido de la web', '/admin/content'],
-  ['Contacto y redes', '/admin/contact'],
   ['Imágenes', '/admin/images'],
   ['Consultas de clientes', '/admin/inquiries'],
   ['Avalúos — Próximamente', '/admin/valuations'],

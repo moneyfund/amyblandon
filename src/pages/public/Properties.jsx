@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import PropertyCard from '../../components/properties/PropertyCard';
 import RevealOnScroll from '../../components/common/RevealOnScroll';
+import SectorSocialSection from '../../components/common/SectorSocialSection';
 import SEO from '../../components/common/SEO';
 import { useSiteImages } from '../../contexts/SiteImagesContext';
 import { propertyTypeOptions } from '../../config/adminLabels.es';
@@ -98,6 +99,8 @@ export default function Properties() {
         <div className="re-services__grid">{services.map(({ icon: Icon, title, text }, index) => <RevealOnScroll as="article" className="re-service" key={title} delay={index * 70}><span className="re-service__icon"><Icon /></span><h3>{title}</h3><p>{text}</p><span className="re-service__line" /></RevealOnScroll>)}</div>
       </div>
     </section>
+
+    <SectorSocialSection sector="realEstate" />
 
     <section className="re-section re-catalog" id="propiedades">
       <div className="re-shell">

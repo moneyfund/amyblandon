@@ -18,6 +18,7 @@ import Properties from '../pages/public/Properties';
 import PropertyDetail from '../pages/public/PropertyDetail';
 import MapView from '../pages/public/MapView';
 import Insurance from '../pages/public/Insurance';
+import InsuranceCoverageDetail from '../pages/public/InsuranceCoverageDetail';
 import InsuranceQuote from '../pages/public/InsuranceQuote';
 import SellWithAmy from '../pages/public/SellWithAmy';
 import { Resources, Article, Contact, NotFound } from '../pages/public/BasicPages';
@@ -40,6 +41,7 @@ export default function AppRoutes() {
         <Route path="bienes-raices" element={<Properties />} />
         <Route path="sell-with-amy" element={<SellWithAmy />} />
         <Route path="seguros" element={<Insurance />} />
+        <Route path="seguros/:slug" element={<InsuranceCoverageDetail />} />
         <Route path="insurance" element={<Navigate to="/seguros" replace />} />
         <Route path="insurance/quote" element={<InsuranceQuote />} />
         <Route path="sobre-mi" element={<About />} />

@@ -1,0 +1,9 @@
+.insurance-coverage-card--link{display:flex;flex-direction:column;color:inherit;text-decoration:none;cursor:pointer}
+.insurance-coverage-card--link:focus-visible{outline:3px solid rgba(201,154,68,.38);outline-offset:4px}
+.insurance-coverage-card--link small{margin-bottom:18px}
+.insurance-coverage-card__cta{display:inline-flex;align-items:center;gap:7px;width:max-content;margin-top:auto;padding-top:15px;border-top:1px solid #edf1f2;color:var(--ins-deep);font-size:12px;font-weight:800;letter-spacing:.035em;transition:color .22s ease,gap .22s ease,border-color .22s ease}
+.insurance-coverage-card__cta svg{color:var(--ins-gold);transition:transform .22s ease}
+.insurance-coverage-card--link:hover .insurance-coverage-card__cta{color:#8a641f;gap:10px;border-color:rgba(201,154,68,.32)}
+.insurance-coverage-card--link:hover .insurance-coverage-card__cta svg{transform:translateX(3px)}
+@media(max-width:600px){.insurance-coverage-card__cta{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.insurance-coverage-card__cta,.insurance-coverage-card__cta svg{transition:none!important}}

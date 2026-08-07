@@ -2,63 +2,19 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   BadgeCheck,
-  BriefcaseBusiness,
-  Car,
   Check,
   FileSearch,
   Handshake,
-  HeartPulse,
-  Home,
   PhoneCall,
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
-  Umbrella,
-  UsersRound,
 } from 'lucide-react';
 import RevealOnScroll from '../../components/common/RevealOnScroll';
 import SectorSocialSection from '../../components/common/SectorSocialSection';
 import SEO from '../../components/common/SEO';
+import { insuranceCoverages } from '../../config/insuranceCoverages';
 import { useSiteImages } from '../../contexts/SiteImagesContext';
-
-const coverageOptions = [
-  {
-    icon: HeartPulse,
-    title: 'Vida y salud',
-    text: 'Protección pensada para cuidar tu estabilidad y la de quienes dependen de ti ante situaciones inesperadas.',
-    note: 'Bienestar · Respaldo familiar',
-  },
-  {
-    icon: Home,
-    title: 'Hogar y patrimonio',
-    text: 'Coberturas orientadas a proteger tu vivienda, bienes y patrimonio frente a riesgos que pueden afectar tu tranquilidad.',
-    note: 'Vivienda · Bienes',
-  },
-  {
-    icon: Car,
-    title: 'Vehículos',
-    text: 'Alternativas para proteger tu vehículo y contar con respaldo ante accidentes, daños o responsabilidades frente a terceros.',
-    note: 'Auto · Responsabilidad',
-  },
-  {
-    icon: BriefcaseBusiness,
-    title: 'Negocios',
-    text: 'Soluciones para empresas, oficinas y actividades comerciales que necesitan continuidad y protección frente a riesgos operativos.',
-    note: 'Empresa · Continuidad',
-  },
-  {
-    icon: UsersRound,
-    title: 'Familia',
-    text: 'Opciones de protección diseñadas para acompañar las distintas etapas de tu familia y ayudarte a planificar con mayor seguridad.',
-    note: 'Familia · Previsión',
-  },
-  {
-    icon: Umbrella,
-    title: 'Protección integral',
-    text: 'Evaluamos tus prioridades para construir una combinación de coberturas coherente con tu realidad, patrimonio y objetivos.',
-    note: 'Asesoría · Estrategia',
-  },
-];
 
 const process = [
   { icon: PhoneCall, number: '01', title: 'Conocemos tu necesidad', text: 'Conversamos sobre lo que quieres proteger, tus prioridades y el nivel de respaldo que necesitas.' },
@@ -130,17 +86,25 @@ export default function Insurance() {
           <RevealOnScroll className="insurance-heading insurance-heading--center">
             <p className="insurance-eyebrow">SOLUCIONES DE PROTECCIÓN</p>
             <h2>Coberturas para distintas áreas de tu vida</h2>
-            <p>Analizamos cada necesidad de forma individual para construir una protección coherente, comprensible y útil.</p>
+            <p>Analizamos cada necesidad de forma individual para construir una protección coherente, comprensible y útil. Toca una opción para conocerla en detalle.</p>
           </RevealOnScroll>
 
           <div className="insurance-coverages__grid">
-            {coverageOptions.map(({ icon: Icon, title, text, note }, index) => (
-              <RevealOnScroll as="article" className="insurance-coverage-card" key={title} delay={index * 55}>
+            {insuranceCoverages.map(({ icon: Icon, slug, index, title, shortText, note }, cardIndex) => (
+              <RevealOnScroll
+                as={Link}
+                to={`/seguros/${slug}`}
+                className="insurance-coverage-card insurance-coverage-card--link"
+                key={slug}
+                delay={cardIndex * 55}
+                aria-label={`Conocer cobertura de ${title}`}
+              >
                 <span className="insurance-coverage-card__icon"><Icon /></span>
-                <span className="insurance-coverage-card__index">0{index + 1}</span>
+                <span className="insurance-coverage-card__index">{index}</span>
                 <h3>{title}</h3>
-                <p>{text}</p>
+                <p>{shortText}</p>
                 <small>{note}</small>
+                <span className="insurance-coverage-card__cta">Conocer cobertura <ArrowRight size={15} /></span>
               </RevealOnScroll>
             ))}
           </div>

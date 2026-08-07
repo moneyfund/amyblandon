@@ -3,12 +3,12 @@ import ProtectedAdminRoute from '../components/admin/ProtectedAdminRoute';
 import AdminLayout from '../layouts/AdminLayout';
 import PublicLayout from '../layouts/PublicLayout';
 import {
-  ContentAdmin,
   Dashboard,
   AdminProperties,
   InquiriesAdmin,
   SettingsAdmin,
 } from '../pages/admin/AdminPages';
+import ContentAdmin from '../pages/admin/ContentAdminV2';
 import PropertyWorkspace from '../pages/admin/PropertyWorkspace';
 import ImagesAdmin from '../pages/admin/ImagesAdmin';
 import AdminLogin from '../pages/admin/AdminLogin';

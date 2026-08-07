@@ -34,6 +34,14 @@ export const defaultSiteContent = {
     facebook: '',
     instagram: '',
     tiktok: '',
+    realEstateEmail: '',
+    realEstateFacebook: '',
+    realEstateInstagram: '',
+    realEstateTiktok: '',
+    insuranceEmail: '',
+    insuranceFacebook: '',
+    insuranceInstagram: '',
+    insuranceTiktok: '',
   },
 };
 

@@ -15,6 +15,7 @@ import './styles/reference-hero-proximity.css';
 import './styles/reference-mobile-hero.css';
 import './styles/insurance.css';
 import './styles/insurance-mobile-overrides.css';
+import './styles/contact-footer-overrides.css';
 import './styles/property-workspace.css';
 import './styles/property-workspace-simplified.css';
 

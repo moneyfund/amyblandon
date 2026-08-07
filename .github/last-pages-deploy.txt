@@ -1,5 +1,5 @@
 sha=e745b7184c48b7c5bedd76936c91e3f463490da1
-build=cancelled
-deploy=cancelled
-run_id=31222422226
-recorded_at=2026-08-07T22:03:37Z
+build=success
+deploy=failure
+run_id=31222423404
+recorded_at=2026-08-07T22:04:15Z

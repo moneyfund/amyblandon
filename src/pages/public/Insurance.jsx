@@ -17,6 +17,7 @@ import {
   UsersRound,
 } from 'lucide-react';
 import RevealOnScroll from '../../components/common/RevealOnScroll';
+import SectorSocialSection from '../../components/common/SectorSocialSection';
 import SEO from '../../components/common/SEO';
 import { useSiteImages } from '../../contexts/SiteImagesContext';
 
@@ -121,6 +122,8 @@ export default function Insurance() {
           <RevealOnScroll delay={140}><Handshake /><div><b>Acompañamiento humano</b><span>Orientación cercana durante todo el proceso.</span></div></RevealOnScroll>
         </div>
       </section>
+
+      <SectorSocialSection sector="insurance" />
 
       <section className="insurance-section insurance-coverages" id="coberturas">
         <div className="insurance-shell">

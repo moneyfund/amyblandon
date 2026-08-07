@@ -55,7 +55,7 @@ export default function Footer() {
     <footer className="public-footer">
       <div className="public-footer__grid">
         <RevealOnScroll as="div" className="public-footer__col" delay={0}>
-          <BrandLogo className="brand-logo--footer" />
+          <BrandLogo className="brand-logo--footer" image />
           <a className="public-footer__line" href={mapLink(address)} target="_blank" rel="noreferrer">
             <MapPin size={18} />
             {address}

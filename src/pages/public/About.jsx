@@ -157,15 +157,5 @@ export default function About() {
         </RevealOnScroll>
       </div>
     </section>
-
-    <section className="about-page__cta">
-      <RevealOnScroll>
-        <p className="section-kicker">Acompañamiento</p>
-        <h2>Construyamos una estrategia clara para tu próxima decisión.</h2>
-        <a className="btn" href={whatsappLink(amyContact.whatsappMessage, amyContact.phone)}>
-          <MessageCircle size={18} />Conversemos
-        </a>
-      </RevealOnScroll>
-    </section>
   </div>;
 }

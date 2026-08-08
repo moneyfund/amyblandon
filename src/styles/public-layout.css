@@ -15,8 +15,8 @@
 .public-navbar__menu>a:not(.public-navbar__phone)::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:2px;background:var(--amy-gold);transform:scaleX(0);transform-origin:left center;transition:transform .28s cubic-bezier(.22,.61,.36,1)}
 .public-navbar__menu a:hover,.public-navbar__menu a.active{color:var(--amy-gold)}
 .public-navbar__menu>a:not(.public-navbar__phone):hover::after,.public-navbar__menu>a:not(.public-navbar__phone).active::after{transform:scaleX(1)}
-.public-navbar__phone{border:1px solid var(--amy-gold);padding:10px 17px;display:inline-flex!important;align-items:center;gap:8px;color:#fff!important;transition:background .24s ease,color .24s ease,box-shadow .24s ease,transform .24s ease,border-color .24s ease}
-.public-navbar--scrolled .public-navbar__phone,.public-navbar--open .public-navbar__phone{color:var(--amy-navy)!important}
+.public-navbar__phone{border:1px solid var(--amy-gold);padding:10px 17px;display:inline-flex!important;align-items:center;gap:8px;color:var(--amy-gold)!important;transition:background .24s ease,color .24s ease,box-shadow .24s ease,transform .24s ease,border-color .24s ease}
+.public-navbar--scrolled .public-navbar__phone,.public-navbar--open .public-navbar__phone{color:var(--amy-gold)!important}
 .public-navbar__phone:hover{background:var(--amy-gold);color:var(--amy-navy)!important;transform:translateY(-1px);box-shadow:0 8px 20px rgba(201,154,68,.2)}
 .public-navbar__phone svg{transition:transform .24s ease}
 .public-navbar__phone:hover svg{transform:rotate(-8deg) scale(1.08)}
@@ -59,7 +59,7 @@
 .public-navbar__menu.is-open{opacity:1;pointer-events:auto;transform:translateY(0);clip-path:inset(0)}
 .public-navbar__menu a{padding:14px 0}
 .public-navbar__menu>a:not(.public-navbar__phone)::after{bottom:8px}
-.public-navbar__phone{justify-content:center;margin-top:10px;color:var(--amy-navy)!important}
+.public-navbar__phone{justify-content:center;margin-top:10px;color:var(--amy-gold)!important}
 .public-footer{padding:54px 20px 28px}
 .public-footer__grid{grid-template-columns:1fr;gap:34px}
 .public-footer__form{flex-direction:column}

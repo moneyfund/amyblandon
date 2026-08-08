@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import RevealOnScroll from '../common/RevealOnScroll';
 import { homePageContent } from '../../content/homePage.es';
 
@@ -35,25 +37,56 @@ const icons = {
 };
 
 export default function IntegratedSolutions() {
+  const carouselRef = useRef(null);
+
+  const moveCarousel = (direction) => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    const card = carousel.querySelector('.home-solution');
+    const distance = (card?.getBoundingClientRect().width || 320) + 15;
+    carousel.scrollBy({ left: direction * distance, behavior: 'smooth' });
+  };
+
   return (
     <section className="home-solutions" aria-labelledby="solutions-title">
       <RevealOnScroll className="home-section-heading">
         <p className="home-kicker">{homePageContent.servicesHeader.kicker}</p>
         <h2 id="solutions-title">{homePageContent.servicesHeader.title}</h2>
       </RevealOnScroll>
-      <div className="home-solutions__grid">
-        {homePageContent.services.map((service, index) => {
-          const Icon = icons[service.key];
-          return (
-            <RevealOnScroll as="article" className="home-solution" key={service.key} delay={index * 110}>
-              <span className="home-solution__icon" aria-hidden="true">
-                <Icon />
-              </span>
-              <h3>{service.title}</h3>
-              <p>{service.text}</p>
-            </RevealOnScroll>
-          );
-        })}
+
+      <div className="home-solutions__carousel">
+        <button
+          type="button"
+          className="home-solutions__arrow home-solutions__arrow--left"
+          onClick={() => moveCarousel(-1)}
+          aria-label="Ver solución anterior"
+        >
+          <ChevronLeft aria-hidden="true" />
+        </button>
+
+        <div className="home-solutions__grid" ref={carouselRef}>
+          {homePageContent.services.map((service, index) => {
+            const Icon = icons[service.key];
+            return (
+              <RevealOnScroll as="article" className="home-solution" key={service.key} delay={index * 110}>
+                <span className="home-solution__icon" aria-hidden="true">
+                  <Icon />
+                </span>
+                <h3>{service.title}</h3>
+                <p>{service.text}</p>
+              </RevealOnScroll>
+            );
+          })}
+        </div>
+
+        <button
+          type="button"
+          className="home-solutions__arrow home-solutions__arrow--right"
+          onClick={() => moveCarousel(1)}
+          aria-label="Ver siguiente solución"
+        >
+          <ChevronRight aria-hidden="true" />
+        </button>
       </div>
     </section>
   );

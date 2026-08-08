@@ -58,6 +58,7 @@
     position: relative;
     min-height: 930px;
     overflow: hidden;
+    background: var(--amy-hero-navy);
   }
 
   .home-hero__inner {
@@ -106,12 +107,18 @@
     margin: 0;
     border-radius: 0;
     overflow: visible;
+    background: var(--amy-hero-navy);
   }
 
   .home-hero__background {
-    inset: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: -1px;
+    width: calc(100% + 1px);
     border-radius: 0;
     box-shadow: none;
+    background: var(--amy-hero-navy);
   }
 
   .home-hero__background::after {
@@ -119,6 +126,8 @@
   }
 
   .home-hero__background img {
+    width: 100.2%;
+    height: 100%;
     object-position: center center !important;
   }
 

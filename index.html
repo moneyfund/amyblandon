@@ -4,12 +4,44 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#001929" />
-    <link rel="icon" type="image/svg+xml" href="/favicon-amy.svg" />
-    <link rel="shortcut icon" href="/favicon-amy.svg" />
     <meta
       name="description"
       content="Amy Blandon: asesoría en bienes raíces, seguros e inversiones."
     />
+
+    <!--
+      El recurso heredado public/favicon.png contiene exactamente la imagen
+      suministrada por Amy, almacenada como Data URL de texto. Cargamos ese
+      contenido y lo asignamos al favicon para conservar la imagen original
+      sin que el navegador intente interpretar el archivo de texto como PNG.
+    -->
+    <link id="amy-favicon" rel="icon" href="data:," />
+    <link id="amy-shortcut-icon" rel="shortcut icon" href="data:," />
+    <link id="amy-apple-icon" rel="apple-touch-icon" href="data:," />
+    <script>
+      (() => {
+        const applyFavicon = (raw) => {
+          const value = String(raw || '').trim();
+          if (!value) return;
+          const imageUrl = value.startsWith('data:image/')
+            ? value
+            : `data:image/png;base64,${value}`;
+          ['amy-favicon', 'amy-shortcut-icon', 'amy-apple-icon'].forEach((id) => {
+            const link = document.getElementById(id);
+            if (link) link.href = imageUrl;
+          });
+        };
+
+        fetch('/favicon.png?v=20260807-2', { cache: 'no-store' })
+          .then((response) => {
+            if (!response.ok) throw new Error('favicon unavailable');
+            return response.text();
+          })
+          .then(applyFavicon)
+          .catch(() => {});
+      })();
+    </script>
+
     <title>Amy Blandon | Bienes Raíces, Seguros e Inversiones</title>
   </head>
   <body>

@@ -1,0 +1,75 @@
+.about-page__map-outline{
+  stroke-dasharray:none!important;
+  stroke-dashoffset:0!important;
+  animation:aboutMapGlow 4s ease-in-out infinite!important;
+}
+
+.about-page__map-route,
+.about-page__map-marker{
+  display:none!important;
+}
+
+.about-page__map-stage::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:96px;
+  height:96px;
+  border:1.5px solid rgba(240,201,111,.78);
+  border-radius:50%;
+  transform:translate(-50%,-50%) scale(.38);
+  opacity:.9;
+  z-index:3;
+  pointer-events:none;
+  box-shadow:0 0 26px rgba(226,190,115,.18);
+  animation:aboutNationalWave 2.7s cubic-bezier(.2,.65,.3,1) infinite;
+}
+
+.about-page__map-stage::after{
+  content:"COBERTURA NACIONAL";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  z-index:4;
+  pointer-events:none;
+  min-width:178px;
+  padding:11px 17px 10px;
+  border:1px solid rgba(244,213,142,.92);
+  border-radius:999px;
+  background:linear-gradient(135deg,#e8be68 0%,#c99a44 52%,#e2be73 100%);
+  color:#001929;
+  box-shadow:0 10px 28px rgba(0,0,0,.26),0 0 24px rgba(201,154,68,.18);
+  font-family:var(--font-navigation);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.16em;
+  line-height:1;
+  text-align:center;
+  white-space:nowrap;
+  text-transform:uppercase;
+}
+
+@keyframes aboutNationalWave{
+  0%{transform:translate(-50%,-50%) scale(.42);opacity:.9}
+  72%{opacity:.22}
+  100%{transform:translate(-50%,-50%) scale(3.15);opacity:0}
+}
+
+@media(max-width:700px){
+  .about-page__map-stage::after{
+    min-width:158px;
+    padding:10px 14px 9px;
+    font-size:9px;
+    letter-spacing:.13em;
+  }
+  .about-page__map-stage::before{
+    width:84px;
+    height:84px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .about-page__map-stage::before{animation:none;opacity:.34;transform:translate(-50%,-50%) scale(1.35)}
+}

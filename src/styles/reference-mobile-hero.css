@@ -1,15 +1,33 @@
-/* Ajuste móvil del hero tomando como referencia la composición de amyblandon.com.
-   No modifica la versión de escritorio. */
+/* Ajuste móvil del hero tomando como referencia la composición de escritorio.
+   En móvil se conserva la misma arquitectura de capas: skyline a sangre + PNG de Amy superpuesto. */
 @media (max-width: 820px) {
+  .home-hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--amy-hero-navy) !important;
+  }
+
+  /* El responsive antiguo creaba una franja celeste independiente detrás de las imágenes. */
+  .home-hero::after {
+    display: none !important;
+    content: none !important;
+  }
+
   .home-hero__inner {
-    padding-top: 148px;
+    width: 100%;
+    max-width: none;
+    padding: 148px 0 0;
+    gap: 0;
     text-align: center;
   }
 
   .home-hero__copy {
+    position: relative;
+    z-index: 4;
     width: 100%;
     max-width: 660px;
     margin-inline: auto;
+    padding: 0 20px 46px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -44,13 +62,96 @@
   .home-hero .amy-button {
     margin-inline: auto;
   }
+
+  /*
+   * El bloque de imagen deja de ser una tarjeta angosta/arredondada.
+   * Ocupa todo el ancho del viewport para que el skyline funcione como un verdadero fondo.
+   */
+  .home-hero__media,
+  .home-hero__media.home-hero__media--layered {
+    position: relative;
+    isolation: isolate;
+    justify-self: stretch;
+    width: 100vw;
+    max-width: none;
+    height: clamp(500px, 128vw, 650px);
+    min-height: 0;
+    margin: 0;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* Skyline: fondo completo, sin marco, sin forma y mostrando la zona arquitectónica. */
+  .home-hero__media--layered .home-hero__background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0 !important;
+    overflow: hidden;
+    background: var(--amy-hero-blue-deep);
+    box-shadow: none !important;
+  }
+
+  .home-hero__background::after {
+    background: linear-gradient(180deg, rgba(0, 25, 41, .03), rgba(0, 25, 41, .18));
+  }
+
+  .home-hero__background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover !important;
+    /* El skyline generado concentra la arquitectura a la derecha; evitamos recortar solo el cielo claro. */
+    object-position: 72% center !important;
+  }
+
+  /* Amy conserva su transparencia y flota sobre el skyline, igual que en escritorio. */
+  .home-hero__media--layered .home-hero__person {
+    position: absolute;
+    top: auto;
+    right: auto;
+    bottom: -2%;
+    left: 50%;
+    width: min(92vw, 610px);
+    height: 96%;
+    margin: 0;
+    overflow: visible;
+    background: transparent !important;
+    box-shadow: none !important;
+    transform: translateX(-50%);
+    transform-origin: center bottom;
+    pointer-events: none;
+  }
+
+  .home-hero__person::before,
+  .home-hero__person::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  .home-hero__person img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain !important;
+    object-position: center bottom !important;
+    background: transparent !important;
+    filter: drop-shadow(0 20px 24px rgba(0, 0, 0, .25));
+  }
 }
 
 @media (max-width: 430px) {
   .home-hero__inner {
     padding-top: 148px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .home-hero__copy {
     padding-left: 18px;
     padding-right: 18px;
+    padding-bottom: 40px;
   }
 
   .home-hero .home-kicker {
@@ -80,11 +181,29 @@
   .home-hero .amy-button {
     min-height: 52px;
   }
+
+  .home-hero__media,
+  .home-hero__media.home-hero__media--layered {
+    height: clamp(500px, 142vw, 590px);
+  }
+
+  .home-hero__background img {
+    object-position: 70% center !important;
+  }
+
+  .home-hero__media--layered .home-hero__person {
+    width: 96vw;
+    height: 96%;
+    bottom: -2.5%;
+  }
 }
 
 @media (max-width: 370px) {
   .home-hero__inner {
     padding-top: 142px;
+  }
+
+  .home-hero__copy {
     padding-left: 14px;
     padding-right: 14px;
   }
@@ -99,5 +218,20 @@
 
   .home-hero__copy > p:not(.home-kicker) {
     font-size: 15px;
+  }
+
+  .home-hero__media,
+  .home-hero__media.home-hero__media--layered {
+    height: 500px;
+  }
+
+  .home-hero__media--layered .home-hero__person {
+    width: 100vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero__person img {
+    filter: none;
   }
 }

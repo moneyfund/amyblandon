@@ -1,4 +1,4 @@
-import { Landmark, MapPin, MessageCircle, ShieldCheck, TrendingUp } from 'lucide-react';
+import { Clock, Home, MapPin, MessageCircle, Users } from 'lucide-react';
 import RevealOnScroll from '../../components/common/RevealOnScroll';
 import building from '../../assets/icons/building.svg';
 import graph from '../../assets/icons/graph.svg';
@@ -11,9 +11,9 @@ import { whatsappLink } from '../../utils/whatsapp';
 const icons = { realEstate: building, investments: graph, insurance: secure };
 
 const impactStats = [
-  { value: '+5', label: 'Años de experiencia', icon: TrendingUp },
-  { value: '+220', label: 'Personas aseguradas', icon: ShieldCheck },
-  { value: '+20', label: 'Propiedades vendidas', icon: Landmark },
+  { value: '+5', label: 'Años de experiencia', icon: Clock },
+  { value: '+220', label: 'Personas aseguradas', icon: Users },
+  { value: '+20', label: 'Propiedades vendidas', icon: Home },
 ];
 
 // Frontera real de Nicaragua basada en coordenadas cartográficas de Natural Earth.

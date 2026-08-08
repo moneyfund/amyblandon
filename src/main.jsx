@@ -21,6 +21,7 @@ import './styles/contact-footer-overrides.css';
 import './styles/sector-socials.css';
 import './styles/property-workspace.css';
 import './styles/property-workspace-simplified.css';
+import './styles/real-estate-hero-premium.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

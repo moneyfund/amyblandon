@@ -132,8 +132,16 @@ export default function ImagesAdmin() {
             return (
               <article className="admin-image-card" key={slot.key}>
                 <div className={`admin-image-preview admin-image-preview--${slot.preview}`}>
-                  <img src={record.url} alt={`Vista previa: ${slot.label}`} />
-                  <span>{record.isDefault ? 'Imagen predeterminada' : 'Imagen personalizada'}</span>
+                  {record.url ? (
+                    <img src={record.url} alt={`Vista previa: ${slot.label}`} />
+                  ) : (
+                    <ImagePlus aria-hidden="true" size={44} />
+                  )}
+                  <span>
+                    {record.isDefault
+                      ? (record.url ? 'Imagen predeterminada' : 'Usando respaldo del sitio')
+                      : 'Imagen personalizada'}
+                  </span>
                 </div>
 
                 <div className="admin-image-card__body">

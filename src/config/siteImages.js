@@ -1,6 +1,7 @@
 import { defaultBrandLogo } from '../content/defaultBrandLogo';
 
 export const siteImages = {
+  favicon: '',
   brandLogo: defaultBrandLogo,
   heroBackground: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=85',
   // No se usa una persona predeterminada: Firebase debe proporcionar la imagen real del hero.
@@ -20,6 +21,14 @@ siteImages.hero = siteImages.heroPerson;
 siteImages.aboutAmy = siteImages.aboutHome;
 
 export const siteImageSlots = [
+  {
+    key: 'favicon',
+    label: 'Favicon del sitio',
+    shortLabel: 'Icono de la pestaña',
+    description: 'Icono que aparece en la pestaña del navegador, favoritos y accesos directos. Se carga desde Firebase Storage y se aplica automáticamente en la web pública.',
+    recommendation: 'PNG o WEBP cuadrado. Recomendado: 512 × 512 px, con el símbolo centrado y poco margen alrededor para que se distinga bien en tamaños pequeños.',
+    preview: 'transparent',
+  },
   {
     key: 'brandLogo',
     label: 'Logo principal',

@@ -11,9 +11,9 @@ import { whatsappLink } from '../../utils/whatsapp';
 const icons = { realEstate: building, investments: graph, insurance: secure };
 
 const impactStats = [
-  { value: '1:1', label: 'Atención personalizada', icon: ShieldCheck },
-  { value: '3', label: 'Áreas de asesoría integradas', icon: Landmark },
-  { value: '360°', label: 'Visión patrimonial', icon: TrendingUp },
+  { value: '+5', label: 'Años de experiencia', icon: TrendingUp },
+  { value: '+220', label: 'Personas aseguradas', icon: ShieldCheck },
+  { value: '+20', label: 'Propiedades vendidas', icon: Landmark },
 ];
 
 // Frontera real de Nicaragua basada en coordenadas cartográficas de Natural Earth.

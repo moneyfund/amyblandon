@@ -37,8 +37,6 @@ export default function Properties() {
   const [q, setQ] = useState('');
   const [operationType, setOperationType] = useState('');
   const [propertyType, setPropertyType] = useState('');
-  const [beds, setBeds] = useState('');
-  const [baths, setBaths] = useState('');
   const [view, setView] = useState('grid');
 
   useEffect(() => {
@@ -52,27 +50,108 @@ export default function Properties() {
   }, []);
 
   const filtered = useMemo(() => properties.filter((property) => {
-    const text = [property.title, property.city, property.state, property.department, property.sector,
-      property.address, property.publicAddress].filter(Boolean).join(' ').toLowerCase();
+    const text = [
+      property.title,
+      property.city,
+      property.state,
+      property.department,
+      property.sector,
+      property.address,
+      property.publicAddress,
+      property.propertyType,
+    ].filter(Boolean).join(' ').toLowerCase();
     const currentOperation = property.operationType || property.transactionType;
+
     return (!q || text.includes(q.toLowerCase().trim()))
       && (!operationType || currentOperation === operationType)
-      && (!propertyType || property.propertyType === propertyType)
-      && (!beds || Number(property.bedrooms) >= Number(beds))
-      && (!baths || Number(property.bathrooms) >= Number(baths));
-  }), [properties, q, operationType, propertyType, beds, baths]);
+      && (!propertyType || property.propertyType === propertyType);
+  }), [properties, q, operationType, propertyType]);
 
   const featured = filtered.filter((property) => property.featured);
   const standardProperties = featured.length ? filtered.filter((property) => !property.featured) : filtered;
+  const hasSearch = Boolean(q || operationType || propertyType);
   const clear = () => {
-    setQ(''); setOperationType(''); setPropertyType(''); setBeds(''); setBaths('');
+    setQ('');
+    setOperationType('');
+    setPropertyType('');
+  };
+  const submitSearch = (event) => {
+    event.preventDefault();
+    document.getElementById('propiedades')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
   const heroImage = images.realEstateHero || images.aboutPage;
 
   return <div className="real-estate-page">
     <SEO title="Bienes raíces | Amy Blandón" />
 
-    <section className="re-hero">
+    <section className="re-search-hero">
+      <div className="re-search-hero__decor re-search-hero__decor--one" aria-hidden="true" />
+      <div className="re-search-hero__decor re-search-hero__decor--two" aria-hidden="true" />
+      <div className="re-shell re-search-hero__inner">
+        <RevealOnScroll className="re-search-hero__heading">
+          <p className="re-eyebrow">PORTAFOLIO INMOBILIARIO</p>
+          <h1>Encuentra una propiedad que encaje con tu próxima decisión.</h1>
+          <p>Busca por ubicación, tipo de propiedad u operación y explora las oportunidades disponibles.</p>
+        </RevealOnScroll>
+
+        <RevealOnScroll as="form" className="re-search-bar" delay={90} aria-label="Buscar propiedades" onSubmit={submitSearch}>
+          <label className="re-search-bar__field re-search-bar__field--keyword">
+            <span>Ubicación o palabra clave</span>
+            <div><Search aria-hidden="true" /><input aria-label="Ubicación o palabra clave" placeholder="Ciudad, zona o propiedad" value={q} onChange={(event) => setQ(event.target.value)} /></div>
+          </label>
+          <label className="re-search-bar__field">
+            <span>Operación</span>
+            <select value={operationType} onChange={(event) => setOperationType(event.target.value)}>
+              <option value="">Comprar o alquilar</option>
+              <option value="sale">Venta</option>
+              <option value="rent">Alquiler</option>
+              <option value="venta">Venta (anterior)</option>
+              <option value="renta">Alquiler (anterior)</option>
+            </select>
+          </label>
+          <label className="re-search-bar__field">
+            <span>Tipo de propiedad</span>
+            <select value={propertyType} onChange={(event) => setPropertyType(event.target.value)}>
+              <option value="">Todos los tipos</option>
+              {propertyTypeOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}
+            </select>
+          </label>
+          <button className="re-search-bar__button" type="submit"><Search size={18} /> Buscar</button>
+        </RevealOnScroll>
+
+        {hasSearch && <button className="re-search-bar__clear" type="button" onClick={clear}>Restablecer búsqueda</button>}
+      </div>
+    </section>
+
+    <section className="re-section re-catalog re-catalog--front" id="propiedades">
+      <div className="re-shell">
+        <div className="re-results__top">
+          <div>
+            <p className="re-eyebrow">PROPIEDADES</p>
+            <h2>Propiedades disponibles</h2>
+            <p>Explora las oportunidades que Amy ha seleccionado para venta o alquiler.</p>
+          </div>
+          <div className="re-view-toggle" aria-label="Cambiar vista">
+            <button type="button" className={view === 'grid' ? 'active' : ''} onClick={() => setView('grid')}><List /> Lista</button>
+            <button type="button" className={view === 'map' ? 'active' : ''} onClick={() => setView('map')}><Map /> Mapa</button>
+          </div>
+        </div>
+        <div className="re-results__meta">
+          <p className="re-results__count">{filtered.length} {filtered.length === 1 ? 'propiedad disponible' : 'propiedades disponibles'}</p>
+          {hasSearch && <button type="button" onClick={clear}>Ver todo el portafolio</button>}
+        </div>
+
+        {loading ? <div className="re-empty"><span className="re-loader" /><h3>Buscando oportunidades...</h3></div>
+          : error ? <div className="re-empty"><Compass /><h3>No pudimos conectar con el catálogo</h3><p>{error}</p></div>
+            : filtered.length === 0 ? <div className="re-empty"><Search /><h3>No encontramos coincidencias</h3><p>Prueba con otra ubicación, operación o tipo de propiedad.</p><button type="button" className="btn re-btn--gold" onClick={clear}>Ver todas las propiedades</button></div>
+              : view === 'map' ? <MapView embedded properties={filtered} /> : <>
+                {featured.length > 0 && <div className="re-featured"><div className="re-subheading"><Sparkles /><div><h3>Propiedades destacadas</h3><p>Oportunidades que merecen una mirada especial.</p></div></div><div className="properties-grid">{featured.map((property) => <PropertyCard key={property.id} property={property} />)}</div></div>}
+                {standardProperties.length > 0 && <div className="properties-grid">{standardProperties.map((property) => <PropertyCard key={property.id} property={property} />)}</div>}
+              </>}
+      </div>
+    </section>
+
+    <section className="re-hero re-hero--advisory">
       <div className="re-shell re-hero__grid">
         <RevealOnScroll className="re-hero__media" direction="left">
           <div className="re-hero__image">
@@ -85,7 +164,7 @@ export default function Properties() {
           <h1>{content.heroTitle}</h1>
           <p className="re-hero__lead">{content.heroText}</p>
           <div className="re-hero__actions">
-            <a className="btn re-btn--gold" href="#propiedades">Ver propiedades <ArrowRight size={17} /></a>
+            <a className="btn re-btn--gold" href="#propiedades">Explorar propiedades <ArrowRight size={17} /></a>
             <Link className="btn re-btn--outline" to="/contacto">Agendar asesoría</Link>
           </div>
           <div className="re-hero__trust"><Check /> Atención cercana <span /> <Check /> Decisiones informadas</div>
@@ -101,34 +180,6 @@ export default function Properties() {
     </section>
 
     <SectorSocialSection sector="realEstate" />
-
-    <section className="re-section re-catalog" id="propiedades">
-      <div className="re-shell">
-        <RevealOnScroll className="re-heading"><p className="re-eyebrow">PORTAFOLIO INMOBILIARIO</p><h2>Encuentra tu próxima propiedad</h2><p>Filtra las oportunidades disponibles según lo que necesitas.</p></RevealOnScroll>
-        <RevealOnScroll as="form" className="re-filters" aria-label="Filtros de propiedades" onSubmit={(event) => event.preventDefault()}>
-          <label className="re-filter re-filter--search"><span>Ubicación o palabra clave</span><div><Search /><input aria-label="Ciudad, título o zona" placeholder="Ciudad, título o zona" value={q} onChange={(event) => setQ(event.target.value)} /></div></label>
-          <label className="re-filter"><span>Operación</span><select value={operationType} onChange={(event) => setOperationType(event.target.value)}><option value="">Comprar o alquilar</option><option value="sale">Venta</option><option value="rent">Alquiler</option><option value="venta">Venta (anterior)</option><option value="renta">Alquiler (anterior)</option></select></label>
-          <label className="re-filter"><span>Tipo</span><select value={propertyType} onChange={(event) => setPropertyType(event.target.value)}><option value="">Todos los tipos</option>{propertyTypeOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
-          <label className="re-filter"><span>Habitaciones</span><select value={beds} onChange={(event) => setBeds(event.target.value)}><option value="">Cualquiera</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option></select></label>
-          <label className="re-filter"><span>Baños</span><select value={baths} onChange={(event) => setBaths(event.target.value)}><option value="">Cualquiera</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option></select></label>
-          <button className="btn re-filter__submit" type="submit"><Search size={17} /> Buscar propiedades</button>
-          <button className="re-filter__clear" type="button" onClick={clear}>Limpiar filtros</button>
-        </RevealOnScroll>
-
-        <div className="re-results__top">
-          <div><p className="re-eyebrow">SELECCIÓN DE AMY</p><h2>Propiedades disponibles</h2><p>Explora oportunidades seleccionadas por Amy Blandón.</p></div>
-          <div className="re-view-toggle" aria-label="Cambiar vista"><button type="button" className={view === 'grid' ? 'active' : ''} onClick={() => setView('grid')}><List /> Lista</button><button type="button" className={view === 'map' ? 'active' : ''} onClick={() => setView('map')}><Map /> Mapa</button></div>
-        </div>
-        <p className="re-results__count">{filtered.length} {filtered.length === 1 ? 'propiedad disponible' : 'propiedades disponibles'}</p>
-        {loading ? <div className="re-empty"><span className="re-loader" /><h3>Buscando oportunidades...</h3></div>
-          : error ? <div className="re-empty"><Compass /><h3>No pudimos conectar con el catálogo</h3><p>{error}</p></div>
-            : filtered.length === 0 ? <div className="re-empty"><Search /><h3>No encontramos coincidencias</h3><p>Prueba con otros criterios o limpia los filtros para ver todo el portafolio.</p><button type="button" className="btn re-btn--gold" onClick={clear}>Ver todas las propiedades</button></div>
-              : view === 'map' ? <MapView embedded properties={filtered} /> : <>
-                {featured.length > 0 && <div className="re-featured"><div className="re-subheading"><Sparkles /><div><h3>Propiedades destacadas</h3><p>Oportunidades que merecen una mirada especial.</p></div></div><div className="properties-grid">{featured.map((property) => <PropertyCard key={property.id} property={property} />)}</div></div>}
-                {standardProperties.length > 0 && <div className="properties-grid">{standardProperties.map((property) => <PropertyCard key={property.id} property={property} />)}</div>}
-              </>}
-      </div>
-    </section>
 
     <section className="re-section re-process"><div className="re-shell"><RevealOnScroll className="re-heading re-heading--center"><p className="re-eyebrow">UNA RUTA CLARA</p><h2>Un acompañamiento inmobiliario más claro y estratégico</h2><p>Un proceso cercano, estructurado y enfocado en proteger tus intereses.</p></RevealOnScroll><div className="re-process__grid">{process.map(([number, title, text], index) => <RevealOnScroll as="article" key={number} delay={index * 80}><span>{number}</span><h3>{title}</h3><p>{text}</p></RevealOnScroll>)}</div></div></section>
 

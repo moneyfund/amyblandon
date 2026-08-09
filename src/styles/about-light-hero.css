@@ -1,0 +1,171 @@
+/* Hero claro y premium para la página Sobre mí.
+   Mantiene la composición original y el marco dorado de la fotografía. */
+.public-site--about .about-page__hero {
+  background:
+    radial-gradient(circle at 82% 18%, rgba(201,154,68,.13), transparent 24%),
+    radial-gradient(circle at 15% 78%, rgba(4,43,58,.045), transparent 27%),
+    linear-gradient(128deg, #ffffff 0%, #faf9f6 48%, #f0f1ef 100%);
+  color: var(--amy-navy);
+}
+
+.public-site--about .about-page__hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(4,43,58,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(4,43,58,.018) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.45) 42%, #000 100%);
+}
+
+.public-site--about .about-page__hero::after {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 4%, rgba(201,154,68,.7) 48%, transparent 96%);
+}
+
+.public-site--about .about-page__hero-glow {
+  border-color: rgba(201,154,68,.22);
+  background: rgba(255,255,255,.1);
+}
+
+.public-site--about .about-page__hero-glow--one {
+  width: 560px;
+  height: 560px;
+  right: -155px;
+  top: -190px;
+}
+
+.public-site--about .about-page__hero-glow--two {
+  width: 350px;
+  height: 350px;
+  right: 30px;
+  top: -82px;
+  border-color: rgba(4,43,58,.065);
+}
+
+.public-site--about .about-page__portrait-frame {
+  padding: 18px 18px 0;
+}
+
+/* Se conserva y refuerza el borde dorado solicitado. */
+.public-site--about .about-page__portrait-frame::before {
+  inset: 0 0 36px;
+  border: 1px solid rgba(201,154,68,.72);
+  transform: translate(-14px,14px);
+  box-shadow: 0 16px 48px rgba(4,43,58,.05);
+}
+
+.public-site--about .about-page__portrait-line {
+  height: 2px;
+  background: linear-gradient(90deg, #c99a44 0%, #e2be73 56%, transparent 100%);
+}
+
+.public-site--about .about-page__portrait {
+  background: linear-gradient(180deg, #f6f4ef 0%, #e6e7e4 100%);
+  box-shadow: 0 30px 68px rgba(4,43,58,.16);
+}
+
+.public-site--about .about-page__portrait::after {
+  background: linear-gradient(180deg, transparent 70%, rgba(4,43,58,.08));
+}
+
+.public-site--about .about-page__portrait-badge {
+  background: #fff;
+  color: var(--amy-navy);
+  border-top-color: var(--amy-gold);
+  box-shadow: 0 18px 44px rgba(4,43,58,.13);
+}
+
+.public-site--about .about-page__portrait-badge span {
+  color: #727a7c;
+}
+
+.public-site--about .about-page__label {
+  color: #b67f23;
+}
+
+.public-site--about .about-page__content h1 {
+  color: var(--amy-navy-deep, #001929);
+  text-shadow: none;
+}
+
+.public-site--about .about-page__content p:not(.about-page__label) {
+  color: #425861;
+}
+
+.public-site--about .about-page__hero-tags span {
+  border-color: rgba(201,154,68,.4);
+  color: var(--amy-navy);
+  background: rgba(255,255,255,.7);
+  box-shadow: 0 6px 22px rgba(4,43,58,.035);
+  backdrop-filter: blur(10px);
+}
+
+.public-site--about .about-page__button {
+  background: var(--amy-gold);
+  border-color: var(--amy-gold);
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(201,154,68,.22);
+}
+
+.public-site--about .about-page__button:hover {
+  background: var(--amy-navy);
+  border-color: var(--amy-navy);
+  color: #fff;
+  box-shadow: 0 16px 34px rgba(4,43,58,.18);
+}
+
+/* El navbar permanece transparente, pero usa tonos oscuros mientras descansa sobre el hero claro. */
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .brand-logo__tagline,
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .brand-logo__tagline--image {
+  color: var(--amy-navy) !important;
+  text-shadow: none;
+}
+
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu {
+  color: var(--amy-navy);
+}
+
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__toggle {
+  color: var(--amy-navy);
+}
+
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__phone {
+  background: #fff !important;
+  color: #24383b !important;
+  box-shadow: 0 10px 28px rgba(4,43,58,.09) !important;
+}
+
+@media (max-width: 1024px) {
+  .public-site--about .about-page__hero-inner {
+    gap: 46px;
+  }
+
+  .public-site--about .about-page__content {
+    padding-top: 12px;
+  }
+}
+
+@media (max-width: 700px) {
+  .public-site--about .about-page__hero {
+    background:
+      radial-gradient(circle at 88% 12%, rgba(201,154,68,.12), transparent 25%),
+      linear-gradient(145deg, #fff 0%, #f7f6f2 62%, #eceeeb 100%);
+  }
+
+  .public-site--about .about-page__hero::before {
+    background-size: 42px 42px;
+    opacity: .6;
+  }
+
+  .public-site--about .about-page__portrait-frame::before {
+    border-color: rgba(201,154,68,.62);
+  }
+
+  .public-site--about .about-page__hero-tags span {
+    background: rgba(255,255,255,.84);
+  }
+}

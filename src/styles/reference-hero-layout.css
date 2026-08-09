@@ -47,7 +47,7 @@
   .public-navbar__menu {
     flex: 1 1 auto;
     justify-content: flex-start;
-    gap: clamp(38px, 3vw, 58px);
+    gap: clamp(44px, 3.35vw, 64px);
     font-size: 16px;
     font-weight: 500;
     transform: translateY(8px);
@@ -225,7 +225,7 @@
   }
 
   .public-navbar__menu {
-    gap: 30px;
+    gap: 34px;
     font-size: 15px;
     transform: translateY(6px);
   }

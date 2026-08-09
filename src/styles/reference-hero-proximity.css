@@ -1,5 +1,4 @@
-/* Corrección final de proximidad visual del hero frente a amyblandon.com.
-   Amplía el título y la persona únicamente en escritorio. */
+/* Corrección fina de proximidad visual del hero frente a amyblandon.com. */
 @media (min-width: 1451px) {
   .home-hero h1 {
     max-width: 690px;
@@ -18,7 +17,7 @@
 
   .home-hero__person {
     left: -24%;
-    bottom: -8%;
+    bottom: -10.5%;
     width: 98%;
     height: 110%;
     transform: scale(1.2);
@@ -40,7 +39,7 @@
 
   .home-hero__person {
     left: -27%;
-    bottom: -8%;
+    bottom: -10%;
     width: 104%;
     height: 108%;
     transform: scale(1.16);

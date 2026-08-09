@@ -13,7 +13,7 @@
 .home-solution__icon{width:84px;height:84px;margin:0 auto 28px;display:grid;place-items:center;color:var(--amy-navy)}
 .home-solution h3{font-family:var(--font-reference);font-size:14px;font-weight:700;line-height:1.65;letter-spacing:normal;text-transform:none;margin:0 0 16px;color:var(--amy-navy)}
 .home-solution p{font-family:var(--font-reference);font-size:16px;font-weight:400;line-height:1.375;letter-spacing:normal;color:#263947;margin:0}
-.home-about{background:#f9faf9}
+.home-about{background:#fff}
 .home-about__inner{max-width:var(--amy-container);margin:0 auto;padding:92px 24px;display:grid;grid-template-columns:.92fr 1.08fr;gap:76px;align-items:center}
 .home-about__image{width:430px;max-width:100%;margin:0 auto;border-radius:235px 235px 0 0;overflow:hidden}
 .home-about__label{font-family:var(--font-reference);font-size:14px;font-weight:700;line-height:1.65;letter-spacing:normal;margin:0 0 20px;color:var(--amy-navy)}

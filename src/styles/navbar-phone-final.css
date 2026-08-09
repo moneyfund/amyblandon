@@ -1,0 +1,26 @@
+/* Override final del botón telefónico del navbar.
+   Se importa al final para impedir que estilos anteriores recuperen el borde dorado. */
+.public-navbar .public-navbar__phone,
+.public-navbar.public-navbar--scrolled .public-navbar__phone,
+.public-navbar.public-navbar--open .public-navbar__phone,
+.public-navbar .public-navbar__phone:hover,
+.public-navbar .public-navbar__phone:focus,
+.public-navbar .public-navbar__phone:focus-visible {
+  border: none !important;
+  border-width: 0 !important;
+  border-style: none !important;
+  border-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* El círculo permanece verde, pero todo el glifo del teléfono es blanco. */
+.public-navbar .public-navbar__phone svg {
+  color: #fff !important;
+  stroke: #fff !important;
+  fill: none !important;
+}
+
+.public-navbar .public-navbar__phone svg * {
+  stroke: #fff !important;
+}

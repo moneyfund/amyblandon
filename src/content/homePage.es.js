@@ -32,8 +32,8 @@ export const homePageContent = {
   },
   services: [
     { key: 'realEstate', title: 'Bienes Raíces', text: 'Encuentra oportunidades inmobiliarias estratégicas que generen valor, estabilidad y crecimiento en el tiempo. Te asesoro en cada paso para que tomes decisiones seguras y rentables.' },
-    { key: 'investments', title: 'Inversiones', text: 'Diseñamos estrategias personalizadas para hacer crecer tu dinero con visión, control y propósito. Invertir bien no es suerte, es estructura.' },
-    { key: 'insurance', title: 'Seguros', text: 'Protege lo que has construido con soluciones diseñadas para resguardar tu patrimonio, tu familia y tu tranquilidad.' }
+    { key: 'insurance', title: 'Seguros', text: 'Protege lo que has construido con soluciones diseñadas para resguardar tu patrimonio, tu familia y tu tranquilidad.' },
+    { key: 'investments', title: 'Inversiones', text: 'Diseñamos estrategias personalizadas para hacer crecer tu dinero con visión, control y propósito. Invertir bien no es suerte, es estructura.' }
   ],
   about: {
     label: 'Sobre Mi',

@@ -7,6 +7,10 @@ export default function PublicLayout() {
   const footerRef = useRef(null);
   const location = useLocation();
   const isAboutPage = location.pathname === '/sobre-mi' || location.pathname === '/about';
+  const isRealEstatePage = location.pathname === '/propiedades'
+    || location.pathname === '/properties'
+    || location.pathname === '/real-estate'
+    || location.pathname === '/bienes-raices';
 
   useEffect(() => {
     const footer = footerRef.current;
@@ -28,7 +32,13 @@ export default function PublicLayout() {
     };
   }, []);
 
-  return <div className={`public-site${isAboutPage ? ' public-site--about' : ''}`}>
+  const pageClass = [
+    'public-site',
+    isAboutPage ? 'public-site--about' : '',
+    isRealEstatePage ? 'public-site--real-estate' : '',
+  ].filter(Boolean).join(' ');
+
+  return <div className={pageClass}>
     <Navbar />
     <main className="public-main"><Outlet /></main>
     <div ref={footerRef} className="public-footer-reveal" aria-hidden="false">

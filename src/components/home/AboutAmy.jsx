@@ -31,10 +31,13 @@ export default function AboutAmy({ content }) {
   const about = content
     ? {
       label: homePageContent.about.label,
-      titleLines: [content.aboutTitle],
+      titleLines: ['ASESORA INMOBILIARIA, SEGUROS', 'E INVERSIONES'],
       paragraphs: splitAboutParagraphs(content.aboutText),
     }
-    : homePageContent.about;
+    : {
+      ...homePageContent.about,
+      titleLines: ['ASESORA INMOBILIARIA, SEGUROS', 'E INVERSIONES'],
+    };
 
   return (
     <section className="home-about">

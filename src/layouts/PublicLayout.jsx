@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 
 export default function PublicLayout() {
   const footerRef = useRef(null);
+  const location = useLocation();
+  const isAboutPage = location.pathname === '/sobre-mi' || location.pathname === '/about';
 
   useEffect(() => {
     const footer = footerRef.current;
@@ -26,7 +28,7 @@ export default function PublicLayout() {
     };
   }, []);
 
-  return <div className="public-site">
+  return <div className={`public-site${isAboutPage ? ' public-site--about' : ''}`}>
     <Navbar />
     <main className="public-main"><Outlet /></main>
     <div ref={footerRef} className="public-footer-reveal" aria-hidden="false">

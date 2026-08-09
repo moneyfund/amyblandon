@@ -1,4 +1,23 @@
 /* Corrección fina de proximidad visual del hero frente a amyblandon.com. */
+.home-hero .amy-button {
+  background: var(--amy-gold);
+  border-color: var(--amy-gold);
+  color: #fff !important;
+  border-radius: 999px;
+  padding-inline: 28px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .12);
+}
+
+.home-hero .amy-button svg {
+  color: #fff;
+}
+
+.home-hero .amy-button:hover {
+  background: #d5a33e;
+  border-color: #d5a33e;
+  color: #fff !important;
+}
+
 @media (min-width: 1451px) {
   .home-hero h1 {
     max-width: 690px;
@@ -9,18 +28,25 @@
 
   .home-hero__copy {
     padding-right: clamp(38px, 4.2vw, 78px);
+    transform: translateY(49px);
+  }
+
+  .home-hero .home-kicker {
+    transform: translateY(29px);
   }
 
   .home-hero__copy > p:not(.home-kicker) {
     max-width: 650px;
   }
 
+  /* Medido contra las dos capturas: la referencia muestra a Amy ~3.4% más grande
+     y entre 22–38 px más abajo según el punto de la figura. */
   .home-hero__person {
     left: -21.5%;
-    bottom: -8%;
+    bottom: -13%;
     width: 98%;
     height: 110%;
-    transform: scale(1.2);
+    transform: scale(1.241);
     transform-origin: left bottom;
   }
 }
@@ -35,14 +61,19 @@
 
   .home-hero__copy {
     padding-right: 40px;
+    transform: translateY(41px);
+  }
+
+  .home-hero .home-kicker {
+    transform: translateY(24px);
   }
 
   .home-hero__person {
     left: -24.5%;
-    bottom: -8%;
+    bottom: -12.7%;
     width: 104%;
     height: 108%;
-    transform: scale(1.16);
+    transform: scale(1.199);
     transform-origin: left bottom;
   }
 }

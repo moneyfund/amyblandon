@@ -1,14 +1,16 @@
 .public-navbar .brand-logo--image {
+  position: relative;
+  top: -3px;
   width: 318px;
   min-width: 318px;
   max-width: 318px;
   display: inline-flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 14px;
   line-height: 1;
-  text-align: left;
+  text-align: center;
   overflow: visible;
   transform-origin: left center;
 }
@@ -30,7 +32,7 @@
   max-width: none;
   max-height: none;
   object-fit: contain;
-  object-position: left center;
+  object-position: center;
   pointer-events: none;
   user-select: none;
 }
@@ -40,12 +42,12 @@
   width: 100%;
   margin-top: 0;
   font-family: var(--font-navigation);
-  font-size: 10.5px;
+  font-size: 11.6px;
   font-weight: 500;
   line-height: 1.25;
   letter-spacing: .04em;
   white-space: nowrap;
-  text-align: left;
+  text-align: center;
   color: #fff;
   text-shadow: 0 1px 2px rgba(0, 25, 41, .2);
   transition: color .32s ease, text-shadow .32s ease;
@@ -66,22 +68,24 @@
     width: 296px;
     min-width: 296px;
     max-width: 296px;
-    gap: 6px;
+    gap: 12px;
   }
 
   .public-navbar .brand-logo__mark { height: 58px; }
-  .public-navbar .brand-logo__tagline--image { font-size: 9.9px; }
+  .public-navbar .brand-logo__tagline--image { font-size: 10.8px; }
 }
 
 @media (max-width: 1080px) {
   .public-navbar .brand-logo--image {
+    top: -2px;
     width: 274px;
     min-width: 274px;
     max-width: 274px;
+    gap: 9px;
   }
 
   .public-navbar .brand-logo__mark { height: 53px; }
-  .public-navbar .brand-logo__tagline--image { font-size: 9.1px; }
+  .public-navbar .brand-logo__tagline--image { font-size: 9.7px; }
 }
 
 @media (max-width: 920px) {
@@ -89,26 +93,27 @@
     width: 250px;
     min-width: 250px;
     max-width: 250px;
-    gap: 6px;
+    gap: 8px;
   }
 
   .public-navbar .brand-logo__mark { height: 49px; }
-  .public-navbar .brand-logo__tagline--image { font-size: 8.3px; }
+  .public-navbar .brand-logo__tagline--image { font-size: 8.8px; }
 }
 
 @media (max-width: 820px) {
   .public-navbar .brand-logo--image {
+    top: 0;
     width: 220px;
     min-width: 220px;
     max-width: 220px;
-    align-items: flex-start;
-    gap: 5px;
+    align-items: center;
+    gap: 6px;
   }
 
   .public-navbar .brand-logo__mark { height: 43px; }
   .public-navbar .brand-logo__tagline--image {
     font-size: 7.5px;
-    text-align: left;
+    text-align: center;
   }
 
   .public-navbar--scrolled .brand-logo--image { transform: none; }

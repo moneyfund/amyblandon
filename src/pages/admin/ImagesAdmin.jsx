@@ -110,7 +110,7 @@ export default function ImagesAdmin() {
             Cada espacio tiene una función fija. Al reemplazar una imagen, las pestañas abiertas de la web reciben la
             nueva URL mediante Firestore en tiempo real.
           </p>
-          <strong>Para la persona del hero usa PNG o WEBP con fondo transparente.</strong>
+          <strong>Para la persona del hero y la firma usa PNG o WEBP con fondo transparente.</strong>
         </div>
       </section>
 
@@ -139,7 +139,7 @@ export default function ImagesAdmin() {
                   )}
                   <span>
                     {record.isDefault
-                      ? (record.url ? 'Imagen predeterminada' : 'Usando respaldo del sitio')
+                      ? (record.url ? 'Imagen predeterminada' : 'Sin imagen cargada')
                       : 'Imagen personalizada'}
                   </span>
                 </div>

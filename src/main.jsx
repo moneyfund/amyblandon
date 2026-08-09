@@ -24,6 +24,7 @@ import './styles/property-workspace-simplified.css';
 import './styles/real-estate-hero-premium.css';
 import './styles/about-map-coverage-overrides.css';
 import './styles/navbar-phone-final.css';
+import './styles/home-about-signature.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

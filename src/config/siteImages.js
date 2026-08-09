@@ -8,6 +8,7 @@ export const siteImages = {
   heroPerson: '',
   aboutHome: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1000&q=85',
   aboutPage: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1000&q=85',
+  signature: '',
   strategicBanner: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=85',
   realEstateHero: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=85',
   insuranceHero: '',
@@ -76,6 +77,14 @@ export const siteImageSlots = [
     description: 'Fotografía utilizada en la sección “Sobre mí” de la página de inicio.',
     recommendation: 'JPG, PNG o WEBP vertical. Recomendado: 1000 × 1300 px.',
     preview: 'portrait',
+  },
+  {
+    key: 'signature',
+    label: 'Firma de Amy',
+    shortLabel: 'Firma',
+    description: 'Firma gráfica que aparece al final del bloque “Sobre mí” de la página de inicio y queda disponible para reutilizarla en otras secciones de la web.',
+    recommendation: 'PNG o WEBP con fondo transparente. Recomendado: 1000 × 320 px, firma centrada y con poco margen transparente alrededor.',
+    preview: 'transparent',
   },
   {
     key: 'aboutPage',

@@ -26,6 +26,7 @@ import './styles/about-map-coverage-overrides.css';
 import './styles/navbar-phone-final.css';
 import './styles/home-about-signature.css';
 import './styles/about-light-hero.css';
+import './styles/real-estate-light-hero.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

@@ -69,7 +69,7 @@
   margin:0 auto 2px;
   display:grid;
   place-items:center;
-  color:var(--amy-reference-dark);
+  color:var(--amy-reference-gold);
 }
 
 .home-solution__icon svg{

@@ -18,6 +18,23 @@
   color: #fff !important;
 }
 
+@media (min-width: 1081px) {
+  .public-navbar__phone,
+  .public-navbar--scrolled .public-navbar__phone,
+  .public-navbar--open .public-navbar__phone {
+    border: 0 !important;
+    outline: 0 !important;
+    background: #fff !important;
+    color: #24383b !important;
+    box-shadow: none;
+  }
+
+  .public-navbar__phone:focus-visible {
+    outline: 0 !important;
+    box-shadow: 0 0 0 3px rgba(79, 120, 72, .28);
+  }
+}
+
 @media (min-width: 1451px) {
   .home-hero h1 {
     max-width: 690px;

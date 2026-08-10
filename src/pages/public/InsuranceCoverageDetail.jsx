@@ -179,27 +179,6 @@ export default function InsuranceCoverageDetail() {
           </RevealOnScroll>
         </div>
       </section>
-
-      <section className="insurance-detail-cta">
-        <RevealOnScroll className="insurance-detail-shell insurance-detail-cta__inner">
-          <div>
-            <p className="insurance-detail-eyebrow">HABLEMOS DE TU PROTECCIÓN</p>
-            <h2>Consulta con Amy sobre {coverage.title.toLowerCase()}</h2>
-            <p>Al tocar WhatsApp, el mensaje indicará automáticamente que llegaste desde esta cobertura para que la atención comience con el contexto correcto.</p>
-          </div>
-          <div className="insurance-detail-cta__actions">
-            {whatsappUrl && (
-              <a className="btn insurance-detail-btn--gold" href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-                <MessageCircle size={19} /> Consultar por WhatsApp
-              </a>
-            )}
-            <Link className="btn insurance-detail-btn--light" to="/seguros">Ver otros seguros</Link>
-          </div>
-        </RevealOnScroll>
-        <div className="insurance-detail-shell">
-          <p className="insurance-detail-disclaimer">La disponibilidad, alcance, primas, deducibles, límites, exclusiones y demás condiciones dependen de la aseguradora y del producto finalmente contratado. La información de esta página es orientativa y no sustituye las condiciones particulares de una póliza.</p>
-        </div>
-      </section>
     </div>
   );
 }

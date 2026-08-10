@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { ExternalLink, LogOut, Menu } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useSiteImages } from '../contexts/SiteImagesContext';
 import { firebaseEnabled } from '../firebase/firebase';
 import { logout } from '../services/authService';
 
@@ -12,12 +13,14 @@ const links = [
   ['Propiedades', '/admin/properties'],
   ['Contenido de la web', '/admin/content'],
   ['Imágenes', '/admin/images'],
+  ['Personalización', '/admin/customization'],
   ['Consultas de clientes', '/admin/inquiries'],
   ['Configuración', '/admin/settings'],
 ];
 
 export default function AdminLayout() {
   const { user, profile } = useAuth();
+  const { images } = useSiteImages();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const publicUrl = window.location.hostname.endsWith('github.io')
@@ -33,7 +36,11 @@ export default function AdminLayout() {
     <div className="admin-shell">
       <aside className={open ? 'open' : ''}>
         <div className="admin-brand">
-          <span>AMY BLANDON</span>
+          <div className="admin-brand__logo">
+            {images.brandLogo
+              ? <img src={images.brandLogo} alt="Amy Blandón" />
+              : <span>AMY BLANDON</span>}
+          </div>
           <small>Panel administrativo</small>
         </div>
 

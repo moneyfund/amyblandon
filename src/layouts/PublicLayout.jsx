@@ -11,6 +11,7 @@ export default function PublicLayout() {
     || location.pathname === '/properties'
     || location.pathname === '/real-estate'
     || location.pathname === '/bienes-raices';
+  const isInsurancePage = location.pathname === '/seguros' || location.pathname === '/insurance';
 
   useEffect(() => {
     const footer = footerRef.current;
@@ -36,6 +37,7 @@ export default function PublicLayout() {
     'public-site',
     isAboutPage ? 'public-site--about' : '',
     isRealEstatePage ? 'public-site--real-estate' : '',
+    isInsurancePage ? 'public-site--insurance' : '',
   ].filter(Boolean).join(' ');
 
   return <div className={pageClass}>

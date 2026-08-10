@@ -1,0 +1,3 @@
+Retry deployment trigger for Amy Blandon site.
+Requested after Vercel reported a build-rate-limit on the previous deployment attempt.
+No application code or design changes in this commit.

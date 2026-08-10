@@ -175,20 +175,6 @@ export default function Insurance() {
           </div>
         </div>
       </section>
-
-      <section className="insurance-cta">
-        <RevealOnScroll className="insurance-shell insurance-cta__inner">
-          <div>
-            <p className="insurance-eyebrow">TU TRANQUILIDAD TAMBIÉN SE PLANIFICA</p>
-            <h2>Encuentra una protección que tenga sentido para ti</h2>
-            <p>Cuéntame qué quieres proteger y revisemos juntos las alternativas disponibles.</p>
-          </div>
-          <div className="insurance-cta__actions">
-            <Link className="btn insurance-btn--gold" to="/insurance/quote">Solicitar cotización <ArrowRight /></Link>
-            <Link className="btn insurance-btn--light" to="/contacto">Hablar con Amy</Link>
-          </div>
-        </RevealOnScroll>
-      </section>
     </div>
   );
 }

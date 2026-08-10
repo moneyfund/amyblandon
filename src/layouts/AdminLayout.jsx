@@ -5,13 +5,14 @@ import { useAuth } from '../contexts/AuthContext';
 import { firebaseEnabled } from '../firebase/firebase';
 import { logout } from '../services/authService';
 
+const AVALUOS_PLATFORM_URL = 'https://avaluos-platform.vercel.app/?tenant=amyblandon&source=amy-admin';
+
 const links = [
   ['Panel principal', '/admin'],
   ['Propiedades', '/admin/properties'],
   ['Contenido de la web', '/admin/content'],
   ['Imágenes', '/admin/images'],
   ['Consultas de clientes', '/admin/inquiries'],
-  ['Avalúos — Próximamente', '/admin/valuations'],
   ['Configuración', '/admin/settings'],
 ];
 
@@ -42,6 +43,16 @@ export default function AdminLayout() {
               {label}
             </NavLink>
           ))}
+          <a
+            href={AVALUOS_PLATFORM_URL}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => setOpen(false)}
+            aria-label="Abrir sistema de avalúos de Amy Blandon"
+          >
+            <span>Avalúos</span>
+            <ExternalLink size={15} aria-hidden="true" />
+          </a>
         </nav>
 
         <a className="link-button" href={publicUrl} target="_blank" rel="noreferrer">

@@ -1,0 +1,76 @@
+/* Personalización dinámica de la web pública */
+.public-site{background:var(--site-footer-bg,var(--amy-navy-deep))}
+.public-navbar--scrolled,.public-navbar--open{background:var(--site-navbar-bg,#fff)}
+.public-navbar--scrolled .brand-logo__tagline,.public-navbar--open .brand-logo__tagline,
+.public-navbar--scrolled .public-navbar__menu,.public-navbar--open .public-navbar__menu,
+.public-navbar--scrolled .public-navbar__toggle,.public-navbar--open .public-navbar__toggle{color:var(--site-navbar-text,var(--amy-navy))}
+.public-navbar__menu.is-open{background:var(--site-navbar-bg,#fff);color:var(--site-navbar-text,var(--amy-navy))}
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .brand-logo__tagline,
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .brand-logo__tagline--image,
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu,
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__toggle,
+.public-site--real-estate .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .brand-logo__tagline,
+.public-site--real-estate .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .brand-logo__tagline--image,
+.public-site--real-estate .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu,
+.public-site--real-estate .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__toggle,
+.public-site--insurance .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .brand-logo__tagline,
+.public-site--insurance .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .brand-logo__tagline--image,
+.public-site--insurance .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu,
+.public-site--insurance .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__toggle{color:var(--site-navbar-text,var(--amy-navy))!important}
+.public-footer-reveal{background:var(--site-footer-bg,var(--amy-navy-deep))}
+.public-footer{background:radial-gradient(circle at 12% 0%,rgba(201,154,68,.13),transparent 34%),var(--site-footer-bg,var(--amy-navy-deep));color:var(--site-footer-text,#fff)}
+.public-footer__line,.public-footer h2,.public-footer h3,.public-footer p,.public-footer small{color:var(--site-footer-text,#fff)}
+.public-footer__form input{background:rgba(0,0,0,.18);color:var(--site-footer-text,#fff);border-color:rgba(255,255,255,.2)}
+.public-footer__form input::placeholder{color:var(--site-footer-text,#fff);opacity:.68}
+.public-footer small{border-top-color:rgba(255,255,255,.16)}
+
+/* Logo administrable del panel */
+.admin-brand{gap:.45rem}
+.admin-brand__logo{width:100%;min-height:52px;display:flex;align-items:center;justify-content:flex-start;overflow:hidden}
+.admin-brand__logo img{width:min(230px,100%);height:52px;object-fit:contain;object-position:left center;display:block}
+.admin-brand__logo span{font-family:var(--font-logo);font-size:1.15rem;letter-spacing:.08em;color:#d6aa55}
+.admin-brand>small{margin-top:0}
+
+/* Panel Personalización */
+.customization-logo-card,.customization-theme-card,.customization-colors-card{padding:1.45rem;margin-bottom:1.2rem}
+.customization-section-heading{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.25rem}
+.customization-section-heading h2{margin:.05rem 0 .25rem;font-size:1.35rem}
+.customization-section-heading p:not(.admin-eyebrow){margin:0;color:#64748b}
+.customization-icon{width:46px;height:46px;border-radius:14px;background:#fff7e6;color:#a96f11;display:grid;place-items:center;flex:0 0 auto}
+.customization-logo-grid{display:grid;grid-template-columns:minmax(280px,1fr) minmax(280px,.8fr);gap:1.4rem;align-items:center}
+.customization-logo-preview{min-height:150px;border:1px solid #dde4ec;border-radius:16px;background:linear-gradient(135deg,#fff,#f4f6f8);display:flex;align-items:center;justify-content:center;padding:1.5rem;overflow:hidden}
+.customization-logo-preview img{width:min(520px,92%);max-height:110px;object-fit:contain}
+.customization-logo-preview span{font-family:var(--font-logo);color:#c99a44;font-size:1.7rem;letter-spacing:.08em}
+.customization-logo-actions{display:grid;gap:.9rem;align-content:center}
+.customization-logo-actions p{margin:0;color:#64748b}
+.customization-logo-actions .btn{width:max-content}
+.customization-logo-actions input[type=file]{display:none}
+.customization-presets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+.customization-preset{appearance:none;border:1px solid #dce3eb;background:#fff;border-radius:16px;padding:1rem;text-align:left;cursor:pointer;display:grid;gap:.8rem;transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;color:#172033}
+.customization-preset:hover{transform:translateY(-2px);border-color:#c99a44;box-shadow:0 12px 28px rgba(23,32,51,.09)}
+.customization-preset.is-selected{border:2px solid #c99a44;box-shadow:0 0 0 3px rgba(201,154,68,.1)}
+.customization-preset__top{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.customization-preset__top svg{color:#b57918}
+.customization-preset small{color:#64748b;line-height:1.45;min-height:60px}
+.customization-palette{height:34px;border-radius:9px;overflow:hidden;display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #e5e7eb}
+.customization-palette i{display:block}
+.customization-color-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.customization-color-field{border:1px solid #dfe5ed;border-radius:14px;padding:1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#fbfcfd}
+.customization-color-field>span{display:grid;gap:.2rem;min-width:0}
+.customization-color-field small{color:#64748b;font-weight:500;line-height:1.35}
+.customization-color-field>div{display:grid;grid-template-columns:48px 100px;gap:.5rem;align-items:center;flex:0 0 auto}
+.admin-shell .customization-color-field input[type=color]{width:48px;height:44px;padding:3px;border-radius:10px;cursor:pointer;background:#fff}
+.admin-shell .customization-color-field input[type=text]{height:44px;padding:.55rem;text-transform:uppercase;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem}
+.customization-live-note{margin-top:1.2rem;padding:1rem 1.1rem;border-radius:14px;background:#eef8f1;color:#245235;display:grid;gap:.2rem;border:1px solid #cfe8d6}
+.customization-live-note span{color:#486455}
+.customization-actions{justify-content:flex-end;margin-bottom:0}
+.btn.is-disabled{opacity:.6;pointer-events:none}
+
+@media(max-width:1180px){.customization-presets{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+.customization-logo-grid,.customization-color-grid,.customization-presets{grid-template-columns:1fr}
+.customization-color-field{align-items:flex-start;flex-direction:column}
+.customization-color-field>div{width:100%;grid-template-columns:52px 1fr}
+.customization-logo-actions .btn{width:100%}
+.customization-preset small{min-height:0}
+}

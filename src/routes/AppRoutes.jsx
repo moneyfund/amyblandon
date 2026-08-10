@@ -11,6 +11,7 @@ import {
 import ContentAdmin from '../pages/admin/ContentAdminV2';
 import PropertyWorkspace from '../pages/admin/PropertyWorkspace';
 import ImagesAdmin from '../pages/admin/ImagesAdmin';
+import CustomizationAdmin from '../pages/admin/CustomizationAdmin';
 import AdminLogin from '../pages/admin/AdminLogin';
 import { ComingSoon, Unauthorized } from '../pages/admin/AdminUtilityPages';
 import Home from '../pages/public/Home';
@@ -61,6 +62,7 @@ export default function AppRoutes() {
           <Route path="properties/:id/edit" element={<PropertyWorkspace />} />
           <Route path="content" element={<ContentAdmin />} />
           <Route path="images" element={<ImagesAdmin />} />
+          <Route path="customization" element={<CustomizationAdmin />} />
           <Route path="inquiries" element={<InquiriesAdmin />} />
           <Route path="settings" element={<SettingsAdmin />} />
           <Route path="valuations" element={<ComingSoon title="Avalúos de propiedades" />} />

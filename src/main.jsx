@@ -4,6 +4,7 @@ import { BrowserRouter, HashRouter } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { SiteImagesProvider } from './contexts/SiteImagesContext';
+import { SiteThemeProvider } from './contexts/SiteThemeContext';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import AppRoutes from './routes/AppRoutes';
 import './styles/global.css';
@@ -29,6 +30,7 @@ import './styles/home-about-signature.css';
 import './styles/about-light-hero.css';
 import './styles/real-estate-light-hero.css';
 import './styles/real-estate-catalog-first.css';
+import './styles/site-personalization.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 
@@ -39,7 +41,9 @@ createRoot(document.getElementById('root')).render(
         <LanguageProvider>
           <AuthProvider>
             <SiteImagesProvider>
-              <AppRoutes />
+              <SiteThemeProvider>
+                <AppRoutes />
+              </SiteThemeProvider>
             </SiteImagesProvider>
           </AuthProvider>
         </LanguageProvider>

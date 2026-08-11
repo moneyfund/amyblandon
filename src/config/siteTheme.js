@@ -1,4 +1,4 @@
-export const THEME_SCHEMA_VERSION = 3;
+export const THEME_SCHEMA_VERSION = 4;
 
 export const defaultSiteTheme = {
   schemaVersion: THEME_SCHEMA_VERSION,
@@ -17,7 +17,7 @@ export const siteThemePresets = [
   {
     id: 'amy-original',
     name: 'Amy Blandón Original',
-    description: 'Paleta de referencia de amyblandon.com: hero azul profundo, blanco, azul petróleo y dorado.',
+    description: 'Referencia exacta de amyblandon.com: hero y footer #001929, navbar blanco, azul petróleo y dorado.',
     values: { ...defaultSiteTheme, preset: 'amy-original' },
   },
   {

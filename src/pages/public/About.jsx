@@ -1,4 +1,4 @@
-import { Clock, Home, MapPin, MessageCircle, Users } from 'lucide-react';
+import { Clock, Home, MapPin, MessageCircle, ShieldCheck, TrendingUp, Users } from 'lucide-react';
 import RevealOnScroll from '../../components/common/RevealOnScroll';
 import building from '../../assets/icons/building.svg';
 import graph from '../../assets/icons/graph.svg';
@@ -9,6 +9,12 @@ import { useSiteImages } from '../../contexts/SiteImagesContext';
 import { whatsappLink } from '../../utils/whatsapp';
 
 const icons = { realEstate: building, investments: graph, insurance: secure };
+
+const heroSpecialties = [
+  { label: 'Bienes raíces', icon: Home },
+  { label: 'Seguros', icon: ShieldCheck },
+  { label: 'Inversiones', icon: TrendingUp },
+];
 
 const impactStats = [
   { value: '+5', label: 'Años de experiencia', icon: Clock },
@@ -147,9 +153,12 @@ export default function About() {
             {homePageContent.about.paragraphs.map((text) => <p key={text}>{text}</p>)}
           </div>
           <div className="about-page__hero-tags" aria-label="Áreas de especialidad">
-            <span>Bienes raíces</span>
-            <span>Seguros</span>
-            <span>Inversiones</span>
+            {heroSpecialties.map(({ label, icon: Icon }) => (
+              <span className="about-page__hero-specialty" key={label}>
+                <span className="about-page__hero-specialty-icon" aria-hidden="true"><Icon size={22} /></span>
+                <strong>{label}</strong>
+              </span>
+            ))}
           </div>
           <a className="btn about-page__button" href={whatsappLink(amyContact.whatsappMessage, amyContact.phone)}>
             <MessageCircle size={18} />Ir a WhatsApp

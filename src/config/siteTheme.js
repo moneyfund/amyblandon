@@ -1,14 +1,15 @@
-export const THEME_SCHEMA_VERSION = 2;
+export const THEME_SCHEMA_VERSION = 3;
 
 export const defaultSiteTheme = {
   schemaVersion: THEME_SCHEMA_VERSION,
   preset: 'amy-original',
   primaryColor: '#042B3A',
+  heroBackground: '#001929',
   accentColor: '#C99A44',
   surfaceColor: '#F4F6F4',
   navbarBackground: '#FFFFFF',
   navbarText: '#042B3A',
-  footerBackground: '#042B3A',
+  footerBackground: '#001929',
   footerText: '#FFFFFF',
 };
 
@@ -16,7 +17,7 @@ export const siteThemePresets = [
   {
     id: 'amy-original',
     name: 'Amy Blandón Original',
-    description: 'Tema predeterminado y restaurable: navbar blanco, azul petróleo, dorado y footer azul petróleo.',
+    description: 'Paleta de referencia de amyblandon.com: hero azul profundo, blanco, azul petróleo y dorado.',
     values: { ...defaultSiteTheme, preset: 'amy-original' },
   },
   {
@@ -27,6 +28,7 @@ export const siteThemePresets = [
       schemaVersion: THEME_SCHEMA_VERSION,
       preset: 'ivory-premium',
       primaryColor: '#263A35',
+      heroBackground: '#172824',
       accentColor: '#B68A42',
       surfaceColor: '#F7F4ED',
       navbarBackground: '#FFFDF8',
@@ -43,6 +45,7 @@ export const siteThemePresets = [
       schemaVersion: THEME_SCHEMA_VERSION,
       preset: 'executive-navy',
       primaryColor: '#102A43',
+      heroBackground: '#081C2C',
       accentColor: '#C7A55B',
       surfaceColor: '#F3F6F8',
       navbarBackground: '#FFFFFF',
@@ -59,6 +62,7 @@ export const siteThemePresets = [
       schemaVersion: THEME_SCHEMA_VERSION,
       preset: 'graphite-gold',
       primaryColor: '#2C3033',
+      heroBackground: '#17191B',
       accentColor: '#B8944E',
       surfaceColor: '#F5F3EF',
       navbarBackground: '#FAF9F6',
@@ -70,7 +74,8 @@ export const siteThemePresets = [
 ];
 
 export const siteThemeFields = [
-  ['primaryColor', 'Color principal', 'Títulos, botones, héroes oscuros y elementos principales de identidad.'],
+  ['primaryColor', 'Color principal', 'Títulos, botones y elementos principales de identidad.'],
+  ['heroBackground', 'Fondo oscuro del hero', 'Color sólido del lado izquierdo del hero de Inicio y base de los bloques oscuros.'],
   ['accentColor', 'Dorado / acento', 'Líneas, estados activos, iconos, detalles premium y llamadas a la acción.'],
   ['surfaceColor', 'Fondos suaves', 'Fondos secundarios, tarjetas, bloques claros y variaciones de los héroes blancos.'],
   ['navbarBackground', 'Fondo del navbar', 'Fondo sólido del menú al desplazarse y del menú móvil.'],

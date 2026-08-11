@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { ExternalLink, LogOut, Menu } from 'lucide-react';
+import { ExternalLink, LogOut, Menu, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSiteImages } from '../contexts/SiteImagesContext';
 import { firebaseEnabled } from '../firebase/firebase';
 import { logout } from '../services/authService';
 
 const AVALUOS_PLATFORM_URL = 'https://avaluos-platform.vercel.app/?tenant=amyblandon&source=amy-admin';
+const SIDEBAR_STORAGE_KEY = 'amy-admin-sidebar-collapsed';
 
 const links = [
   ['Panel principal', '/admin'],
@@ -18,14 +19,31 @@ const links = [
   ['Configuración', '/admin/settings'],
 ];
 
+const readCollapsedPreference = () => {
+  try {
+    return window.localStorage.getItem(SIDEBAR_STORAGE_KEY) === 'true';
+  } catch {
+    return false;
+  }
+};
+
 export default function AdminLayout() {
   const { user, profile } = useAuth();
   const { images } = useSiteImages();
   const [open, setOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(readCollapsedPreference);
   const navigate = useNavigate();
   const publicUrl = window.location.hostname.endsWith('github.io')
     ? `${window.location.origin}${import.meta.env.BASE_URL}#/`
     : `${window.location.origin}/`;
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(SIDEBAR_STORAGE_KEY, String(sidebarCollapsed));
+    } catch {
+      // El panel sigue funcionando aunque el navegador bloquee el almacenamiento local.
+    }
+  }, [sidebarCollapsed]);
 
   const signOut = async () => {
     await logout();
@@ -33,7 +51,7 @@ export default function AdminLayout() {
   };
 
   return (
-    <div className="admin-shell">
+    <div className={`admin-shell ${sidebarCollapsed ? 'admin-shell--sidebar-collapsed' : ''}`}>
       <aside className={open ? 'open' : ''}>
         <div className="admin-brand">
           <div className="admin-brand__logo">
@@ -72,15 +90,28 @@ export default function AdminLayout() {
 
       <main>
         <header className="admin-top">
-          <button
-            className="icon-button"
-            type="button"
-            aria-label={open ? 'Cerrar menú administrativo' : 'Abrir menú administrativo'}
-            aria-expanded={open}
-            onClick={() => setOpen(!open)}
-          >
-            <Menu />
-          </button>
+          <span className="admin-top__menu-controls">
+            <button
+              className="icon-button admin-mobile-menu-toggle"
+              type="button"
+              aria-label={open ? 'Cerrar menú administrativo' : 'Abrir menú administrativo'}
+              aria-expanded={open}
+              onClick={() => setOpen(!open)}
+            >
+              <Menu />
+            </button>
+            <button
+              className="admin-sidebar-collapse-toggle"
+              type="button"
+              aria-label={sidebarCollapsed ? 'Mostrar menú administrativo' : 'Ocultar menú administrativo'}
+              aria-pressed={sidebarCollapsed}
+              title={sidebarCollapsed ? 'Mostrar menú administrativo' : 'Ocultar menú administrativo'}
+              onClick={() => setSidebarCollapsed((current) => !current)}
+            >
+              {sidebarCollapsed ? <PanelLeftOpen aria-hidden="true" /> : <PanelLeftClose aria-hidden="true" />}
+              <span>{sidebarCollapsed ? 'Mostrar menú' : 'Ocultar menú'}</span>
+            </button>
+          </span>
           <div>
             <strong>{profile?.name || user?.displayName || 'Administración'}</strong>
             <span>{user?.email}</span>

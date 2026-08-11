@@ -1,7 +1,7 @@
 :root{
   --amy-solution-card:#f2f4f1;
   --amy-reference-dark:#001929;
-  --amy-reference-gold:#db9d23;
+  --amy-reference-gold:var(--amy-gold);
 }
 
 /* Tarjetas de soluciones medidas en amyblandon.com. */

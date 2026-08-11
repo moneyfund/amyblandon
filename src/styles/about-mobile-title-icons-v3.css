@@ -1,0 +1,44 @@
+/* Ajustes puntuales del hero de Sobre mí solicitados tras la revisión visual. */
+
+/* Especialidades: conserva azul/dorado, pero cambia el contenedor circular por uno cuadrado. */
+.public-site--about .about-page__hero-tags .about-page__hero-specialty-icon {
+  border-radius: 6px !important;
+}
+
+/* Reduce ligeramente el título también en escritorio sin cambiar colores ni familia tipográfica. */
+.public-site--about .about-page__content .about-page__multicolor-title {
+  font-size: clamp(43px, 3.2vw, 57px) !important;
+}
+
+@media (min-width: 701px) and (max-width: 1024px) {
+  .public-site--about .about-page__content .about-page__multicolor-title {
+    font-size: clamp(39px, 5.1vw, 51px) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  /* Da aire real entre el navbar y el título en teléfono. */
+  .public-site--about .about-page__hero-inner {
+    padding-top: 84px !important;
+  }
+
+  .public-site--about .about-page__content .about-page__multicolor-title {
+    font-size: clamp(32px, 9.1vw, 41px) !important;
+    line-height: 1 !important;
+    letter-spacing: -.025em !important;
+  }
+
+  .public-site--about .about-page__hero-tags .about-page__hero-specialty-icon {
+    border-radius: 5px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .public-site--about .about-page__hero-inner {
+    padding-top: 92px !important;
+  }
+
+  .public-site--about .about-page__content .about-page__multicolor-title {
+    font-size: clamp(30px, 8.8vw, 38px) !important;
+  }
+}

@@ -18,6 +18,7 @@ import './styles/insurance.css';
 import './styles/insurance-mobile-overrides.css';
 import './styles/insurance-light-hero.css';
 import './styles/insurance-coverage-links.css';
+import './styles/insurance-coverage-cards-premium.css';
 import './styles/insurance-detail.css';
 import './styles/contact-footer-overrides.css';
 import './styles/sector-socials.css';

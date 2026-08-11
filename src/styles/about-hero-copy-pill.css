@@ -1,0 +1,67 @@
+/* Ajustes finales del contenido del hero de Sobre mí. */
+.public-site--about .about-page__intro-copy--strategic {
+  width: min(100%, 665px);
+  margin: 0 0 26px;
+}
+
+.public-site--about .about-page__intro-copy--strategic p {
+  margin: 0 0 14px !important;
+  color: #425861 !important;
+  font-size: 16.5px;
+  line-height: 1.62;
+}
+
+.public-site--about .about-page__intro-copy--strategic .about-page__intro-lead {
+  margin-bottom: 18px !important;
+  color: #0a223c !important;
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+/* Mismo lenguaje visual del botón de WhatsApp del hero de Inicio. */
+.public-site--about .about-page__button--pill {
+  min-height: 52px;
+  padding: 13px 28px !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--amy-gold, #c99a44) !important;
+  background: var(--amy-gold, #c99a44) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 26px rgba(0,0,0,.12) !important;
+  font-weight: 700;
+  transition: transform .25s ease, background-color .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+
+.public-site--about .about-page__button--pill svg {
+  color: #fff !important;
+}
+
+.public-site--about .about-page__button--pill:hover {
+  background: #d5a33e !important;
+  border-color: #d5a33e !important;
+  color: #fff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(201,154,68,.24) !important;
+}
+
+@media (max-width: 700px) {
+  .public-site--about .about-page__intro-copy--strategic {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+
+  .public-site--about .about-page__intro-copy--strategic p {
+    font-size: 15.5px;
+    line-height: 1.65;
+  }
+
+  .public-site--about .about-page__intro-copy--strategic .about-page__intro-lead {
+    font-size: 17px;
+    line-height: 1.48;
+  }
+
+  .public-site--about .about-page__button--pill {
+    min-height: 50px;
+    padding: 12px 25px !important;
+  }
+}

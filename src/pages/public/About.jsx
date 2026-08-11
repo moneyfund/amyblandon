@@ -143,14 +143,16 @@ export default function About() {
         </RevealOnScroll>
 
         <RevealOnScroll className="about-page__content" direction="right" delay={120}>
-          <p className="about-page__label">Sobre Amy Blandón</p>
           <h1 className="about-page__multicolor-title">
             <span className="about-page__title-navy">ASESORA INMOBILIARIA,</span>
             <span className="about-page__title-gold">SEGUROS</span>
             <span className="about-page__title-navy">E INVERSIONES</span>
           </h1>
-          <div className="about-page__intro-copy">
-            {homePageContent.about.paragraphs.map((text) => <p key={text}>{text}</p>)}
+          <div className="about-page__intro-copy about-page__intro-copy--strategic">
+            <p className="about-page__intro-lead">Asesora Estratégica en Bienes Raíces, Seguros e Inversiones</p>
+            <p>Creo que las mejores decisiones financieras no se toman por impulso, sino con estrategia, información y la asesoría correcta.</p>
+            <p>Mi misión es acompañar a familias, profesionales y empresarios a proteger su patrimonio, identificar oportunidades de crecimiento e inversión y tomar decisiones inmobiliarias con seguridad y confianza.</p>
+            <p>Mi compromiso es ayudarte a construir un futuro más sólido a través de decisiones que generen valor, estabilidad y tranquilidad.</p>
           </div>
           <div className="about-page__hero-tags" aria-label="Áreas de especialidad">
             {heroSpecialties.map(({ label, icon: Icon }) => (
@@ -160,7 +162,7 @@ export default function About() {
               </span>
             ))}
           </div>
-          <a className="btn about-page__button" href={whatsappLink(amyContact.whatsappMessage, amyContact.phone)}>
+          <a className="btn about-page__button about-page__button--pill" href={whatsappLink(amyContact.whatsappMessage, amyContact.phone)}>
             <MessageCircle size={18} />Ir a WhatsApp
           </a>
         </RevealOnScroll>

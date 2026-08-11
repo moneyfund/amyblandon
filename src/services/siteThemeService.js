@@ -6,6 +6,7 @@ const THEME_DOCUMENT = ['siteContent', 'theme'];
 const HEX_PATTERN = /^#[0-9A-F]{6}$/i;
 const colorKeys = [
   'primaryColor',
+  'heroBackground',
   'accentColor',
   'surfaceColor',
   'navbarBackground',
@@ -14,23 +15,29 @@ const colorKeys = [
   'footerText',
 ];
 
-const LEGACY_AMY_CLASSIC = {
-  primaryColor: '#042B3A',
-  accentColor: '#C99A44',
-  surfaceColor: '#F4F6F4',
-  navbarBackground: '#FFFFFF',
-  navbarText: '#042B3A',
-  footerBackground: '#05090B',
-  footerText: '#FFFFFF',
-};
+function migrateTheme(data = {}) {
+  const schemaVersion = Number(data.schemaVersion || 1);
+  const preset = String(data.preset || '');
 
-function isLegacyAmyClassic(data = {}) {
-  if (data.preset !== 'amy-classic') return false;
-  return colorKeys.every((key) => String(data[key] || '').toUpperCase() === LEGACY_AMY_CLASSIC[key]);
+  // Cualquier versión anterior del preset oficial se actualiza a la referencia actual,
+  // para que "Restaurar Amy Blandón Original" siempre vuelva a los mismos colores.
+  if ((preset === 'amy-original' || preset === 'amy-classic') && schemaVersion < THEME_SCHEMA_VERSION) {
+    return { ...defaultSiteTheme };
+  }
+
+  if (schemaVersion < 3) {
+    return {
+      ...data,
+      schemaVersion: THEME_SCHEMA_VERSION,
+      heroBackground: data.heroBackground || data.footerBackground || data.primaryColor || defaultSiteTheme.heroBackground,
+    };
+  }
+
+  return data;
 }
 
 export function normalizeSiteTheme(data = {}) {
-  const source = isLegacyAmyClassic(data) ? defaultSiteTheme : data;
+  const source = migrateTheme(data);
   const theme = {
     schemaVersion: THEME_SCHEMA_VERSION,
     preset: String(source.preset || defaultSiteTheme.preset),

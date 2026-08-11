@@ -40,6 +40,7 @@ import './styles/amy-original-exact.css';
 import './styles/inner-page-typography.css';
 import './styles/home-featured-properties.css';
 import './styles/property-detail-premium.css';
+import './styles/property-gallery-lightbox.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

@@ -1,0 +1,117 @@
+/* Sidebar administrativo colapsable en escritorio. No altera el navbar público. */
+.admin-shell {
+  grid-template-columns: 280px minmax(0, 1fr);
+  transition: grid-template-columns .24s ease;
+}
+
+.admin-shell > aside {
+  min-width: 0;
+  overflow-x: hidden;
+  opacity: 1;
+  visibility: visible;
+  transition: padding .24s ease, opacity .16s ease, visibility .16s ease;
+}
+
+.admin-shell > main {
+  min-width: 0;
+  transition: padding .24s ease;
+}
+
+.admin-shell--sidebar-collapsed {
+  grid-template-columns: 0 minmax(0, 1fr);
+}
+
+.admin-shell--sidebar-collapsed > aside {
+  padding-left: 0;
+  padding-right: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.admin-top__menu-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.admin-sidebar-collapse-toggle {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 13px;
+  border: 1px solid #dbe3e8;
+  border-radius: 11px;
+  background: #f8fafb;
+  color: #173642;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 5px 16px rgba(0, 25, 41, .05);
+  transition: border-color .18s ease, background-color .18s ease, color .18s ease, transform .18s ease;
+}
+
+.admin-sidebar-collapse-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.admin-sidebar-collapse-toggle:hover {
+  border-color: #c99a44;
+  background: #fffaf0;
+  color: #79520d;
+  transform: translateY(-1px);
+}
+
+.admin-shell--sidebar-collapsed .admin-sidebar-collapse-toggle {
+  border-color: rgba(201, 154, 68, .5);
+  background: #fffaf0;
+  color: #79520d;
+}
+
+/* Al ocultar el menú, el área útil crece para formularios, mapas y tablas. */
+@media (min-width: 801px) {
+  .admin-shell--sidebar-collapsed > main {
+    padding-left: clamp(18px, 2vw, 34px);
+    padding-right: clamp(18px, 2vw, 34px);
+  }
+
+  .admin-shell--sidebar-collapsed .property-workspace {
+    max-width: 1680px;
+  }
+}
+
+/* En móvil se conserva el comportamiento de menú deslizante ya existente. */
+@media (max-width: 800px) {
+  .admin-shell,
+  .admin-shell--sidebar-collapsed {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-shell--sidebar-collapsed > aside {
+    width: 280px;
+    padding: 1.25rem;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .admin-sidebar-collapse-toggle {
+    display: none;
+  }
+
+  .admin-top__menu-controls {
+    display: inline-flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-shell,
+  .admin-shell > aside,
+  .admin-shell > main,
+  .admin-sidebar-collapse-toggle {
+    transition: none;
+  }
+}

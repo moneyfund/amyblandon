@@ -1,6 +1,6 @@
 import { doc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
 import { db, firebaseEnabled } from '../firebase/firebase';
-import { defaultSiteTheme } from '../config/siteTheme';
+import { defaultSiteTheme, THEME_SCHEMA_VERSION } from '../config/siteTheme';
 
 const THEME_DOCUMENT = ['siteContent', 'theme'];
 const HEX_PATTERN = /^#[0-9A-F]{6}$/i;
@@ -14,13 +14,34 @@ const colorKeys = [
   'footerText',
 ];
 
+const LEGACY_AMY_CLASSIC = {
+  primaryColor: '#042B3A',
+  accentColor: '#C99A44',
+  surfaceColor: '#F4F6F4',
+  navbarBackground: '#FFFFFF',
+  navbarText: '#042B3A',
+  footerBackground: '#05090B',
+  footerText: '#FFFFFF',
+};
+
+function isLegacyAmyClassic(data = {}) {
+  if (data.preset !== 'amy-classic') return false;
+  return colorKeys.every((key) => String(data[key] || '').toUpperCase() === LEGACY_AMY_CLASSIC[key]);
+}
+
 export function normalizeSiteTheme(data = {}) {
-  const theme = { ...defaultSiteTheme, ...data };
+  const source = isLegacyAmyClassic(data) ? defaultSiteTheme : data;
+  const theme = {
+    schemaVersion: THEME_SCHEMA_VERSION,
+    preset: String(source.preset || defaultSiteTheme.preset),
+  };
+
   colorKeys.forEach((key) => {
-    if (!HEX_PATTERN.test(String(theme[key] || ''))) theme[key] = defaultSiteTheme[key];
-    else theme[key] = theme[key].toUpperCase();
+    const value = String(source[key] || defaultSiteTheme[key]).toUpperCase();
+    theme[key] = HEX_PATTERN.test(value) ? value : defaultSiteTheme[key];
   });
-  theme.preset = String(theme.preset || 'custom');
+
+  if (theme.preset === 'amy-classic') theme.preset = 'amy-original';
   return theme;
 }
 

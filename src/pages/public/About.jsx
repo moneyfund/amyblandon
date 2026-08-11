@@ -138,7 +138,11 @@ export default function About() {
 
         <RevealOnScroll className="about-page__content" direction="right" delay={120}>
           <p className="about-page__label">Sobre Amy Blandón</p>
-          <h1>{homePageContent.about.titleLines.map((line) => <span key={line}>{line}</span>)}</h1>
+          <h1 className="about-page__multicolor-title">
+            <span className="about-page__title-navy">ASESORA INMOBILIARIA,</span>
+            <span className="about-page__title-gold">SEGUROS</span>
+            <span className="about-page__title-navy">E INVERSIONES</span>
+          </h1>
           <div className="about-page__intro-copy">
             {homePageContent.about.paragraphs.map((text) => <p key={text}>{text}</p>)}
           </div>

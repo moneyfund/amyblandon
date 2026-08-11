@@ -1,0 +1,28 @@
+.public-site--about .about-page__content .about-page__multicolor-title {
+  font-family: "Times New Roman", Times, serif;
+  font-weight: 700;
+  letter-spacing: -.035em;
+  line-height: .96;
+}
+
+.public-site--about .about-page__multicolor-title > span {
+  display: block;
+  font-family: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
+.public-site--about .about-page__multicolor-title .about-page__title-navy {
+  color: var(--site-footer-bg, #001929);
+}
+
+.public-site--about .about-page__multicolor-title .about-page__title-gold {
+  color: var(--amy-gold, #c99a44);
+}
+
+@media (max-width: 700px) {
+  .public-site--about .about-page__content .about-page__multicolor-title {
+    letter-spacing: -.025em;
+    line-height: .98;
+  }
+}

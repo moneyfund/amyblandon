@@ -8,11 +8,14 @@ import {
   CalendarDays,
   Car,
   Check,
+  ChevronLeft,
+  ChevronRight,
   Download,
   MapPin,
   MessageCircle,
   Ruler,
   Sparkles,
+  X,
 } from 'lucide-react';
 import { getProperties } from '../../services/propertyService';
 import SimpleForm from '../../components/forms/SimpleForm';
@@ -73,11 +76,13 @@ export default function PropertyDetail() {
   const [all, setAll] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useEffect(() => {
     let active = true;
     setLoading(true);
     setError('');
+    setLightboxIndex(null);
 
     getProperties()
       .then((result) => {
@@ -109,6 +114,35 @@ export default function PropertyDetail() {
       .filter(Boolean)
       .filter((url, index, values) => values.indexOf(url) === index);
   }, [property]);
+
+  useEffect(() => {
+    if (lightboxIndex === null || images.length === 0) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setLightboxIndex(null);
+        return;
+      }
+
+      if (event.key === 'ArrowRight') {
+        setLightboxIndex((current) => (current === null ? null : (current + 1) % images.length));
+      }
+
+      if (event.key === 'ArrowLeft') {
+        setLightboxIndex((current) => (current === null ? null : (current - 1 + images.length) % images.length));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [lightboxIndex, images.length]);
 
   if (loading) {
     return (
@@ -178,6 +212,14 @@ export default function PropertyDetail() {
     .sort((a, b) => Number(b.propertyType === property.propertyType) - Number(a.propertyType === property.propertyType))
     .slice(0, 3);
 
+  const showPreviousPhoto = () => {
+    setLightboxIndex((current) => (current === null ? null : (current - 1 + images.length) % images.length));
+  };
+
+  const showNextPhoto = () => {
+    setLightboxIndex((current) => (current === null ? null : (current + 1) % images.length));
+  };
+
   return (
     <div className="property-detail-page">
       <SEO title={`${property.title} | Amy Blandón`} description={property.shortDescription || property.description} />
@@ -208,17 +250,28 @@ export default function PropertyDetail() {
       <section className={`property-detail-shell property-detail-gallery property-detail-gallery--${Math.min(images.length, 4)}`}>
         {images.length ? (
           <>
-            <div className="property-detail-gallery__main">
+            <button
+              className="property-detail-gallery__main"
+              type="button"
+              onClick={() => setLightboxIndex(0)}
+              aria-label={`Abrir fotografía 1 de ${images.length}`}
+            >
               <img src={images[0]} alt={property.title} />
               <span className="property-detail-gallery__count">{images.length} {images.length === 1 ? 'foto' : 'fotos'}</span>
-            </div>
+            </button>
             {images.length > 1 && (
               <div className="property-detail-gallery__side">
                 {images.slice(1, 4).map((image, index) => (
-                  <div className="property-detail-gallery__thumb" key={image}>
+                  <button
+                    className="property-detail-gallery__thumb"
+                    type="button"
+                    key={image}
+                    onClick={() => setLightboxIndex(index + 1)}
+                    aria-label={`Abrir fotografía ${index + 2} de ${images.length}`}
+                  >
                     <img src={image} alt={`${property.title} ${index + 2}`} />
                     {index === 2 && images.length > 4 && <span>+{images.length - 4}</span>}
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
@@ -230,6 +283,71 @@ export default function PropertyDetail() {
           </div>
         )}
       </section>
+
+      {lightboxIndex !== null && images[lightboxIndex] && (
+        <div
+          className="property-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Galería de ${property.title}`}
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setLightboxIndex(null);
+          }}
+        >
+          <div className="property-lightbox__topbar">
+            <div>
+              <strong>{property.title}</strong>
+              <span>{lightboxIndex + 1} / {images.length}</span>
+            </div>
+            <button type="button" onClick={() => setLightboxIndex(null)} aria-label="Cerrar galería">
+              <X />
+            </button>
+          </div>
+
+          <div className="property-lightbox__stage">
+            {images.length > 1 && (
+              <button
+                className="property-lightbox__arrow property-lightbox__arrow--prev"
+                type="button"
+                onClick={showPreviousPhoto}
+                aria-label="Fotografía anterior"
+              >
+                <ChevronLeft />
+              </button>
+            )}
+
+            <img src={images[lightboxIndex]} alt={`${property.title} ${lightboxIndex + 1}`} />
+
+            {images.length > 1 && (
+              <button
+                className="property-lightbox__arrow property-lightbox__arrow--next"
+                type="button"
+                onClick={showNextPhoto}
+                aria-label="Fotografía siguiente"
+              >
+                <ChevronRight />
+              </button>
+            )}
+          </div>
+
+          {images.length > 1 && (
+            <div className="property-lightbox__thumbs" aria-label="Miniaturas de la galería">
+              {images.map((image, index) => (
+                <button
+                  type="button"
+                  key={image}
+                  className={index === lightboxIndex ? 'is-active' : ''}
+                  onClick={() => setLightboxIndex(index)}
+                  aria-label={`Ver fotografía ${index + 1}`}
+                  aria-current={index === lightboxIndex ? 'true' : undefined}
+                >
+                  <img src={image} alt="" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {facts.length > 0 && (
         <section className="property-detail-shell property-detail-facts" aria-label="Datos principales">

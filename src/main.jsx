@@ -31,6 +31,7 @@ import './styles/about-light-hero.css';
 import './styles/real-estate-light-hero.css';
 import './styles/real-estate-catalog-first.css';
 import './styles/site-personalization.css';
+import './styles/home-hero-seam-fix.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

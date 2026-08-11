@@ -43,8 +43,8 @@ export default function PublicLayout() {
   ].filter(Boolean).join(' ');
 
   const primaryDeep = `color-mix(in srgb, ${theme.primaryColor} 78%, #000000)`;
-  const primaryHero = `color-mix(in srgb, ${theme.primaryColor} 84%, #000000)`;
-  const primaryHeroLight = `color-mix(in srgb, ${theme.primaryColor} 72%, #FFFFFF)`;
+  const heroDeep = `color-mix(in srgb, ${theme.heroBackground} 80%, #000000)`;
+  const heroLight = `color-mix(in srgb, ${theme.heroBackground} 68%, #FFFFFF)`;
   const accentLight = `color-mix(in srgb, ${theme.accentColor} 68%, #FFFFFF)`;
   const mutedText = `color-mix(in srgb, ${theme.primaryColor} 48%, #7E8A8F)`;
   const border = `color-mix(in srgb, ${theme.primaryColor} 14%, #FFFFFF)`;
@@ -52,6 +52,8 @@ export default function PublicLayout() {
   const themeStyle = {
     '--site-primary': theme.primaryColor,
     '--site-primary-deep': primaryDeep,
+    '--site-hero-bg': theme.heroBackground,
+    '--site-hero-deep': heroDeep,
     '--site-accent': theme.accentColor,
     '--site-accent-light': accentLight,
     '--site-surface': theme.surfaceColor,
@@ -64,9 +66,9 @@ export default function PublicLayout() {
     '--site-footer-text': theme.footerText,
     '--amy-navy': theme.primaryColor,
     '--amy-navy-deep': primaryDeep,
-    '--amy-hero-navy': primaryHero,
-    '--amy-hero-blue': primaryHeroLight,
-    '--amy-hero-blue-deep': primaryDeep,
+    '--amy-hero-navy': theme.heroBackground,
+    '--amy-hero-blue': heroLight,
+    '--amy-hero-blue-deep': heroDeep,
     '--amy-gold': theme.accentColor,
     '--amy-gold-light': accentLight,
     '--amy-surface': theme.surfaceColor,

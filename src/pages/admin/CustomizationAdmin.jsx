@@ -150,7 +150,7 @@ export default function CustomizationAdmin() {
         <div className="customization-presets">
           {siteThemePresets.map((preset) => {
             const selected = form.preset === preset.id;
-            const palette = [preset.values.navbarBackground, preset.values.primaryColor, preset.values.accentColor, preset.values.footerBackground];
+            const palette = [preset.values.navbarBackground, preset.values.heroBackground, preset.values.accentColor, preset.values.footerBackground];
             return (
               <button
                 type="button"
@@ -163,7 +163,7 @@ export default function CustomizationAdmin() {
                   {selected && <Check size={18} />}
                 </span>
                 <span className="customization-palette" aria-hidden="true">
-                  {palette.map((color) => <i key={color} style={{ backgroundColor: color }} />)}
+                  {palette.map((color, index) => <i key={`${color}-${index}`} style={{ backgroundColor: color }} />)}
                 </span>
                 <small>{preset.description}</small>
               </button>
@@ -172,7 +172,7 @@ export default function CustomizationAdmin() {
         </div>
 
         <div className="customization-original-note">
-          <strong>Amy Blandón Original siempre estará disponible.</strong> Navbar #FFFFFF, texto #042B3A, dorado #C99A44 y footer #042B3A. Aunque pruebes otros temas, puedes volver a esta identidad cuando quieras.
+          <strong>Amy Blandón Original siempre estará disponible.</strong> Hero #001929, navbar #FFFFFF, texto del navbar #042B3A, dorado #C99A44 y footer #001929. Aunque pruebes otros temas, puedes volver a esta identidad cuando quieras.
         </div>
       </section>
 
@@ -181,7 +181,7 @@ export default function CustomizationAdmin() {
           <div>
             <p className="admin-eyebrow">Ajuste manual</p>
             <h2>Personalizar colores</h2>
-            <p>Parte de un tema y ajusta tonos específicos. Las variantes necesarias se generan automáticamente para evitar secciones descoordinadas.</p>
+            <p>Parte de un tema y ajusta tonos específicos. El hero tiene su propio color para no perder el tono original al cambiar otros elementos.</p>
           </div>
         </div>
 
@@ -201,7 +201,7 @@ export default function CustomizationAdmin() {
                     const value = event.target.value.toUpperCase();
                     if (!setColor(key, value)) {
                       event.target.value = form[key];
-                      setError(`El código de “${label}” debe tener el formato #RRGGBB, por ejemplo #042B3A.`);
+                      setError(`El código de “${label}” debe tener el formato #RRGGBB, por ejemplo #001929.`);
                     }
                   }}
                   onKeyDown={(event) => {
@@ -219,7 +219,7 @@ export default function CustomizationAdmin() {
 
         <div className="customization-live-note">
           <strong>Actualización automática y coherente</strong>
-          <span>Al guardar, Firestore publica la paleta y la web genera automáticamente variantes para héroes, textos, bordes, tarjetas y bloques oscuros. No hace falta redeploy.</span>
+          <span>Al guardar, Firestore publica la paleta y la web aplica automáticamente los valores a héroes, textos, bordes, tarjetas y footer. No hace falta redeploy.</span>
         </div>
 
         <div className="quick-actions customization-actions">

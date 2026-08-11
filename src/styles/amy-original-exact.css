@@ -1,0 +1,36 @@
+/* Referencia exacta del tema Amy Blandón Original.
+   Estos valores se aislan del resto del sistema de temas para evitar que mezclas,
+   gradientes o configuraciones antiguas alteren hero y footer. */
+.public-site[data-theme-preset="amy-original"] {
+  --amy-hero-navy: #001929;
+  --site-footer-bg: #001929;
+}
+
+.public-site[data-theme-preset="amy-original"],
+.public-site[data-theme-preset="amy-original"] .public-footer-reveal,
+.public-site[data-theme-preset="amy-original"] .public-footer {
+  background: #001929 !important;
+}
+
+/* El footer original de amyblandon.com es un fondo sólido, sin degradado dorado. */
+.public-site[data-theme-preset="amy-original"] .public-footer {
+  background-image: none !important;
+  background-color: #001929 !important;
+}
+
+/* Hero Inicio: azul profundo exacto en todo el bloque izquierdo. */
+.public-site[data-theme-preset="amy-original"] .home-page .home-hero,
+.public-site[data-theme-preset="amy-original"] .home-page .home-hero__media.home-hero__media--layered {
+  background: #001929 !important;
+}
+
+/* La fotografía solapa ligeramente la unión para que nunca aparezca una línea vertical. */
+@media (min-width: 1081px) {
+  .public-site[data-theme-preset="amy-original"] .home-page .home-hero__background {
+    left: -2px !important;
+    width: calc(100% + 2px) !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: #001929 !important;
+  }
+}

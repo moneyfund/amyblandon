@@ -34,6 +34,7 @@ import './styles/site-personalization.css';
 import './styles/real-estate-search-v2.css';
 import './styles/home-hero-seam-fix.css';
 import './styles/amy-original-exact.css';
+import './styles/inner-page-typography.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

@@ -1,0 +1,17 @@
+/* Corrige la unión del hero de Inicio.
+   La personalización anterior dividía el fondo al 51%, mientras la columna visual inicia al 51.5%,
+   generando una banda vertical intermedia. El fondo base vuelve a ser sólido y la imagen ocupa su columna. */
+.home-page .home-hero {
+  background: var(--amy-hero-navy) !important;
+}
+
+.home-page .home-hero__media.home-hero__media--layered {
+  background: var(--amy-hero-navy) !important;
+}
+
+@media (min-width: 1081px) {
+  .home-page .home-hero__background {
+    left: -1px;
+    width: calc(100% + 1px);
+  }
+}

@@ -1,0 +1,30 @@
+/* Correccion final de especificidad para las cards de Coberturas.
+   Se carga al final para que las capas globales no anulen los colores premium. */
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card,
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card--link {
+  border: 2px solid var(--amy-gold, #c99a44) !important;
+  border-color: var(--amy-gold, #c99a44) !important;
+}
+
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card__icon {
+  background: #001929 !important;
+  background-color: #001929 !important;
+  background-image: none !important;
+  border: 1px solid var(--amy-gold, #c99a44) !important;
+  color: var(--amy-gold, #c99a44) !important;
+}
+
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card__icon svg,
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card__icon svg * {
+  color: var(--amy-gold, #c99a44) !important;
+  stroke: var(--amy-gold, #c99a44) !important;
+}
+
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card:hover,
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card:focus-visible {
+  border-color: var(--amy-gold, #c99a44) !important;
+  box-shadow:
+    0 24px 52px rgba(0, 25, 41, .12),
+    0 0 0 2px rgba(201, 154, 68, .18),
+    0 0 32px rgba(201, 154, 68, .32) !important;
+}

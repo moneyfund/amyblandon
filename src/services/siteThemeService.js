@@ -19,13 +19,14 @@ function migrateTheme(data = {}) {
   const schemaVersion = Number(data.schemaVersion || 1);
   const preset = String(data.preset || '');
 
-  // Cualquier versión anterior del preset oficial se actualiza a la referencia actual,
-  // para que "Restaurar Amy Blandón Original" siempre vuelva a los mismos colores.
-  if ((preset === 'amy-original' || preset === 'amy-classic') && schemaVersion < THEME_SCHEMA_VERSION) {
+  // El preset oficial debe reproducir siempre la referencia de amyblandon.com.
+  // Si Amy modifica cualquier color desde el panel, el editor cambia el preset a `custom`,
+  // por lo que sus cambios manuales siguen respetándose normalmente.
+  if (preset === 'amy-original' || preset === 'amy-classic') {
     return { ...defaultSiteTheme };
   }
 
-  if (schemaVersion < 3) {
+  if (schemaVersion < THEME_SCHEMA_VERSION) {
     return {
       ...data,
       schemaVersion: THEME_SCHEMA_VERSION,

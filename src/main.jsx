@@ -23,6 +23,7 @@ import './styles/contact-footer-overrides.css';
 import './styles/sector-socials.css';
 import './styles/property-workspace.css';
 import './styles/property-workspace-simplified.css';
+import './styles/property-workspace-wizard.css';
 import './styles/real-estate-hero-premium.css';
 import './styles/about-map-coverage-overrides.css';
 import './styles/navbar-phone-final.css';

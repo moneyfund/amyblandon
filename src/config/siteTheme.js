@@ -1,26 +1,30 @@
+export const THEME_SCHEMA_VERSION = 2;
+
 export const defaultSiteTheme = {
-  preset: 'amy-classic',
+  schemaVersion: THEME_SCHEMA_VERSION,
+  preset: 'amy-original',
   primaryColor: '#042B3A',
   accentColor: '#C99A44',
   surfaceColor: '#F4F6F4',
   navbarBackground: '#FFFFFF',
   navbarText: '#042B3A',
-  footerBackground: '#05090B',
+  footerBackground: '#042B3A',
   footerText: '#FFFFFF',
 };
 
 export const siteThemePresets = [
   {
-    id: 'amy-classic',
-    name: 'Amy Clásico',
-    description: 'Blanco, azul petróleo y dorado. Conserva la identidad actual con una apariencia premium.',
-    values: { ...defaultSiteTheme, preset: 'amy-classic' },
+    id: 'amy-original',
+    name: 'Amy Blandón Original',
+    description: 'Tema predeterminado y restaurable: navbar blanco, azul petróleo, dorado y footer azul petróleo.',
+    values: { ...defaultSiteTheme, preset: 'amy-original' },
   },
   {
     id: 'ivory-premium',
     name: 'Marfil Premium',
     description: 'Marfil cálido, verde profundo y dorado suave para una imagen elegante y residencial.',
     values: {
+      schemaVersion: THEME_SCHEMA_VERSION,
       preset: 'ivory-premium',
       primaryColor: '#263A35',
       accentColor: '#B68A42',
@@ -36,6 +40,7 @@ export const siteThemePresets = [
     name: 'Azul Ejecutivo',
     description: 'Azul marino sobrio, blanco limpio y oro champán para una presencia corporativa.',
     values: {
+      schemaVersion: THEME_SCHEMA_VERSION,
       preset: 'executive-navy',
       primaryColor: '#102A43',
       accentColor: '#C7A55B',
@@ -51,6 +56,7 @@ export const siteThemePresets = [
     name: 'Grafito Dorado',
     description: 'Grafito, blanco cálido y dorado envejecido para una estética moderna y exclusiva.',
     values: {
+      schemaVersion: THEME_SCHEMA_VERSION,
       preset: 'graphite-gold',
       primaryColor: '#2C3033',
       accentColor: '#B8944E',
@@ -64,11 +70,11 @@ export const siteThemePresets = [
 ];
 
 export const siteThemeFields = [
-  ['primaryColor', 'Color principal', 'Botones, textos destacados y elementos principales de la identidad.'],
-  ['accentColor', 'Dorado / acento', 'Líneas, estados activos, detalles premium y llamadas a la acción.'],
-  ['surfaceColor', 'Fondos suaves', 'Tarjetas y superficies secundarias claras de la web.'],
-  ['navbarBackground', 'Fondo del navbar', 'Color del navbar cuando aparece su fondo sólido.'],
-  ['navbarText', 'Texto del navbar', 'Color de los enlaces sobre el navbar claro.'],
-  ['footerBackground', 'Fondo del footer', 'Color principal del pie de página.'],
-  ['footerText', 'Texto del footer', 'Color del contenido del pie de página.'],
+  ['primaryColor', 'Color principal', 'Títulos, botones, héroes oscuros y elementos principales de identidad.'],
+  ['accentColor', 'Dorado / acento', 'Líneas, estados activos, iconos, detalles premium y llamadas a la acción.'],
+  ['surfaceColor', 'Fondos suaves', 'Fondos secundarios, tarjetas, bloques claros y variaciones de los héroes blancos.'],
+  ['navbarBackground', 'Fondo del navbar', 'Fondo sólido del menú al desplazarse y del menú móvil.'],
+  ['navbarText', 'Texto del navbar', 'Enlaces, subtítulo del logo y controles cuando el navbar tiene fondo claro.'],
+  ['footerBackground', 'Fondo del footer', 'Color completo del pie de página y del área de revelado inferior.'],
+  ['footerText', 'Texto del footer', 'Títulos, enlaces, datos de contacto y textos del pie de página.'],
 ];

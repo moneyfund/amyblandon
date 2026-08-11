@@ -22,7 +22,6 @@ import {
   areaUnitOptions,
   featurePresets,
   getDynamicFields,
-  highlightTagOptions,
   nicaraguaDepartments,
   propertySections,
   rentPeriodOptions,
@@ -495,11 +494,6 @@ export default function PropertyWorkspace() {
       if (!form.city.trim()) errors.push('Escribe la ciudad o municipio.');
     }
 
-    if (key === 'media') {
-      if (!form.images?.length) errors.push('Sube al menos una fotografía para completar la propiedad.');
-      if (form.images?.length && !form.coverImage) errors.push('Selecciona una fotografía de portada.');
-    }
-
     if (errors.length) {
       setError(errors.join(' '));
       setMessage('');
@@ -539,13 +533,13 @@ export default function PropertyWorkspace() {
     const errors = [];
     const addError = (step, text) => errors.push({ step, text });
 
-    if (!form.title.trim()) addError(0, 'Escribe el título de la propiedad.');
-    if (!form.propertyType) addError(0, 'Selecciona el tipo de propiedad.');
-    if (!form.operationType) addError(1, 'Selecciona si es venta o alquiler.');
-    if (!form.priceOnRequest && !(Number(form.price) > 0)) addError(1, 'Escribe un precio válido o activa “Precio a consultar”.');
+    if (!form.title.trim()) addError(0, 'Escribe el título de la propiedad antes de guardar.');
 
     if (publicationStatus === 'published') {
+      if (!form.propertyType) addError(0, 'Selecciona el tipo de propiedad.');
       if (!form.description.trim()) addError(0, 'Agrega una descripción antes de publicar.');
+      if (!form.operationType) addError(1, 'Selecciona si es venta o alquiler.');
+      if (!form.priceOnRequest && !(Number(form.price) > 0)) addError(1, 'Escribe un precio válido o activa “Precio a consultar”.');
       if (!form.department) addError(2, 'Selecciona el departamento antes de publicar.');
       if (!form.city.trim()) addError(2, 'Escribe la ciudad o municipio antes de publicar.');
       if (!form.coverImage) addError(4, 'Selecciona una fotografía de portada antes de publicar.');

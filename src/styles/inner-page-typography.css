@@ -1,0 +1,303 @@
+/* Jerarquía editorial para páginas internas.
+   Inicio queda fuera de esta hoja mediante .public-site--inner. */
+.public-site--inner {
+  --inner-title-color: var(--site-primary-deep, #001929);
+  --inner-title-max: 1120px;
+  --inner-title-weight: 700;
+  --inner-title-tracking: -.045em;
+}
+
+/* Etiquetas superiores: pequeñas, doradas y con presencia sin competir con el título. */
+.public-site--inner :is(
+  .re-eyebrow,
+  .about-page__label,
+  .section-kicker,
+  .insurance-eyebrow,
+  .insurance-detail-eyebrow,
+  .contact-eyebrow
+) {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+
+/* Bienes raíces: título más compacto y con el peso visual de la referencia. */
+.public-site--inner .real-estate-page .re-search-hero {
+  padding-top: 154px;
+  padding-bottom: 76px;
+}
+
+.public-site--inner .real-estate-page .re-search-hero__heading {
+  max-width: 1220px;
+  margin-bottom: 38px;
+}
+
+.public-site--inner .real-estate-page .re-search-hero__heading h1 {
+  max-width: 1180px;
+  margin: 0 auto 22px;
+  font-family: var(--font-body);
+  font-size: clamp(48px, 4.15vw, 68px);
+  font-weight: 700;
+  line-height: 1.055;
+  letter-spacing: -.047em;
+  text-wrap: balance;
+}
+
+.public-site--inner .real-estate-page .re-search-hero__heading > p:last-child {
+  max-width: 760px;
+  font-size: clamp(17px, 1.25vw, 20px);
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -.012em;
+}
+
+/* Sobre mí: mantiene el carácter editorial, pero evita un titular excesivamente liviano. */
+.public-site--inner .about-page__content h1 {
+  max-width: 760px;
+  margin-top: 12px;
+  margin-bottom: 24px;
+  font-family: var(--font-body);
+  font-size: clamp(44px, 4vw, 64px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -.045em;
+}
+
+.public-site--inner .about-page__content h1 span {
+  line-height: inherit;
+}
+
+.public-site--inner .about-page__intro-copy {
+  max-width: 690px;
+}
+
+/* Seguros principal: más contundente, menos genérico y con mejor ritmo entre líneas. */
+.public-site--inner .insurance-hero__content h1 {
+  max-width: 720px;
+  margin-top: 12px;
+  margin-bottom: 22px;
+  font-family: var(--font-body);
+  font-size: clamp(44px, 3.8vw, 62px);
+  font-weight: 700;
+  line-height: 1.065;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+
+.public-site--inner .insurance-hero__lead {
+  max-width: 660px;
+  font-size: clamp(16px, 1.15vw, 19px);
+  line-height: 1.62;
+}
+
+/* Detalles de seguros. */
+.public-site--inner .insurance-detail-hero__content h1 {
+  max-width: 760px;
+  margin-top: 12px;
+  margin-bottom: 22px;
+  font-family: var(--font-body);
+  font-size: clamp(42px, 3.65vw, 60px);
+  font-weight: 700;
+  line-height: 1.065;
+  letter-spacing: -.043em;
+  text-wrap: balance;
+}
+
+.public-site--inner .insurance-detail-hero__lead {
+  max-width: 670px;
+  font-size: clamp(16px, 1.12vw, 19px);
+  line-height: 1.62;
+}
+
+/* Contacto y páginas sencillas. */
+.public-site--inner .contact-heading h1,
+.public-site--inner .page-hero > h1 {
+  max-width: var(--inner-title-max);
+  margin-top: 10px;
+  margin-bottom: 18px;
+  font-family: var(--font-body);
+  font-size: clamp(44px, 4vw, 64px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+
+.public-site--inner .contact-heading > p:last-child,
+.public-site--inner .page-hero > h1 + p {
+  max-width: 760px;
+  font-size: clamp(16px, 1.18vw, 19px);
+  line-height: 1.6;
+}
+
+/* Títulos secundarios: misma familia, más peso y menos dispersión vertical. */
+.public-site--inner :is(
+  .re-results__top,
+  .re-heading,
+  .re-hero__content,
+  .re-cta__inner,
+  .about-page__purpose,
+  .about-page__section-heading,
+  .about-page__impact-copy,
+  .insurance-heading,
+  .insurance-guidance__content,
+  .insurance-principles__intro,
+  .insurance-detail-intro__copy,
+  .insurance-detail-heading,
+  .insurance-detail-fit__panel,
+  .insurance-detail-advice__grid,
+  .contact-form-card__heading
+) :is(h2, h1) {
+  font-family: var(--font-body);
+  font-weight: 700;
+  line-height: 1.09;
+  letter-spacing: -.037em;
+  text-wrap: balance;
+}
+
+.public-site--inner :is(
+  .re-results__top,
+  .re-heading,
+  .about-page__purpose,
+  .about-page__section-heading,
+  .about-page__impact-copy,
+  .insurance-heading,
+  .insurance-guidance__content,
+  .insurance-principles__intro,
+  .insurance-detail-intro__copy,
+  .insurance-detail-heading,
+  .insurance-detail-fit__panel,
+  .insurance-detail-advice__grid,
+  .contact-form-card__heading
+) h2 {
+  font-size: clamp(34px, 3vw, 48px);
+}
+
+/* El bloque de asesoría de Bienes raíces usa h1 aunque ya no es el título principal de página. */
+.public-site--inner .real-estate-page .re-hero--advisory .re-hero__content h1 {
+  font-size: clamp(38px, 3.2vw, 52px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -.04em;
+}
+
+/* Cards y microtítulos: un poco más definidos sin hacerlos pesados. */
+.public-site--inner :is(
+  .re-service,
+  .re-process__grid article,
+  .insurance-coverage-card,
+  .insurance-process__step,
+  .insurance-principles__list article,
+  .insurance-detail-pillars article,
+  .insurance-detail-questions__grid article,
+  .contact-card
+) h3 {
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -.02em;
+}
+
+/* Propiedad individual / recursos: evita títulos gigantes sin estructura. */
+.public-site--inner .page-hero {
+  padding-top: 112px;
+}
+
+.public-site--inner .page-hero .gallery + h1 {
+  margin-top: 38px;
+}
+
+/* Mejor separación visual título-subtítulo-contenido. */
+.public-site--inner :is(
+  .re-search-hero__heading,
+  .contact-heading,
+  .insurance-heading,
+  .insurance-detail-heading
+) > p:last-child {
+  margin-top: 0;
+}
+
+@media (min-width: 1280px) {
+  .public-site--inner .real-estate-page .re-search-hero__heading h1 {
+    max-width: 1240px;
+  }
+
+  .public-site--inner .contact-heading {
+    max-width: 980px;
+  }
+}
+
+@media (max-width: 980px) {
+  .public-site--inner .real-estate-page .re-search-hero {
+    padding-top: 132px;
+    padding-bottom: 66px;
+  }
+
+  .public-site--inner .real-estate-page .re-search-hero__heading h1,
+  .public-site--inner .about-page__content h1,
+  .public-site--inner .insurance-hero__content h1,
+  .public-site--inner .insurance-detail-hero__content h1,
+  .public-site--inner .contact-heading h1,
+  .public-site--inner .page-hero > h1 {
+    font-size: clamp(42px, 7vw, 56px);
+  }
+}
+
+@media (max-width: 680px) {
+  .public-site--inner :is(
+    .re-eyebrow,
+    .about-page__label,
+    .section-kicker,
+    .insurance-eyebrow,
+    .insurance-detail-eyebrow,
+    .contact-eyebrow
+  ) {
+    font-size: 10px;
+    letter-spacing: .15em;
+  }
+
+  .public-site--inner .real-estate-page .re-search-hero {
+    padding-top: 112px;
+    padding-bottom: 54px;
+  }
+
+  .public-site--inner .real-estate-page .re-search-hero__heading {
+    margin-bottom: 28px;
+  }
+
+  .public-site--inner .real-estate-page .re-search-hero__heading h1,
+  .public-site--inner .about-page__content h1,
+  .public-site--inner .insurance-hero__content h1,
+  .public-site--inner .insurance-detail-hero__content h1,
+  .public-site--inner .contact-heading h1,
+  .public-site--inner .page-hero > h1 {
+    font-size: clamp(36px, 10vw, 44px);
+    line-height: 1.075;
+    letter-spacing: -.04em;
+  }
+
+  .public-site--inner :is(
+    .re-results__top,
+    .re-heading,
+    .about-page__purpose,
+    .about-page__section-heading,
+    .about-page__impact-copy,
+    .insurance-heading,
+    .insurance-guidance__content,
+    .insurance-principles__intro,
+    .insurance-detail-intro__copy,
+    .insurance-detail-heading,
+    .insurance-detail-fit__panel,
+    .insurance-detail-advice__grid,
+    .contact-form-card__heading
+  ) h2 {
+    font-size: clamp(30px, 8vw, 38px);
+    line-height: 1.1;
+  }
+
+  .public-site--inner .page-hero {
+    padding-top: 92px;
+  }
+}

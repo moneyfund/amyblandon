@@ -42,6 +42,7 @@ import './styles/home-featured-properties.css';
 import './styles/property-detail-premium.css';
 import './styles/property-gallery-lightbox.css';
 import './styles/about-service-cards-premium.css';
+import './styles/about-title-multicolor.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

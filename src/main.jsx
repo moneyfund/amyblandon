@@ -50,6 +50,7 @@ import './styles/about-title-reference-v2.css';
 import './styles/about-hero-copy-pill.css';
 import './styles/about-hero-cleanup-v2.css';
 import './styles/about-mobile-title-icons-v3.css';
+import './styles/section-hero-backgrounds-v5.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

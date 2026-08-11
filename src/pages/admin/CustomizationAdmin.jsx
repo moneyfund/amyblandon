@@ -8,6 +8,8 @@ import { getSiteImageRecords, saveSiteImageSlot } from '../../services/siteImage
 import { saveSiteTheme } from '../../services/siteThemeService';
 import { deleteStorageFile, uploadSiteImage } from '../../services/storageService';
 
+const HEX_PATTERN = /^#[0-9A-F]{6}$/i;
+
 export default function CustomizationAdmin() {
   const { user } = useAuth();
   const { images } = useSiteImages();
@@ -29,13 +31,17 @@ export default function CustomizationAdmin() {
   }, []);
 
   const setColor = (key, value) => {
-    setForm((current) => ({ ...current, [key]: value.toUpperCase(), preset: 'custom' }));
+    const normalized = String(value || '').toUpperCase();
+    if (!HEX_PATTERN.test(normalized)) return false;
+    setForm((current) => ({ ...current, [key]: normalized, preset: 'custom' }));
     setMessage('');
+    setError('');
+    return true;
   };
 
   const choosePreset = (preset) => {
     setForm({ ...preset.values });
-    setMessage('');
+    setMessage(`Tema “${preset.name}” preparado. Presiona “Guardar y aplicar” para publicarlo.`);
     setError('');
   };
 
@@ -45,7 +51,7 @@ export default function CustomizationAdmin() {
     setError('');
     try {
       await saveSiteTheme(form);
-      setMessage('Personalización guardada. La web pública recibe estos colores automáticamente.');
+      setMessage('Personalización guardada. La web pública recibió la paleta completa automáticamente.');
     } catch (saveError) {
       setError(saveError?.message || 'No se pudo guardar la personalización.');
     } finally {
@@ -55,7 +61,7 @@ export default function CustomizationAdmin() {
 
   const restore = () => {
     setForm({ ...defaultSiteTheme });
-    setMessage('Tema Amy Clásico preparado. Presiona “Guardar y aplicar” para publicarlo.');
+    setMessage('Colores originales de Amy Blandón preparados. Presiona “Guardar y aplicar” para restaurarlos en la web.');
     setError('');
   };
 
@@ -89,7 +95,7 @@ export default function CustomizationAdmin() {
         <div>
           <p className="admin-eyebrow">Identidad visual</p>
           <h1>Personalización</h1>
-          <p>Administra el logo, la paleta y los principales colores de la web sin editar código.</p>
+          <p>Administra el logo y la paleta de la web. Cada color se aplica a un grupo visual completo para mantener coherencia.</p>
         </div>
       </div>
 
@@ -137,7 +143,7 @@ export default function CustomizationAdmin() {
           <div>
             <p className="admin-eyebrow">Temas profesionales</p>
             <h2>Elige una identidad base</h2>
-            <p>Los temas cambian la paleta manteniendo la estructura y el estilo premium de la web.</p>
+            <p>Los temas cambian la paleta completa de forma coordinada: navegación, héroes, superficies, acentos, bloques oscuros y footer.</p>
           </div>
         </div>
 
@@ -164,6 +170,10 @@ export default function CustomizationAdmin() {
             );
           })}
         </div>
+
+        <div className="customization-original-note">
+          <strong>Amy Blandón Original siempre estará disponible.</strong> Navbar #FFFFFF, texto #042B3A, dorado #C99A44 y footer #042B3A. Aunque pruebes otros temas, puedes volver a esta identidad cuando quieras.
+        </div>
       </section>
 
       <section className="admin-card customization-colors-card">
@@ -171,7 +181,7 @@ export default function CustomizationAdmin() {
           <div>
             <p className="admin-eyebrow">Ajuste manual</p>
             <h2>Personalizar colores</h2>
-            <p>Puedes partir de un tema y ajustar únicamente los tonos que quieras cambiar.</p>
+            <p>Parte de un tema y ajusta tonos específicos. Las variantes necesarias se generan automáticamente para evitar secciones descoordinadas.</p>
           </div>
         </div>
 
@@ -182,11 +192,24 @@ export default function CustomizationAdmin() {
               <div>
                 <input type="color" value={form[key]} onChange={(event) => setColor(key, event.target.value)} />
                 <input
+                  key={`${key}-${form[key]}`}
                   type="text"
-                  value={form[key]}
+                  defaultValue={form[key]}
                   maxLength={7}
                   pattern="#[0-9A-Fa-f]{6}"
-                  onChange={(event) => setColor(key, event.target.value)}
+                  onBlur={(event) => {
+                    const value = event.target.value.toUpperCase();
+                    if (!setColor(key, value)) {
+                      event.target.value = form[key];
+                      setError(`El código de “${label}” debe tener el formato #RRGGBB, por ejemplo #042B3A.`);
+                    }
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      event.currentTarget.blur();
+                    }
+                  }}
                   aria-label={`Código hexadecimal de ${label}`}
                 />
               </div>
@@ -195,13 +218,13 @@ export default function CustomizationAdmin() {
         </div>
 
         <div className="customization-live-note">
-          <strong>Actualización automática</strong>
-          <span>Al guardar, Firestore publica la configuración y las páginas abiertas reciben el cambio en tiempo real. No hace falta volver a desplegar la web.</span>
+          <strong>Actualización automática y coherente</strong>
+          <span>Al guardar, Firestore publica la paleta y la web genera automáticamente variantes para héroes, textos, bordes, tarjetas y bloques oscuros. No hace falta redeploy.</span>
         </div>
 
         <div className="quick-actions customization-actions">
           <button className="btn secondary" type="button" onClick={restore} disabled={saving}>
-            <RefreshCcw size={16} /> Restaurar Amy Clásico
+            <RefreshCcw size={16} /> Restaurar Amy Blandón Original
           </button>
           <button className="btn primary" type="button" onClick={save} disabled={saving}>
             {saving ? 'Guardando...' : 'Guardar y aplicar'}

@@ -42,17 +42,40 @@ export default function PublicLayout() {
     isInsurancePage ? 'public-site--insurance' : '',
   ].filter(Boolean).join(' ');
 
+  const primaryDeep = `color-mix(in srgb, ${theme.primaryColor} 78%, #000000)`;
+  const primaryHero = `color-mix(in srgb, ${theme.primaryColor} 84%, #000000)`;
+  const primaryHeroLight = `color-mix(in srgb, ${theme.primaryColor} 72%, #FFFFFF)`;
+  const accentLight = `color-mix(in srgb, ${theme.accentColor} 68%, #FFFFFF)`;
+  const mutedText = `color-mix(in srgb, ${theme.primaryColor} 48%, #7E8A8F)`;
+  const border = `color-mix(in srgb, ${theme.primaryColor} 14%, #FFFFFF)`;
+
   const themeStyle = {
-    '--amy-navy': theme.primaryColor,
-    '--amy-gold': theme.accentColor,
-    '--amy-surface': theme.surfaceColor,
+    '--site-primary': theme.primaryColor,
+    '--site-primary-deep': primaryDeep,
+    '--site-accent': theme.accentColor,
+    '--site-accent-light': accentLight,
+    '--site-surface': theme.surfaceColor,
+    '--site-body-text': primaryDeep,
+    '--site-muted-text': mutedText,
+    '--site-border': border,
     '--site-navbar-bg': theme.navbarBackground,
     '--site-navbar-text': theme.navbarText,
     '--site-footer-bg': theme.footerBackground,
     '--site-footer-text': theme.footerText,
+    '--amy-navy': theme.primaryColor,
+    '--amy-navy-deep': primaryDeep,
+    '--amy-hero-navy': primaryHero,
+    '--amy-hero-blue': primaryHeroLight,
+    '--amy-hero-blue-deep': primaryDeep,
+    '--amy-gold': theme.accentColor,
+    '--amy-gold-light': accentLight,
+    '--amy-surface': theme.surfaceColor,
+    '--amy-text': primaryDeep,
+    '--amy-muted': mutedText,
+    '--amy-border': border,
   };
 
-  return <div className={pageClass} style={themeStyle}>
+  return <div className={pageClass} style={themeStyle} data-theme-preset={theme.preset}>
     <Navbar />
     <main className="public-main"><Outlet /></main>
     <div ref={footerRef} className="public-footer-reveal" aria-hidden="false">

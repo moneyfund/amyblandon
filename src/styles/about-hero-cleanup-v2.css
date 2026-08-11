@@ -1,0 +1,75 @@
+/* Ajustes finales del hero de Sobre mi: fondo limpio, tipografia de marca y cierre compacto. */
+.public-site--about .about-page__hero::before {
+  background-image: none !important;
+  background: transparent !important;
+  mask-image: none !important;
+  opacity: 0 !important;
+}
+
+/* Regresa el titulo a la tipografia principal de la web conservando la paleta azul/dorado. */
+.public-site--about .about-page__content .about-page__multicolor-title {
+  font-family: var(--font-body), "Plus Jakarta Sans", Arial, sans-serif !important;
+  font-size: clamp(46px, 3.45vw, 61px) !important;
+  font-weight: 800 !important;
+  line-height: .94 !important;
+  letter-spacing: -.035em !important;
+}
+
+.public-site--about .about-page__multicolor-title > span {
+  font-family: inherit !important;
+  font-weight: inherit !important;
+}
+
+/* Cierra visualmente el hero poco despues del contenido y elimina el gran vacio inferior. */
+@media (min-width: 1025px) {
+  .public-site--about .about-page__hero-inner {
+    padding-bottom: 34px !important;
+  }
+
+  /* Pieza azul/dorada mas baja, usada solo como remate inferior. */
+  .public-site--about .about-page__hero-glow--two {
+    width: clamp(270px, 25vw, 410px) !important;
+    height: clamp(120px, 10.5vw, 170px) !important;
+    right: clamp(-82px, -4vw, -46px) !important;
+    bottom: clamp(-72px, -4vw, -46px) !important;
+    border-top-width: 8px !important;
+    border-radius: 90% 0 0 0 / 100% 0 0 0 !important;
+    transform: rotate(-3deg) !important;
+  }
+
+  .public-site--about .about-page__hero-glow--two::before {
+    height: 72% !important;
+    top: 12px !important;
+  }
+
+  .public-site--about .about-page__hero-glow--two::after {
+    height: 45% !important;
+    bottom: 2% !important;
+  }
+}
+
+@media (min-width: 701px) and (max-width: 1024px) {
+  .public-site--about .about-page__hero-inner {
+    padding-bottom: 42px !important;
+  }
+
+  .public-site--about .about-page__content .about-page__multicolor-title {
+    font-size: clamp(43px, 5.6vw, 56px) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .public-site--about .about-page__hero::before {
+    display: none !important;
+  }
+
+  .public-site--about .about-page__content .about-page__multicolor-title {
+    font-size: clamp(36px, 10.4vw, 46px) !important;
+    line-height: .97 !important;
+    letter-spacing: -.03em !important;
+  }
+
+  .public-site--about .about-page__hero-inner {
+    padding-bottom: 46px !important;
+  }
+}

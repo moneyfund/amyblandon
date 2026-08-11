@@ -53,6 +53,7 @@ import './styles/about-hero-cleanup-v2.css';
 import './styles/about-mobile-title-icons-v3.css';
 import './styles/section-hero-backgrounds-v5.css';
 import './styles/insurance-coverage-colors-final.css';
+import './styles/about-impact-clean.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

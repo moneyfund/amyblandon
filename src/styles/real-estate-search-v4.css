@@ -1,0 +1,88 @@
+/* Ajuste visual v4 del buscador inmobiliario: esquinas redondeadas y categorías con mayor presencia. */
+.real-estate-page .re-search-panel {
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  box-shadow: 0 22px 58px color-mix(in srgb, var(--site-primary, #042B3A) 12%, transparent) !important;
+}
+
+.real-estate-page .re-search-panel__keyword,
+.real-estate-page .re-search-panel__operation,
+.real-estate-page .re-search-panel__type,
+.real-estate-page .re-search-panel__submit {
+  border-radius: 0 !important;
+}
+
+.real-estate-page .re-quick-categories {
+  margin-top: 22px !important;
+  gap: 18px !important;
+}
+
+.real-estate-page .re-quick-categories__heading > span {
+  margin-right: 12px !important;
+  font-size: 10.5px !important;
+  letter-spacing: .14em !important;
+}
+
+.real-estate-page .re-quick-categories__grid {
+  gap: 6px 16px !important;
+}
+
+.real-estate-page .re-category-button {
+  padding: 9px 12px 10px !important;
+}
+
+.real-estate-page .re-category-button strong {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  letter-spacing: -.01em;
+}
+
+.real-estate-page .re-category-button::after {
+  left: 12px !important;
+  right: 12px !important;
+  bottom: 4px !important;
+  height: 2px !important;
+}
+
+@media (max-width: 980px) {
+  .real-estate-page .re-search-panel {
+    border-radius: 22px !important;
+  }
+
+  .real-estate-page .re-quick-categories {
+    gap: 12px !important;
+  }
+
+  .real-estate-page .re-category-button strong {
+    font-size: 14.5px !important;
+  }
+}
+
+@media (max-width: 680px) {
+  .real-estate-page .re-search-panel {
+    border-radius: 20px !important;
+  }
+
+  .real-estate-page .re-quick-categories {
+    margin-top: 18px !important;
+    gap: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .real-estate-page .re-quick-categories__heading > span {
+    font-size: 10px !important;
+    margin-right: 7px !important;
+  }
+
+  .real-estate-page .re-quick-categories__grid {
+    gap: 4px 8px !important;
+  }
+
+  .real-estate-page .re-category-button {
+    padding: 8px 10px 10px !important;
+  }
+
+  .real-estate-page .re-category-button strong {
+    font-size: 14px !important;
+  }
+}

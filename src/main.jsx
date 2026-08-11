@@ -47,6 +47,7 @@ import './styles/about-reference-hero.css';
 import './styles/about-mobile-order.css';
 import './styles/about-title-reference-v2.css';
 import './styles/about-hero-copy-pill.css';
+import './styles/about-hero-cleanup-v2.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

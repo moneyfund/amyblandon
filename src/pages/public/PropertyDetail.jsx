@@ -1,6 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Download, MapPin } from 'lucide-react';
+import {
+  ArrowLeft,
+  Bath,
+  BedDouble,
+  Building2,
+  CalendarDays,
+  Car,
+  Check,
+  Download,
+  MapPin,
+  MessageCircle,
+  Ruler,
+  Sparkles,
+} from 'lucide-react';
 import { getProperties } from '../../services/propertyService';
 import SimpleForm from '../../components/forms/SimpleForm';
 import PropertyCard from '../../components/properties/PropertyCard';
@@ -9,6 +22,12 @@ import { downloadPropertyPDF } from '../../utils/pdf';
 import { propertyWhatsApp } from '../../utils/whatsapp';
 import SEO from '../../components/common/SEO';
 import MapView from './MapView';
+import {
+  labelFor,
+  operationTypeOptions,
+  propertyTypeOptions,
+} from '../../config/adminLabels.es';
+import { getDynamicFields } from '../../config/propertyWorkspace.es';
 
 const imageUrl = (image) => {
   if (typeof image === 'string') return image;
@@ -33,6 +52,19 @@ const hasCoordinates = (property) => {
     && longitude >= -180
     && longitude <= 180
     && !(latitude === 0 && longitude === 0);
+};
+
+const hasValue = (value) => value !== undefined && value !== null && value !== '' && Number(value) !== 0;
+
+const normalizeOperation = (value) => {
+  if (value === 'venta') return 'sale';
+  if (value === 'renta') return 'rent';
+  return value;
+};
+
+const optionLabel = (definition, value) => {
+  if (!definition?.options?.length) return value;
+  return definition.options.find(([optionValue]) => optionValue === value)?.[1] || value;
 };
 
 export default function PropertyDetail() {
@@ -79,12 +111,18 @@ export default function PropertyDetail() {
   }, [property]);
 
   if (loading) {
-    return <section className="page-hero"><p>Cargando propiedad...</p></section>;
+    return (
+      <section className="property-detail-state">
+        <span className="property-detail-state__loader" />
+        <p>Cargando propiedad...</p>
+      </section>
+    );
   }
 
   if (!property) {
     return (
-      <section className="page-hero">
+      <section className="property-detail-state">
+        <Building2 />
         <h1>{error ? 'No pudimos cargar la propiedad' : 'Propiedad no encontrada'}</h1>
         <p>{error || 'Esta propiedad no existe o ya no se encuentra publicada.'}</p>
         <Link className="btn" to="/propiedades">Volver a propiedades</Link>
@@ -98,85 +136,190 @@ export default function PropertyDetail() {
     ...listValue(property.services),
   ].filter((item, index, values) => values.indexOf(item) === index);
 
+  const propertyTypeLabel = labelFor(propertyTypeOptions, property.propertyType, 'Propiedad');
+  const operation = normalizeOperation(property.operationType || property.transactionType);
+  const operationLabel = labelFor(operationTypeOptions, operation, 'Disponible');
+  const locationText = property.publicAddress
+    || [property.sector, property.city, property.department].filter(Boolean).join(', ')
+    || property.city
+    || 'Nicaragua';
+  const priceLabel = property.priceOnRequest ? 'Precio a consultar' : money(property.price, property.currency);
+
   const facts = [
-    ['Habitaciones', property.bedrooms],
-    ['Baños', property.bathrooms],
-    ['Parqueos', property.parkingSpaces],
-    ['Área', property.builtArea || property.constructionArea
-      ? `${property.builtArea || property.constructionArea} ${property.areaUnit || 'm²'}`
-      : '—'],
-    ['Año', property.yearBuilt || '—'],
-    ['Tipo', property.propertyType || '—'],
-  ];
+    hasValue(property.bedrooms) && { icon: BedDouble, label: 'Habitaciones', value: property.bedrooms },
+    hasValue(property.bathrooms) && { icon: Bath, label: 'Baños', value: property.bathrooms },
+    hasValue(property.parkingSpaces) && { icon: Car, label: 'Parqueos', value: property.parkingSpaces },
+    hasValue(property.constructionArea || property.builtArea) && {
+      icon: Ruler,
+      label: 'Construcción',
+      value: `${property.constructionArea || property.builtArea} ${property.areaUnit || 'm²'}`,
+    },
+    hasValue(property.landArea) && {
+      icon: Ruler,
+      label: 'Terreno',
+      value: `${property.landArea} ${property.areaUnit || 'm²'}`,
+    },
+    hasValue(property.yearBuilt) && { icon: CalendarDays, label: 'Año', value: property.yearBuilt },
+  ].filter(Boolean);
+
+  const dynamicDetails = getDynamicFields(property.propertyType)
+    .map((definition) => {
+      const value = property.propertyDetails?.[definition.key];
+      if (!hasValue(value)) return null;
+      return {
+        label: definition.label,
+        value: optionLabel(definition, value),
+      };
+    })
+    .filter(Boolean);
+
+  const similar = all
+    .filter((item) => item.id !== property.id)
+    .sort((a, b) => Number(b.propertyType === property.propertyType) - Number(a.propertyType === property.propertyType))
+    .slice(0, 3);
 
   return (
-    <>
-      <SEO title={`${property.title} | Amy Blandon`} />
-      <section className="page-hero">
-        {images.length ? (
-          <div className="gallery">
-            <img src={images[0]} alt={property.title} />
-            <div>
-              {images.slice(1, 4).map((image, index) => (
-                <img key={image} src={image} alt={`${property.title} ${index + 2}`} />
-              ))}
-            </div>
+    <div className="property-detail-page">
+      <SEO title={`${property.title} | Amy Blandón`} description={property.shortDescription || property.description} />
+
+      <div className="property-detail-shell property-detail-breadcrumb">
+        <Link to="/bienes-raices"><ArrowLeft size={17} /> Bienes raíces</Link>
+        <span>/</span>
+        <span>{propertyTypeLabel}</span>
+      </div>
+
+      <section className="property-detail-shell property-detail-head">
+        <div className="property-detail-head__copy">
+          <div className="property-detail-head__badges">
+            <span>{operationLabel}</span>
+            {property.featured && <span className="is-featured"><Sparkles size={14} /> Destacada</span>}
           </div>
-        ) : (
-          <div className="panel"><p>Esta propiedad todavía no tiene fotografías disponibles.</p></div>
-        )}
-
-        <h1>{property.title}</h1>
-        <h2>{money(property.price, property.currency)}</h2>
-        {(property.address || property.publicAddress || property.city) && (
-          <p><MapPin size={18} /> {property.address || property.publicAddress || property.city}</p>
-        )}
-        <p className="preline">{property.description || 'Descripción pendiente.'}</p>
-
-        <div className="grid three">
-          {facts.map(([label, value]) => (
-            <div className="panel" key={label}>
-              <b>{label}</b>
-              <span>{value ?? '—'}</span>
-            </div>
-          ))}
+          <p className="property-detail-head__type">{propertyTypeLabel}</p>
+          <h1>{property.title}</h1>
+          <p className="property-detail-head__location"><MapPin size={18} /> {locationText}</p>
         </div>
-
-        <h2>Amenidades</h2>
-        {amenities.length ? (
-          <ul>{amenities.map((amenity) => <li key={amenity}>{amenity}</li>)}</ul>
-        ) : (
-          <p>Las amenidades se agregarán próximamente.</p>
-        )}
-
-        {hasCoordinates(property) ? (
-          <MapView embedded properties={[property]} />
-        ) : (
-          <div className="panel">
-            <h2>Ubicación</h2>
-            <p>La ubicación exacta todavía no tiene coordenadas válidas para mostrarse en el mapa.</p>
-          </div>
-        )}
-
-        <div className="panel">
-          <h2>Amy Blandón</h2>
-          <p>Te acompaño a revisar esta propiedad con estrategia, claridad y visión patrimonial.</p>
-          <a className="btn" href={propertyWhatsApp(property)}>WhatsApp</a>
-          <button className="btn secondary" type="button" onClick={() => downloadPropertyPDF(property)}>
-            <Download size={18} /> Descargar ficha PDF
-          </button>
-        </div>
-
-        <SimpleForm collection="contacts" extra={{ propertyId: property.id, propertyTitle: property.title }} />
-
-        <h2>Propiedades similares</h2>
-        <div className="grid cards">
-          {all
-            .filter((item) => item.id !== property.id)
-            .slice(0, 3)
-            .map((item) => <PropertyCard key={item.id || item.slug} property={item} />)}
+        <div className="property-detail-head__price">
+          <small>{operation === 'rent' ? 'Precio de alquiler' : 'Precio de venta'}</small>
+          <strong>{priceLabel}</strong>
+          {property.priceNegotiable && <span>Precio negociable</span>}
         </div>
       </section>
-    </>
+
+      <section className={`property-detail-shell property-detail-gallery property-detail-gallery--${Math.min(images.length, 4)}`}>
+        {images.length ? (
+          <>
+            <div className="property-detail-gallery__main">
+              <img src={images[0]} alt={property.title} />
+              <span className="property-detail-gallery__count">{images.length} {images.length === 1 ? 'foto' : 'fotos'}</span>
+            </div>
+            {images.length > 1 && (
+              <div className="property-detail-gallery__side">
+                {images.slice(1, 4).map((image, index) => (
+                  <div className="property-detail-gallery__thumb" key={image}>
+                    <img src={image} alt={`${property.title} ${index + 2}`} />
+                    {index === 2 && images.length > 4 && <span>+{images.length - 4}</span>}
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="property-detail-gallery__empty">
+            <Building2 />
+            <span>Fotografías próximamente</span>
+          </div>
+        )}
+      </section>
+
+      {facts.length > 0 && (
+        <section className="property-detail-shell property-detail-facts" aria-label="Datos principales">
+          {facts.map(({ icon: Icon, label, value }) => (
+            <div className="property-detail-fact" key={label}>
+              <Icon />
+              <span><small>{label}</small><strong>{value}</strong></span>
+            </div>
+          ))}
+        </section>
+      )}
+
+      <div className="property-detail-shell property-detail-layout">
+        <main className="property-detail-content">
+          <section className="property-detail-section">
+            <p className="property-detail-eyebrow">SOBRE LA PROPIEDAD</p>
+            <h2>Descripción</h2>
+            <div className="property-detail-description preline">{property.description || 'Descripción pendiente.'}</div>
+          </section>
+
+          {amenities.length > 0 && (
+            <section className="property-detail-section">
+              <p className="property-detail-eyebrow">LO QUE OFRECE</p>
+              <h2>Características y servicios</h2>
+              <div className="property-detail-amenities">
+                {amenities.map((amenity) => <span key={amenity}><Check /> {amenity}</span>)}
+              </div>
+            </section>
+          )}
+
+          {dynamicDetails.length > 0 && (
+            <section className="property-detail-section">
+              <p className="property-detail-eyebrow">DETALLES</p>
+              <h2>Información adicional</h2>
+              <dl className="property-detail-specs">
+                {dynamicDetails.map(({ label, value }) => (
+                  <div key={label}><dt>{label}</dt><dd>{value}</dd></div>
+                ))}
+              </dl>
+            </section>
+          )}
+        </main>
+
+        <aside className="property-detail-sidebar">
+          <div className="property-detail-contact">
+            <span className="property-detail-contact__mark">AB</span>
+            <p className="property-detail-eyebrow">ASESORÍA PERSONALIZADA</p>
+            <h2>Amy Blandón</h2>
+            <p>Conversemos sobre esta propiedad y revisemos juntos si encaja con lo que estás buscando.</p>
+            <a className="property-detail-contact__whatsapp" href={propertyWhatsApp(property)}>
+              <MessageCircle /> Consultar por WhatsApp
+            </a>
+            <button type="button" onClick={() => downloadPropertyPDF(property)}>
+              <Download /> Descargar ficha PDF
+            </button>
+          </div>
+
+          <div className="property-detail-inquiry">
+            <h3>Solicitar información</h3>
+            <p>Déjame tus datos y me pondré en contacto contigo.</p>
+            <SimpleForm collection="contacts" extra={{ propertyId: property.id, propertyTitle: property.title }} />
+          </div>
+        </aside>
+      </div>
+
+      <section className="property-detail-location-section">
+        <div className="property-detail-shell">
+          <div className="property-detail-section-heading">
+            <div><p className="property-detail-eyebrow">UBICACIÓN</p><h2>Conoce el entorno</h2></div>
+            <p>{locationText}</p>
+          </div>
+          {hasCoordinates(property) ? (
+            <div className="property-detail-map"><MapView embedded properties={[property]} /></div>
+          ) : (
+            <div className="property-detail-map-empty"><MapPin /><p>La ubicación exacta todavía no tiene coordenadas válidas para mostrarse en el mapa.</p></div>
+          )}
+        </div>
+      </section>
+
+      {similar.length > 0 && (
+        <section className="property-detail-shell property-detail-similar">
+          <div className="property-detail-section-heading">
+            <div><p className="property-detail-eyebrow">SIGUE EXPLORANDO</p><h2>Propiedades que podrían interesarte</h2></div>
+            <Link to="/bienes-raices">Ver más propiedades</Link>
+          </div>
+          <div className="properties-grid">
+            {similar.map((item) => <PropertyCard key={item.id || item.slug} property={item} />)}
+          </div>
+        </section>
+      )}
+    </div>
   );
 }

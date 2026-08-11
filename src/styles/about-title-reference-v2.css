@@ -1,0 +1,149 @@
+/* Refinamiento del hero Sobre mí inspirado en la referencia IA compartida.
+   Solo modifica la jerarquía del título y la composición decorativa del hero. */
+.public-site--about .about-page__hero {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.public-site--about .about-page__hero-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.public-site--about .about-page__content .about-page__multicolor-title {
+  position: relative;
+  width: min(100%, 640px);
+  margin: 0 0 30px;
+  padding-bottom: 28px;
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: clamp(52px, 3.75vw, 67px) !important;
+  font-weight: 700 !important;
+  line-height: .88 !important;
+  letter-spacing: -.022em !important;
+  text-wrap: balance;
+}
+
+.public-site--about .about-page__multicolor-title > span {
+  display: block;
+}
+
+.public-site--about .about-page__multicolor-title > span:first-child {
+  max-width: 610px;
+}
+
+.public-site--about .about-page__multicolor-title .about-page__title-navy {
+  color: #0a223c !important;
+}
+
+.public-site--about .about-page__multicolor-title .about-page__title-gold {
+  color: var(--amy-gold, #c99a44) !important;
+}
+
+.public-site--about .about-page__multicolor-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: min(100%, 520px);
+  height: 1px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--amy-gold, #c99a44) 92%, transparent),
+    color-mix(in srgb, var(--amy-gold, #c99a44) 72%, transparent));
+}
+
+.public-site--about .about-page__multicolor-title::before {
+  content: "";
+  position: absolute;
+  left: min(49%, 250px);
+  bottom: -4px;
+  width: 8px;
+  height: 8px;
+  z-index: 1;
+  border: 1px solid color-mix(in srgb, var(--amy-gold, #c99a44) 82%, #ffffff);
+  background: #fffaf0;
+  transform: rotate(45deg);
+  box-shadow: 0 0 0 3px rgba(255,255,255,.72);
+}
+
+/* Reutiliza el segundo aro decorativo para crear una pieza curva azul/dorada
+   en la esquina inferior derecha, similar a la composición de la referencia. */
+.public-site--about .about-page__hero-glow--two {
+  width: clamp(300px, 29vw, 470px) !important;
+  height: clamp(210px, 21vw, 335px) !important;
+  right: clamp(-100px, -5vw, -58px) !important;
+  bottom: clamp(-120px, -6.5vw, -76px) !important;
+  top: auto !important;
+  z-index: 0 !important;
+  opacity: 1 !important;
+  border: 0 !important;
+  border-top: 11px solid var(--amy-gold, #c99a44) !important;
+  border-radius: 82% 0 0 0 / 100% 0 0 0 !important;
+  background: linear-gradient(145deg, #102d4e 2%, #0a223c 46%, #001929 100%) !important;
+  box-shadow:
+    -22px -12px 46px rgba(10,34,60,.08),
+    inset 0 2px 0 rgba(255,255,255,.04) !important;
+  transform: rotate(-4deg) !important;
+  pointer-events: none;
+}
+
+.public-site--about .about-page__hero-glow--two::before {
+  content: "";
+  position: absolute;
+  width: 110%;
+  height: 84%;
+  left: -10%;
+  top: 18px;
+  border-top: 1px solid color-mix(in srgb, var(--amy-gold, #c99a44) 72%, transparent);
+  border-radius: 76% 0 0 0 / 100% 0 0 0;
+  transform: rotate(-1deg);
+}
+
+.public-site--about .about-page__hero-glow--two::after {
+  content: "";
+  position: absolute;
+  width: 68%;
+  height: 58%;
+  right: -4%;
+  bottom: 4%;
+  border-left: 1px solid rgba(255,255,255,.08);
+  border-radius: 68% 0 0 0;
+  transform: rotate(8deg);
+}
+
+@media (max-width: 1120px) {
+  .public-site--about .about-page__content .about-page__multicolor-title {
+    font-size: clamp(48px, 5vw, 61px) !important;
+    width: min(100%, 570px);
+  }
+
+  .public-site--about .about-page__hero-glow--two {
+    width: 310px !important;
+    height: 225px !important;
+    right: -82px !important;
+    bottom: -88px !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .public-site--about .about-page__content .about-page__multicolor-title {
+    width: 100%;
+    margin-bottom: 22px;
+    padding-bottom: 20px;
+    font-size: clamp(39px, 11.2vw, 50px) !important;
+    line-height: .92 !important;
+    letter-spacing: -.018em !important;
+  }
+
+  .public-site--about .about-page__multicolor-title::after {
+    width: 82%;
+  }
+
+  .public-site--about .about-page__multicolor-title::before {
+    left: 40%;
+  }
+
+  /* En móvil se prioriza el orden título → foto → texto. */
+  .public-site--about .about-page__hero-glow--two {
+    display: none !important;
+  }
+}

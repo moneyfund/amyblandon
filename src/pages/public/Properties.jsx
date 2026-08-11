@@ -28,6 +28,20 @@ const process = [
   ['04', 'Damos seguimiento', 'Estoy presente durante la negociación y cada etapa del proceso.'],
 ];
 
+const quickCategories = [
+  { value: '', label: 'Todas', hint: 'Ver portafolio', icon: Sparkles },
+  { value: 'house', label: 'Casas', hint: 'Residencial', icon: Home },
+  { value: 'land', label: 'Terrenos', hint: 'Inversión', icon: Map },
+  { value: 'farm', label: 'Fincas', hint: 'Productivo', icon: Compass },
+  { value: 'commercial', label: 'Local comercial', hint: 'Negocios', icon: Building2 },
+];
+
+const normalizeOperation = (value) => {
+  if (value === 'venta') return 'sale';
+  if (value === 'renta') return 'rent';
+  return value;
+};
+
 export default function Properties() {
   const { images } = useSiteImages();
   const [properties, setProperties] = useState([]);
@@ -60,7 +74,7 @@ export default function Properties() {
       property.publicAddress,
       property.propertyType,
     ].filter(Boolean).join(' ').toLowerCase();
-    const currentOperation = property.operationType || property.transactionType;
+    const currentOperation = normalizeOperation(property.operationType || property.transactionType);
 
     return (!q || text.includes(q.toLowerCase().trim()))
       && (!operationType || currentOperation === operationType)
@@ -75,11 +89,21 @@ export default function Properties() {
     setOperationType('');
     setPropertyType('');
   };
-  const submitSearch = (event) => {
-    event.preventDefault();
+  const showResults = () => {
     document.getElementById('propiedades')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+  const submitSearch = (event) => {
+    event.preventDefault();
+    showResults();
+  };
+  const chooseCategory = (value) => {
+    setPropertyType(value);
+    window.setTimeout(showResults, 80);
+  };
   const heroImage = images.realEstateHero || images.aboutPage;
+  const resultLabel = loading
+    ? 'Buscar propiedades'
+    : `Ver ${filtered.length} ${filtered.length === 1 ? 'propiedad' : 'propiedades'}`;
 
   return <div className="real-estate-page">
     <SEO title="Bienes raíces | Amy Blandón" />
@@ -91,35 +115,67 @@ export default function Properties() {
         <RevealOnScroll className="re-search-hero__heading">
           <p className="re-eyebrow">PORTAFOLIO INMOBILIARIO</p>
           <h1>Encuentra una propiedad que encaje con tu próxima decisión.</h1>
-          <p>Busca por ubicación, tipo de propiedad u operación y explora las oportunidades disponibles.</p>
+          <p>Busca por ubicación, elige cómo quieres invertir y encuentra el tipo de propiedad que necesitas.</p>
         </RevealOnScroll>
 
-        <RevealOnScroll as="form" className="re-search-bar" delay={90} aria-label="Buscar propiedades" onSubmit={submitSearch}>
-          <label className="re-search-bar__field re-search-bar__field--keyword">
-            <span>Ubicación o palabra clave</span>
-            <div><Search aria-hidden="true" /><input aria-label="Ubicación o palabra clave" placeholder="Ciudad, zona o propiedad" value={q} onChange={(event) => setQ(event.target.value)} /></div>
-          </label>
-          <label className="re-search-bar__field">
-            <span>Operación</span>
-            <select value={operationType} onChange={(event) => setOperationType(event.target.value)}>
-              <option value="">Comprar o alquilar</option>
-              <option value="sale">Venta</option>
-              <option value="rent">Alquiler</option>
-              <option value="venta">Venta (anterior)</option>
-              <option value="renta">Alquiler (anterior)</option>
-            </select>
-          </label>
-          <label className="re-search-bar__field">
-            <span>Tipo de propiedad</span>
-            <select value={propertyType} onChange={(event) => setPropertyType(event.target.value)}>
-              <option value="">Todos los tipos</option>
-              {propertyTypeOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}
-            </select>
-          </label>
-          <button className="re-search-bar__button" type="submit"><Search size={18} /> Buscar</button>
+        <RevealOnScroll as="form" className="re-search-panel" delay={90} aria-label="Buscar propiedades" onSubmit={submitSearch}>
+          <div className="re-search-panel__top">
+            <label className="re-search-panel__keyword">
+              <span className="re-search-panel__icon"><Search aria-hidden="true" /></span>
+              <span className="re-search-panel__keyword-copy">
+                <small>¿Dónde quieres buscar?</small>
+                <input
+                  aria-label="Ubicación o palabra clave"
+                  placeholder="Ciudad, zona o nombre de propiedad"
+                  value={q}
+                  onChange={(event) => setQ(event.target.value)}
+                />
+              </span>
+            </label>
+
+            <div className="re-search-panel__operation" role="group" aria-label="Tipo de operación">
+              <span>¿Qué quieres hacer?</span>
+              <div className="re-search-panel__segments">
+                <button type="button" className={!operationType ? 'active' : ''} aria-pressed={!operationType} onClick={() => setOperationType('')}>Todas</button>
+                <button type="button" className={operationType === 'sale' ? 'active' : ''} aria-pressed={operationType === 'sale'} onClick={() => setOperationType('sale')}>Comprar</button>
+                <button type="button" className={operationType === 'rent' ? 'active' : ''} aria-pressed={operationType === 'rent'} onClick={() => setOperationType('rent')}>Alquilar</button>
+              </div>
+            </div>
+          </div>
+
+          <div className="re-search-panel__bottom">
+            <label className="re-search-panel__type">
+              <span><Building2 aria-hidden="true" /> Tipo de propiedad</span>
+              <select value={propertyType} onChange={(event) => setPropertyType(event.target.value)}>
+                <option value="">Todos los tipos de propiedad</option>
+                {propertyTypeOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}
+              </select>
+            </label>
+            <button className="re-search-panel__submit" type="submit"><Search size={19} /> {resultLabel}</button>
+          </div>
         </RevealOnScroll>
 
-        {hasSearch && <button className="re-search-bar__clear" type="button" onClick={clear}>Restablecer búsqueda</button>}
+        <RevealOnScroll className="re-quick-categories" delay={140}>
+          <div className="re-quick-categories__heading">
+            <span>Explora por categoría</span>
+            {hasSearch && <button type="button" onClick={clear}>Limpiar filtros</button>}
+          </div>
+          <div className="re-quick-categories__grid">
+            {quickCategories.map(({ value, label, hint, icon: Icon }) => {
+              const active = propertyType === value;
+              return <button
+                type="button"
+                key={label}
+                className={`re-category-button ${active ? 'active' : ''}`}
+                aria-pressed={active}
+                onClick={() => chooseCategory(value)}
+              >
+                <span className="re-category-button__icon"><Icon /></span>
+                <span><strong>{label}</strong><small>{hint}</small></span>
+              </button>;
+            })}
+          </div>
+        </RevealOnScroll>
       </div>
     </section>
 

@@ -8,6 +8,7 @@ export default function PublicLayout() {
   const footerRef = useRef(null);
   const location = useLocation();
   const { theme } = useSiteTheme();
+  const isHomePage = location.pathname === '/';
   const isAboutPage = location.pathname === '/sobre-mi' || location.pathname === '/about';
   const isRealEstatePage = location.pathname === '/propiedades'
     || location.pathname === '/properties'
@@ -37,6 +38,7 @@ export default function PublicLayout() {
 
   const pageClass = [
     'public-site',
+    isHomePage ? 'public-site--home' : 'public-site--inner',
     isAboutPage ? 'public-site--about' : '',
     isRealEstatePage ? 'public-site--real-estate' : '',
     isInsurancePage ? 'public-site--insurance' : '',

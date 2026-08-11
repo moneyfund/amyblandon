@@ -35,6 +35,7 @@ import './styles/real-estate-catalog-first.css';
 import './styles/site-personalization.css';
 import './styles/real-estate-search-v2.css';
 import './styles/real-estate-search-v3.css';
+import './styles/real-estate-search-v4.css';
 import './styles/home-hero-seam-fix.css';
 import './styles/amy-original-exact.css';
 import './styles/inner-page-typography.css';

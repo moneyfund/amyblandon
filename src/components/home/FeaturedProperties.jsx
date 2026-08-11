@@ -1,2 +1,89 @@
-import { Bath, BedDouble, MapPin, Waves } from 'lucide-react';import { Link } from 'react-router-dom';import RevealOnScroll from '../common/RevealOnScroll';import SafeImage from '../common/SafeImage';import { homePageContent } from '../../content/homePage.es';
-export default function FeaturedProperties(){return <section className="home-properties"><div className="home-properties__heading"><h2>{homePageContent.properties.title}</h2><Link to="/propiedades">{homePageContent.properties.viewAll}</Link></div><div className="home-properties__grid">{homePageContent.properties.items.map((p,i)=><RevealOnScroll as="article" className="home-property" key={p.id} delay={i*100}><Link to={`/properties/${p.id}`} className="home-property__image" aria-label={p.title}><SafeImage src={p.image} alt={p.title} width="390" height="285" /></Link><div className="home-property__body"><p className="home-property__price">{p.price}</p><h3><Link to={`/properties/${p.id}`}>{p.title}</Link></h3><p className="home-property__location"><MapPin size={16}/>{p.location}</p><dl className="home-property__features"><div><dt><BedDouble size={18}/><b>{p.bedrooms}</b></dt><dd>Bedrooms</dd></div><div><dt><Bath size={18}/><b>{p.bathrooms}</b></dt><dd>Bathrooms</dd></div><div><dt><Waves size={18}/><b>{p.pool}</b></dt><dd>Pool</dd></div><div><dt><b>{p.area}</b></dt><dd>Total Area</dd></div></dl></div></RevealOnScroll>)}</div></section>}
+import { useEffect, useState } from 'react';
+import { ArrowRight, Building2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import RevealOnScroll from '../common/RevealOnScroll';
+import PropertyCard from '../properties/PropertyCard';
+import { getProperties } from '../../services/propertyService';
+
+export default function FeaturedProperties() {
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    getProperties()
+      .then((items) => {
+        if (!active) return;
+        setProperties(items.filter((property) => Boolean(property.featured)));
+        setError(false);
+      })
+      .catch(() => {
+        if (!active) return;
+        setProperties([]);
+        setError(true);
+      })
+      .finally(() => active && setLoading(false));
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  return (
+    <section className="home-featured" aria-labelledby="home-featured-title">
+      <div className="home-featured__heading">
+        <div>
+          <p className="home-featured__eyebrow">SELECCIÓN ESPECIAL</p>
+          <h2 id="home-featured-title">Propiedades destacadas</h2>
+        </div>
+        <Link className="home-featured__view-all" to="/bienes-raices">
+          Ver más propiedades <ArrowRight size={18} aria-hidden="true" />
+        </Link>
+      </div>
+
+      {loading ? (
+        <div className="home-featured__track" aria-label="Cargando propiedades destacadas">
+          {[0, 1, 2].map((item) => (
+            <div className="home-featured__skeleton" key={item} aria-hidden="true">
+              <span />
+              <div><i /><i /><i /></div>
+            </div>
+          ))}
+        </div>
+      ) : error ? (
+        <div className="home-featured__empty" role="status">
+          <Building2 aria-hidden="true" />
+          <div>
+            <h3>No pudimos cargar las propiedades destacadas.</h3>
+            <p>Puedes explorar el portafolio completo desde la sección de Bienes Raíces.</p>
+          </div>
+          <Link to="/bienes-raices">Ver propiedades</Link>
+        </div>
+      ) : properties.length === 0 ? (
+        <div className="home-featured__empty">
+          <Building2 aria-hidden="true" />
+          <div>
+            <h3>Próximamente nuevas propiedades destacadas.</h3>
+            <p>Las propiedades marcadas como “Destacar en inicio” desde el panel aparecerán automáticamente aquí.</p>
+          </div>
+          <Link to="/bienes-raices">Ver portafolio</Link>
+        </div>
+      ) : (
+        <div className="home-featured__track">
+          {properties.map((property, index) => (
+            <RevealOnScroll
+              as="div"
+              className="home-featured__item"
+              delay={Math.min(index, 5) * 70}
+              key={property.id}
+            >
+              <PropertyCard property={property} />
+            </RevealOnScroll>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}

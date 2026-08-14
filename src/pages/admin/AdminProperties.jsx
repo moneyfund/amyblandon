@@ -69,13 +69,8 @@ const fetchImageViaProxy = async (url) => {
   const proxyUrl = `/api/property-image?url=${encodeURIComponent(url)}`;
   const response = await fetch(proxyUrl, { cache: 'no-store' });
   if (!response.ok) {
-    let detail = '';
-    try {
-      const payload = await response.json();
-      detail = payload?.error ? ` ${payload.error}` : '';
-    } catch {
-      detail = '';
-    }
+    const payload = await response.json().catch(() => null);
+    const detail = payload?.error ? ` ${payload.error}` : '';
     throw new Error(`El proxy de imágenes respondió ${response.status}.${detail}`);
   }
   const blob = await response.blob();
@@ -85,7 +80,7 @@ const fetchImageViaProxy = async (url) => {
   return blob;
 };
 
-const imageToTemporaryUrl = async (image) => {
+const decodeImageForPdf = async (image) => {
   let blob = null;
 
   if (image.path && firebaseEnabled && storage) {
@@ -103,7 +98,16 @@ const imageToTemporaryUrl = async (image) => {
 
   if (!blob) throw new Error('La imagen no tiene una ubicación válida o no pudo descargarse.');
   if (blob.type && !blob.type.startsWith('image/')) throw new Error('El archivo descargado no es una imagen.');
-  return URL.createObjectURL(blob);
+  if (typeof window.createImageBitmap !== 'function') {
+    throw new Error('Este navegador no admite la decodificación necesaria para generar la ficha con fotografías.');
+  }
+
+  const bitmap = await window.createImageBitmap(blob);
+  if (!bitmap?.width || !bitmap?.height) {
+    bitmap?.close?.();
+    throw new Error('La fotografía se descargó, pero no pudo decodificarse correctamente.');
+  }
+  return bitmap;
 };
 
 export default function AdminProperties() {
@@ -181,31 +185,31 @@ export default function AdminProperties() {
     if (pdfGeneratingId) return;
     setPdfGeneratingId(property.id);
     setError('');
-    const temporaryImageUrls = [];
+    const decodedImages = [];
 
     try {
       const candidates = getPdfImageCandidates(property);
       for (const candidate of candidates) {
-        if (temporaryImageUrls.length === 3) break;
+        if (decodedImages.length === 3) break;
         try {
-          temporaryImageUrls.push(await imageToTemporaryUrl(candidate));
+          decodedImages.push(await decodeImageForPdf(candidate));
         } catch (imageError) {
           console.warn('No se pudo preparar una fotografía para la ficha técnica.', imageError);
         }
       }
 
-      if (!temporaryImageUrls.length) {
-        throw new Error('No se pudo cargar ninguna fotografía para la ficha técnica. El PDF no se generó para evitar descargar otra versión sin imágenes.');
+      if (!decodedImages.length) {
+        throw new Error('No se pudo decodificar ninguna fotografía para la ficha técnica. El PDF no se generó para evitar otra versión sin imágenes.');
       }
 
       await downloadPropertyTechnicalSheetPdf({
         ...property,
-        pdfGalleryImages: temporaryImageUrls,
+        pdfGalleryBitmaps: decodedImages,
       });
     } catch (pdfError) {
       setError(pdfError?.message || 'No se pudo generar la ficha técnica de esta propiedad.');
     } finally {
-      temporaryImageUrls.forEach((url) => URL.revokeObjectURL(url));
+      decodedImages.forEach((bitmap) => bitmap?.close?.());
       setPdfGeneratingId('');
     }
   };

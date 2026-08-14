@@ -202,7 +202,7 @@ function drawPremiumGallery(ctx, images, width, height) {
     roundedRectPath(ctx, frame.x, frame.y, frame.width, frame.height, 18);
     ctx.clip();
     drawImageCover(ctx, images[index] || null, frame.x, frame.y, frame.width, frame.height);
-    ctx.fillStyle = index === 0 ? 'rgba(0,25,41,.32)' : 'rgba(0,25,41,.20)';
+    ctx.fillStyle = index === 0 ? 'rgba(0,25,41,.24)' : 'rgba(0,25,41,.14)';
     ctx.fillRect(frame.x, frame.y, frame.width, frame.height);
     ctx.restore();
     strokeRoundedRect(ctx, frame.x, frame.y, frame.width, frame.height, 18, COLORS.goldLight, 2);
@@ -353,25 +353,30 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
   ctx.fillStyle = COLORS.ivory;
   ctx.fillRect(0, 0, PAGE.width, PAGE.height);
 
+  const decodedGallery = Array.isArray(property.pdfGalleryBitmaps)
+    ? property.pdfGalleryBitmaps.filter((image) => image?.width && image?.height).slice(0, 3)
+    : [];
   const preparedGallery = Array.isArray(property.pdfGalleryImages)
     ? property.pdfGalleryImages.map(imageUrl).filter(Boolean).slice(0, 3)
     : [];
-  const galleryImages = (await Promise.all(preparedGallery.map(loadImage))).filter(Boolean);
+  const galleryImages = decodedGallery.length
+    ? decodedGallery
+    : (await Promise.all(preparedGallery.map(loadImage))).filter(Boolean);
   const heroHeight = 560;
   const hasCover = drawPremiumGallery(ctx, galleryImages, PAGE.width, heroHeight);
 
   if (hasCover) {
     const sideOverlay = ctx.createLinearGradient(0, 0, PAGE.width, 0);
-    sideOverlay.addColorStop(0, 'rgba(0,25,41,.96)');
-    sideOverlay.addColorStop(.48, 'rgba(0,25,41,.76)');
-    sideOverlay.addColorStop(.78, 'rgba(0,25,41,.28)');
-    sideOverlay.addColorStop(1, 'rgba(0,25,41,.12)');
+    sideOverlay.addColorStop(0, 'rgba(0,25,41,.70)');
+    sideOverlay.addColorStop(.48, 'rgba(0,25,41,.42)');
+    sideOverlay.addColorStop(.78, 'rgba(0,25,41,.14)');
+    sideOverlay.addColorStop(1, 'rgba(0,25,41,.03)');
     ctx.fillStyle = sideOverlay;
     ctx.fillRect(0, 0, PAGE.width, heroHeight);
 
     const bottomOverlay = ctx.createLinearGradient(0, 250, 0, heroHeight);
     bottomOverlay.addColorStop(0, 'rgba(0,25,41,0)');
-    bottomOverlay.addColorStop(1, 'rgba(0,25,41,.72)');
+    bottomOverlay.addColorStop(1, 'rgba(0,25,41,.38)');
     ctx.fillStyle = bottomOverlay;
     ctx.fillRect(0, 0, PAGE.width, heroHeight);
   }

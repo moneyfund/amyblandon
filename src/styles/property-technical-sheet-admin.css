@@ -1,0 +1,29 @@
+/* La ficha técnica PDF se descarga exclusivamente desde el panel privado. */
+.property-detail-contact > button{
+  display:none!important;
+}
+
+.admin-row-actions .admin-tech-sheet-action{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border:1px solid var(--amy-gold)!important;
+  background:linear-gradient(180deg,#fffdf8,#fbf4e7)!important;
+  color:var(--amy-navy)!important;
+  font-weight:800;
+  box-shadow:0 6px 18px rgba(201,154,68,.12);
+  transition:transform .2s ease,box-shadow .2s ease,background .2s ease,color .2s ease;
+}
+
+.admin-row-actions .admin-tech-sheet-action:hover:not(:disabled){
+  transform:translateY(-1px);
+  background:var(--amy-gold)!important;
+  color:var(--amy-navy)!important;
+  box-shadow:0 10px 24px rgba(201,154,68,.28);
+}
+
+.admin-row-actions .admin-tech-sheet-action:disabled{
+  opacity:.58;
+  cursor:wait;
+}

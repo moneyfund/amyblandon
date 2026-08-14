@@ -24,6 +24,8 @@ const asList = (value) => {
   return value ? [value] : [];
 };
 
+const hasOwn = (object, key) => Object.prototype.hasOwnProperty.call(object || {}, key);
+
 const storagePathFromDownloadUrl = (value) => {
   if (typeof value !== 'string' || !value.trim()) return '';
   try {
@@ -73,19 +75,24 @@ const asImages = (value) => {
   return source.map(normalizeImage).filter(Boolean);
 };
 
-const normalize = (data = {}) => ({
-  ...data,
-  images: asImages(data.images),
-  features: asList(data.features),
-  services: asList(data.services),
-  amenities: asList(data.amenities),
-  highlightTags: asList(data.highlightTags),
-  propertyDetails: data.propertyDetails && typeof data.propertyDetails === 'object'
-    ? data.propertyDetails
-    : {},
-  publicationStatus: data.publicationStatus || (data.published ? 'published' : 'draft'),
-  status: data.status || 'available',
-});
+const normalize = (data = {}) => {
+  const hasStructuredAmenities = hasOwn(data, 'features') || hasOwn(data, 'services');
+
+  return {
+    ...data,
+    images: asImages(data.images),
+    features: asList(data.features),
+    services: asList(data.services),
+    amenities: asList(data.amenities),
+    highlightTags: asList(data.highlightTags),
+    propertyDetails: data.propertyDetails && typeof data.propertyDetails === 'object'
+      ? data.propertyDetails
+      : {},
+    publicationStatus: data.publicationStatus || (data.published ? 'published' : 'draft'),
+    status: data.status || 'available',
+    _hasStructuredAmenities: hasStructuredAmenities,
+  };
+};
 
 const timestampValue = (value) => {
   if (value?.toMillis) return value.toMillis();
@@ -120,6 +127,18 @@ export async function getProperty(id) {
 
 export async function saveProperty(data, id, uid) {
   const payload = { ...data, updatedBy: uid || data.updatedBy || '', updatedAt: serverTimestamp() };
+  const hasStructuredAmenities = hasOwn(data, 'features') || hasOwn(data, 'services');
+
+  if (hasStructuredAmenities) {
+    const features = asList(data.features);
+    const services = asList(data.services);
+    payload.features = features;
+    payload.services = services;
+    payload.amenities = [...new Set([...features, ...services])];
+  }
+
+  delete payload._hasStructuredAmenities;
+
   if (payload.publicationStatus === 'published' && !payload.publishedAt) {
     payload.publishedAt = serverTimestamp();
   }

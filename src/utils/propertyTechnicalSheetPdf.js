@@ -19,24 +19,18 @@ const COLORS = {
   border: '#D9E0E0',
 };
 
+const cleanText = (value) => String(value || '').replace(/\s+/g, ' ').trim();
 const normalizeOperation = (value) => {
   if (value === 'venta') return 'sale';
   if (value === 'renta') return 'rent';
   return value || 'sale';
 };
-
 const asList = (value) => {
   if (Array.isArray(value)) return value.filter(Boolean);
   if (typeof value === 'string') return value.split(',').map((item) => item.trim()).filter(Boolean);
   return value ? [String(value)] : [];
 };
-
-const imageUrl = (image) => {
-  if (typeof image === 'string') return image;
-  return image?.url || '';
-};
-
-const cleanText = (value) => String(value || '').replace(/\s+/g, ' ').trim();
+const imageUrl = (image) => (typeof image === 'string' ? image : image?.url || '');
 
 const formatMoney = (value, currency = 'USD') => {
   if (!Number(value)) return 'Precio a consultar';
@@ -100,7 +94,6 @@ function wrapLines(ctx, text, maxWidth, maxLines = Infinity) {
   }
 
   if (lines.length < maxLines && line) lines.push(line);
-
   if (lines.length === maxLines) {
     const consumed = lines.join(' ').split(' ').length;
     if (consumed < words.length) {
@@ -109,7 +102,6 @@ function wrapLines(ctx, text, maxWidth, maxLines = Infinity) {
       lines[lines.length - 1] = `${last.replace(/[.,;:!?-]+$/g, '')}…`;
     }
   }
-
   return lines;
 }
 
@@ -118,21 +110,50 @@ function drawLines(ctx, lines, x, y, lineHeight, color) {
   lines.forEach((line, index) => ctx.fillText(line, x, y + (index * lineHeight)));
 }
 
-async function loadImage(url) {
-  if (!url) return null;
+async function blobToImage(blob) {
+  const objectUrl = URL.createObjectURL(blob);
   try {
-    const response = await fetch(url, { mode: 'cors' });
-    if (!response.ok) throw new Error('image fetch failed');
-    const blob = await response.blob();
-    const objectUrl = URL.createObjectURL(blob);
     const image = new Image();
     await new Promise((resolve, reject) => {
       image.onload = resolve;
       image.onerror = reject;
       image.src = objectUrl;
     });
-    URL.revokeObjectURL(objectUrl);
     return image;
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
+}
+
+async function fetchImageBlob(url) {
+  const response = await fetch(url, { mode: 'cors', cache: 'force-cache' });
+  if (!response.ok) throw new Error('No se pudo cargar la imagen');
+  const blob = await response.blob();
+  if (!blob.type.startsWith('image/')) throw new Error('El recurso no es una imagen');
+  return blob;
+}
+
+async function loadImage(url) {
+  if (!url) return null;
+
+  try {
+    return await blobToImage(await fetchImageBlob(url));
+  } catch {
+    // Firebase Storage puede mostrar la imagen en <img> y aun bloquear su lectura
+    // desde canvas. En Vercel usamos un proxy mismo-origen como respaldo.
+  }
+
+  try {
+    const parsed = new URL(url);
+    const isFirebase = parsed.hostname === 'firebasestorage.googleapis.com'
+      || parsed.hostname === 'storage.googleapis.com';
+    const canUseProxy = typeof window !== 'undefined'
+      && !window.location.hostname.endsWith('github.io')
+      && isFirebase;
+    if (!canUseProxy) return null;
+
+    const proxyUrl = `/api/property-image?url=${encodeURIComponent(url)}`;
+    return await blobToImage(await fetchImageBlob(proxyUrl));
   } catch {
     return null;
   }
@@ -145,7 +166,7 @@ function drawImageCover(ctx, image, x, y, width, height) {
     gradient.addColorStop(1, COLORS.navy);
     ctx.fillStyle = gradient;
     ctx.fillRect(x, y, width, height);
-    return;
+    return false;
   }
 
   const scale = Math.max(width / image.width, height / image.height);
@@ -154,6 +175,7 @@ function drawImageCover(ctx, image, x, y, width, height) {
   const sourceX = Math.max(0, (image.width - sourceWidth) / 2);
   const sourceY = Math.max(0, (image.height - sourceHeight) / 2);
   ctx.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, x, y, width, height);
+  return true;
 }
 
 function drawMetricIcon(ctx, kind, x, y, size = 54) {
@@ -233,14 +255,11 @@ function canvasToJpegBlob(canvas) {
     canvas.toBlob((blob) => {
       if (blob) resolve(blob);
       else reject(new Error('No se pudo preparar la imagen del PDF.'));
-    }, 'image/jpeg', 0.93);
+    }, 'image/jpeg', 0.94);
   });
 }
 
-function asciiBytes(value) {
-  return new TextEncoder().encode(value);
-}
-
+const asciiBytes = (value) => new TextEncoder().encode(value);
 function concatBytes(chunks) {
   const size = chunks.reduce((total, chunk) => total + chunk.length, 0);
   const output = new Uint8Array(size);
@@ -282,13 +301,11 @@ async function singlePagePdfFromCanvas(canvas) {
   addObject(5, `<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
 
   const xrefOffset = length;
-  append('xref\n0 6\n');
-  append('0000000000 65535 f \n');
+  append('xref\n0 6\n0000000000 65535 f \n');
   for (let index = 1; index <= 5; index += 1) {
     append(`${String(offsets[index]).padStart(10, '0')} 00000 n \n`);
   }
   append(`trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`);
-
   return new Blob([concatBytes(chunks)], { type: 'application/pdf' });
 }
 
@@ -307,23 +324,33 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
   const gallery = Array.isArray(property.images) ? property.images : [property.images];
   const coverUrl = imageUrl(property.coverImage) || gallery.map(imageUrl).find(Boolean) || '';
   const cover = await loadImage(coverUrl);
-  drawImageCover(ctx, cover, 0, 0, PAGE.width, 610);
+  const heroHeight = 560;
+  const hasCover = drawImageCover(ctx, cover, 0, 0, PAGE.width, heroHeight);
 
-  const overlay = ctx.createLinearGradient(0, 80, 0, 610);
-  overlay.addColorStop(0, 'rgba(0,25,41,.18)');
-  overlay.addColorStop(.55, 'rgba(0,25,41,.48)');
-  overlay.addColorStop(1, 'rgba(0,25,41,.96)');
-  ctx.fillStyle = overlay;
-  ctx.fillRect(0, 0, PAGE.width, 610);
+  if (hasCover) {
+    const sideOverlay = ctx.createLinearGradient(0, 0, PAGE.width, 0);
+    sideOverlay.addColorStop(0, 'rgba(0,25,41,.96)');
+    sideOverlay.addColorStop(.48, 'rgba(0,25,41,.76)');
+    sideOverlay.addColorStop(.78, 'rgba(0,25,41,.28)');
+    sideOverlay.addColorStop(1, 'rgba(0,25,41,.12)');
+    ctx.fillStyle = sideOverlay;
+    ctx.fillRect(0, 0, PAGE.width, heroHeight);
+
+    const bottomOverlay = ctx.createLinearGradient(0, 250, 0, heroHeight);
+    bottomOverlay.addColorStop(0, 'rgba(0,25,41,0)');
+    bottomOverlay.addColorStop(1, 'rgba(0,25,41,.72)');
+    ctx.fillStyle = bottomOverlay;
+    ctx.fillRect(0, 0, PAGE.width, heroHeight);
+  }
 
   ctx.fillStyle = COLORS.goldLight;
   ctx.font = '700 34px Georgia, serif';
   ctx.fillText('AMY BLANDÓN', 70, 76);
-  ctx.fillStyle = 'rgba(255,255,255,.9)';
+  ctx.fillStyle = 'rgba(255,255,255,.92)';
   ctx.font = '500 17px Arial, sans-serif';
   ctx.fillText('ASESORA INMOBILIARIA | SEGUROS | INVERSIONES', 72, 107);
 
-  fillRoundedRect(ctx, 918, 48, 250, 62, 31, 'rgba(0,25,41,.82)');
+  fillRoundedRect(ctx, 918, 48, 250, 62, 31, 'rgba(0,25,41,.78)');
   strokeRoundedRect(ctx, 918, 48, 250, 62, 31, COLORS.goldLight, 2);
   ctx.textAlign = 'center';
   ctx.fillStyle = COLORS.white;
@@ -336,37 +363,39 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
   const location = cleanText(property.publicAddress || [property.sector, property.city, property.department].filter(Boolean).join(', ') || 'Nicaragua');
   const price = property.priceOnRequest ? 'Precio a consultar' : formatMoney(property.price, property.currency);
 
-  fillRoundedRect(ctx, 70, 330, 170, 42, 21, COLORS.gold);
+  fillRoundedRect(ctx, 70, 290, 170, 42, 21, COLORS.gold);
   ctx.fillStyle = COLORS.navy;
   ctx.font = '800 15px Arial, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText(operationLabel.toUpperCase(), 155, 357);
+  ctx.fillText(operationLabel.toUpperCase(), 155, 317);
   ctx.textAlign = 'left';
 
   ctx.fillStyle = COLORS.white;
-  ctx.font = '800 50px Arial, sans-serif';
-  const titleLines = wrapLines(ctx, property.title || 'Propiedad', 850, 2);
-  drawLines(ctx, titleLines, 70, 423, 58, COLORS.white);
+  ctx.font = '800 47px Arial, sans-serif';
+  const titleLines = wrapLines(ctx, property.title || 'Propiedad', 790, 2);
+  drawLines(ctx, titleLines, 70, 383, 55, COLORS.white);
+  const titleBottom = 383 + ((titleLines.length - 1) * 55);
 
-  const titleBottom = 423 + ((titleLines.length - 1) * 58);
-  ctx.fillStyle = 'rgba(255,255,255,.86)';
-  ctx.font = '500 20px Arial, sans-serif';
-  ctx.fillText(`${typeLabel} · ${location}`, 72, titleBottom + 48);
+  ctx.fillStyle = 'rgba(255,255,255,.88)';
+  ctx.font = '500 19px Arial, sans-serif';
+  const locationLine = `${typeLabel} · ${location}`;
+  const locationLines = wrapLines(ctx, locationLine, 820, 1);
+  drawLines(ctx, locationLines, 72, titleBottom + 43, 26, 'rgba(255,255,255,.88)');
 
   ctx.fillStyle = COLORS.goldLight;
-  ctx.font = '800 34px Arial, sans-serif';
-  ctx.fillText(price, 72, titleBottom + 95);
+  ctx.font = '800 33px Arial, sans-serif';
+  ctx.fillText(price, 72, titleBottom + 87);
 
   if (property.internalCode) {
     ctx.textAlign = 'right';
-    ctx.fillStyle = 'rgba(255,255,255,.76)';
-    ctx.font = '600 15px Arial, sans-serif';
-    ctx.fillText(`CÓDIGO ${cleanText(property.internalCode).toUpperCase()}`, 1168, titleBottom + 93);
+    ctx.fillStyle = 'rgba(255,255,255,.8)';
+    ctx.font = '600 14px Arial, sans-serif';
+    ctx.fillText(`CÓDIGO ${cleanText(property.internalCode).toUpperCase()}`, 1168, titleBottom + 86);
     ctx.textAlign = 'left';
   }
 
   const facts = buildFacts(property);
-  const metricsY = 650;
+  const metricsY = 600;
   const metricsX = 70;
   const metricsWidth = 1100;
   const gap = 14;
@@ -376,38 +405,32 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
   if (facts.length) {
     facts.forEach((fact, index) => {
       const x = metricsX + (index * (metricWidth + gap));
-      fillRoundedRect(ctx, x, metricsY, metricWidth, 128, 18, COLORS.white);
-      strokeRoundedRect(ctx, x, metricsY, metricWidth, 128, 18, COLORS.border, 1.5);
-      drawMetricIcon(ctx, fact.key, x + 18, metricsY + 36, 56);
+      fillRoundedRect(ctx, x, metricsY, metricWidth, 118, 18, COLORS.white);
+      strokeRoundedRect(ctx, x, metricsY, metricWidth, 118, 18, COLORS.border, 1.5);
+      drawMetricIcon(ctx, fact.key, x + 17, metricsY + 31, 54);
       ctx.fillStyle = COLORS.muted;
-      ctx.font = '700 13px Arial, sans-serif';
-      ctx.fillText(fact.label.toUpperCase(), x + 88, metricsY + 48);
+      ctx.font = '700 12px Arial, sans-serif';
+      ctx.fillText(fact.label.toUpperCase(), x + 84, metricsY + 44);
       ctx.fillStyle = COLORS.text;
-      ctx.font = '800 23px Arial, sans-serif';
-      const metricLines = wrapLines(ctx, fact.value, metricWidth - 108, 2);
-      drawLines(ctx, metricLines, x + 88, metricsY + 78, 25, COLORS.text);
+      ctx.font = '800 21px Arial, sans-serif';
+      const metricLines = wrapLines(ctx, fact.value, metricWidth - 102, 2);
+      drawLines(ctx, metricLines, x + 84, metricsY + 73, 23, COLORS.text);
     });
-  } else {
-    fillRoundedRect(ctx, metricsX, metricsY, metricsWidth, 128, 18, COLORS.white);
-    strokeRoundedRect(ctx, metricsX, metricsY, metricsWidth, 128, 18, COLORS.border, 1.5);
-    ctx.fillStyle = COLORS.muted;
-    ctx.font = '600 18px Arial, sans-serif';
-    ctx.fillText('Los datos técnicos se completan según la información disponible de la propiedad.', 100, metricsY + 72);
   }
 
-  const descriptionY = 830;
+  const descriptionY = 770;
   ctx.fillStyle = COLORS.gold;
   ctx.font = '800 14px Arial, sans-serif';
   ctx.fillText('PRESENTACIÓN DE LA PROPIEDAD', 70, descriptionY);
   ctx.fillStyle = COLORS.text;
-  ctx.font = '800 31px Arial, sans-serif';
-  ctx.fillText('Descripción', 70, descriptionY + 48);
+  ctx.font = '800 30px Arial, sans-serif';
+  ctx.fillText('Descripción', 70, descriptionY + 45);
   ctx.fillStyle = COLORS.muted;
-  ctx.font = '500 19px Arial, sans-serif';
+  ctx.font = '500 18px Arial, sans-serif';
   const descriptionLines = wrapLines(ctx, property.description || 'Información descriptiva pendiente.', 1100, 5);
-  drawLines(ctx, descriptionLines, 70, descriptionY + 91, 31, COLORS.muted);
+  drawLines(ctx, descriptionLines, 70, descriptionY + 86, 29, COLORS.muted);
 
-  const sectionY = 1100;
+  const sectionY = 1050;
   const columnWidth = 532;
   const columnGap = 36;
   const amenities = [...asList(property.features), ...asList(property.services), ...asList(property.amenities)]
@@ -451,47 +474,45 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
     ctx.fillStyle = 'rgba(255,255,255,.62)';
     ctx.fillText(`${cleanText(item.label).toUpperCase()}:`, detailsX + 30, y);
     ctx.fillStyle = COLORS.white;
-    const value = cleanText(item.value).slice(0, 36);
-    ctx.fillText(value, detailsX + 188, y);
+    ctx.fillText(cleanText(item.value).slice(0, 36), detailsX + 188, y);
   });
 
-  const contactY = 1440;
+  // Footer compacto: conserva contacto y marca sin ocupar un cuarto de página.
+  const contactY = 1550;
   ctx.fillStyle = COLORS.navy;
   ctx.fillRect(0, contactY, PAGE.width, PAGE.height - contactY);
   ctx.fillStyle = COLORS.gold;
-  ctx.fillRect(0, contactY, PAGE.width, 6);
+  ctx.fillRect(0, contactY, PAGE.width, 5);
 
-  fillRoundedRect(ctx, 70, contactY + 48, 92, 92, 20, COLORS.gold);
+  fillRoundedRect(ctx, 70, contactY + 30, 66, 66, 14, COLORS.gold);
   ctx.fillStyle = COLORS.navy;
   ctx.textAlign = 'center';
-  ctx.font = '800 34px Georgia, serif';
-  ctx.fillText('AB', 116, contactY + 106);
+  ctx.font = '800 26px Georgia, serif';
+  ctx.fillText('AB', 103, contactY + 73);
   ctx.textAlign = 'left';
 
   ctx.fillStyle = COLORS.white;
-  ctx.font = '800 30px Arial, sans-serif';
-  ctx.fillText('Amy Blandón', 190, contactY + 78);
+  ctx.font = '800 24px Arial, sans-serif';
+  ctx.fillText('Amy Blandón', 160, contactY + 53);
   ctx.fillStyle = COLORS.goldLight;
-  ctx.font = '700 15px Arial, sans-serif';
-  ctx.fillText('ASESORÍA INMOBILIARIA · SEGUROS · INVERSIONES', 190, contactY + 111);
+  ctx.font = '700 12px Arial, sans-serif';
+  ctx.fillText('ASESORÍA INMOBILIARIA · SEGUROS · INVERSIONES', 160, contactY + 80);
 
-  ctx.fillStyle = 'rgba(255,255,255,.78)';
-  ctx.font = '600 17px Arial, sans-serif';
-  ctx.fillText(amyContact.phone, 70, contactY + 190);
-  ctx.fillText(amyContact.email, 315, contactY + 190);
-  ctx.fillText(amyContact.location, 650, contactY + 190);
-
+  ctx.fillStyle = 'rgba(255,255,255,.8)';
+  ctx.font = '600 14px Arial, sans-serif';
+  ctx.fillText(amyContact.phone, 70, contactY + 130);
+  ctx.fillText(amyContact.email, 295, contactY + 130);
+  ctx.fillText(amyContact.location, 625, contactY + 130);
   ctx.textAlign = 'right';
   ctx.fillStyle = COLORS.goldLight;
-  ctx.font = '700 17px Arial, sans-serif';
-  ctx.fillText('amyblandon.com', 1170, contactY + 190);
+  ctx.fillText('amyblandon.com', 1170, contactY + 130);
   ctx.textAlign = 'left';
 
   ctx.fillStyle = 'rgba(255,255,255,.38)';
-  ctx.font = '500 12px Arial, sans-serif';
-  ctx.fillText('Ficha comercial informativa · Datos sujetos a verificación y disponibilidad.', 70, PAGE.height - 42);
+  ctx.font = '500 10px Arial, sans-serif';
+  ctx.fillText('Ficha comercial informativa · Datos sujetos a verificación y disponibilidad.', 70, PAGE.height - 22);
   ctx.textAlign = 'right';
-  ctx.fillText(`Generada ${new Date().toLocaleDateString('es-NI')}`, 1170, PAGE.height - 42);
+  ctx.fillText(`Generada ${new Date().toLocaleDateString('es-NI')}`, 1170, PAGE.height - 22);
   ctx.textAlign = 'left';
 
   const pdfBlob = await singlePagePdfFromCanvas(canvas);

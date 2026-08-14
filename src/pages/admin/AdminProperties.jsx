@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FileDown } from 'lucide-react';
+import { getBytes, ref as storageRef } from 'firebase/storage';
 import {
   deleteProperty,
   duplicateProperty,
@@ -8,6 +9,7 @@ import {
   updatePropertyStatus,
 } from '../../services/propertyService';
 import { useAuth } from '../../contexts/AuthContext';
+import { firebaseEnabled, storage } from '../../firebase/firebase';
 import {
   labelFor,
   operationTypeOptions,
@@ -35,6 +37,25 @@ const formatPrice = (property) => {
   } catch {
     return `$${Number(property.price || 0).toLocaleString('en-US')}`;
   }
+};
+
+const asImageMeta = (image) => {
+  if (!image) return null;
+  if (typeof image === 'string') return { url: image, path: '', type: '' };
+  return image;
+};
+
+const getCoverStorageImage = (property) => {
+  const images = (Array.isArray(property.images) ? property.images : [property.images])
+    .map(asImageMeta)
+    .filter(Boolean);
+  const cover = asImageMeta(property.coverImage);
+  if (cover?.path) return cover;
+
+  const coverUrl = cover?.url || (typeof property.coverImage === 'string' ? property.coverImage : '');
+  return images.find((image) => image?.path && coverUrl && image.url === coverUrl)
+    || images.find((image) => image?.path)
+    || null;
 };
 
 export default function AdminProperties() {
@@ -112,11 +133,28 @@ export default function AdminProperties() {
     if (pdfGeneratingId) return;
     setPdfGeneratingId(property.id);
     setError('');
+    let temporaryCoverUrl = '';
+
     try {
-      await downloadPropertyTechnicalSheetPdf(property);
+      let propertyForPdf = property;
+      const coverStorageImage = getCoverStorageImage(property);
+
+      if (firebaseEnabled && storage && coverStorageImage?.path) {
+        try {
+          const bytes = await getBytes(storageRef(storage, coverStorageImage.path), 12 * 1024 * 1024);
+          const blob = new Blob([bytes], { type: coverStorageImage.type || 'image/jpeg' });
+          temporaryCoverUrl = URL.createObjectURL(blob);
+          propertyForPdf = { ...property, coverImage: temporaryCoverUrl };
+        } catch (storageError) {
+          console.warn('No se pudo preparar la portada desde Firebase Storage; se usará el respaldo por URL.', storageError);
+        }
+      }
+
+      await downloadPropertyTechnicalSheetPdf(propertyForPdf);
     } catch (pdfError) {
       setError(pdfError?.message || 'No se pudo generar la ficha técnica de esta propiedad.');
     } finally {
+      if (temporaryCoverUrl) URL.revokeObjectURL(temporaryCoverUrl);
       setPdfGeneratingId('');
     }
   };

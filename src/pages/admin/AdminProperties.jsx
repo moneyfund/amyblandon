@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FileDown } from 'lucide-react';
-import { getBytes, ref as storageRef } from 'firebase/storage';
 import {
   deleteProperty,
   duplicateProperty,
@@ -9,7 +8,6 @@ import {
   updatePropertyStatus,
 } from '../../services/propertyService';
 import { useAuth } from '../../contexts/AuthContext';
-import { firebaseEnabled, storage } from '../../firebase/firebase';
 import {
   labelFor,
   operationTypeOptions,
@@ -21,6 +19,7 @@ import { downloadPropertyTechnicalSheetPdf } from '../../utils/propertyTechnical
 
 const IMAGE_TIMEOUT_MS = 7000;
 const PDF_TIMEOUT_MS = 25000;
+const VERCEL_IMAGE_PROXY = 'https://amyblandon.vercel.app/api/property-image';
 
 const withTimeout = (promise, timeoutMs, message) => new Promise((resolve, reject) => {
   const timer = window.setTimeout(() => reject(new Error(message)), timeoutMs);
@@ -32,6 +31,14 @@ const withTimeout = (promise, timeoutMs, message) => new Promise((resolve, rejec
     reject(error);
   });
 });
+
+const isGithubPagesRuntime = () => (
+  typeof window !== 'undefined' && window.location.hostname.endsWith('github.io')
+);
+
+const imageProxyEndpoint = () => (
+  isGithubPagesRuntime() ? VERCEL_IMAGE_PROXY : '/api/property-image'
+);
 
 const formatDate = (value) => {
   if (!value) return '—';
@@ -64,38 +71,44 @@ const getPdfImageCandidates = (property) => {
     .map(asImageMeta)
     .filter(Boolean);
   const cover = asImageMeta(property.coverImage);
-  const coverWithStorageMeta = cover?.path
-    ? cover
-    : gallery.find((image) => cover?.url && image.url === cover.url) || cover;
+  const coverWithStorageMeta = gallery.find((image) => cover?.url && image.url === cover.url) || cover;
   const seen = new Set();
 
   return [coverWithStorageMeta, ...gallery].filter((image) => {
-    if (!image?.path && !image?.url) return false;
-    const key = image.path || image.url;
-    if (seen.has(key)) return false;
-    seen.add(key);
+    if (!image?.url) return false;
+    if (seen.has(image.url)) return false;
+    seen.add(image.url);
     return true;
   });
 };
 
 const fetchImageViaProxy = async (url) => {
   if (!url) throw new Error('La fotografía no tiene URL pública.');
-  const proxyUrl = `/api/property-image?url=${encodeURIComponent(url)}`;
+
+  const endpoint = imageProxyEndpoint();
+  const proxyUrl = `${endpoint}?url=${encodeURIComponent(url)}`;
   const response = await withTimeout(
-    fetch(proxyUrl, { cache: 'no-store' }),
+    fetch(proxyUrl, {
+      cache: 'no-store',
+      mode: 'cors',
+      credentials: 'omit',
+    }),
     IMAGE_TIMEOUT_MS,
     'El servidor tardó demasiado en recuperar una fotografía.',
   );
+
   if (!response.ok) {
     const payload = await response.json().catch(() => null);
     const detail = payload?.error ? ` ${payload.error}` : '';
     throw new Error(`El proxy de imágenes respondió ${response.status}.${detail}`);
   }
+
   const blob = await withTimeout(
     response.blob(),
     IMAGE_TIMEOUT_MS,
     'La fotografía tardó demasiado en descargarse.',
   );
+
   if (blob.type && !blob.type.startsWith('image/')) {
     throw new Error(`El proxy devolvió un archivo no válido (${blob.type || 'sin tipo'}).`);
   }
@@ -128,27 +141,9 @@ const blobToImageElement = async (blob) => {
 };
 
 const decodeImageForPdf = async (image) => {
-  let blob = null;
-
-  if (image.path && firebaseEnabled && storage) {
-    try {
-      const bytes = await withTimeout(
-        getBytes(storageRef(storage, image.path), 12 * 1024 * 1024),
-        IMAGE_TIMEOUT_MS,
-        'Firebase Storage tardó demasiado en entregar la fotografía.',
-      );
-      blob = new Blob([bytes], { type: image.type || 'image/jpeg' });
-    } catch (storageError) {
-      console.warn('Firebase Storage no permitió leer la fotografía para el PDF; se intentará por el proxy de Vercel.', storageError);
-    }
-  }
-
-  if (!blob && image.url) {
-    blob = await fetchImageViaProxy(image.url);
-  }
-
-  if (!blob) throw new Error('La imagen no tiene una ubicación válida o no pudo descargarse.');
-  if (blob.type && !blob.type.startsWith('image/')) throw new Error('El archivo descargado no es una imagen.');
+  if (!image?.url) throw new Error('La fotografía no tiene una URL utilizable.');
+  const blob = await fetchImageViaProxy(image.url);
+  if (!blob.type.startsWith('image/')) throw new Error('El archivo descargado no es una imagen.');
   return blobToImageElement(blob);
 };
 
@@ -250,7 +245,7 @@ export default function AdminProperties() {
         .forEach((result) => console.warn('No se pudo preparar una fotografía para la ficha técnica.', result.reason));
 
       if (!decodedImages.length) {
-        throw new Error('No se pudo cargar ninguna fotografía. Revisa las imágenes de la propiedad y vuelve a intentarlo.');
+        throw new Error('No se pudo cargar ninguna fotografía mediante el servidor seguro de imágenes. Vuelve a intentarlo o revisa que las fotografías sigan disponibles.');
       }
 
       await withTimeout(

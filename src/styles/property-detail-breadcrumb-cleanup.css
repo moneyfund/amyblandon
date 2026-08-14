@@ -1,0 +1,11 @@
+/* El detalle de propiedad no necesita breadcrumb: en móvil competía visualmente con el navbar. */
+.property-detail-page .property-detail-breadcrumb {
+  display: none !important;
+}
+
+/* Conserva una separación limpia bajo el navbar después de retirar el breadcrumb. */
+@media (max-width: 900px) {
+  .property-detail-page .property-detail-head {
+    padding-top: 34px;
+  }
+}

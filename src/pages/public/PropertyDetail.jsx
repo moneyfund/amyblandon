@@ -11,8 +11,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Download,
+  ExternalLink,
   MapPin,
   MessageCircle,
+  PlayCircle,
   Ruler,
   Sparkles,
   X,
@@ -68,6 +70,41 @@ const normalizeOperation = (value) => {
 const optionLabel = (definition, value) => {
   if (!definition?.options?.length) return value;
   return definition.options.find(([optionValue]) => optionValue === value)?.[1] || value;
+};
+
+const getVideoMeta = (value) => {
+  const raw = String(value || '').trim();
+  if (!raw) return null;
+
+  try {
+    const parsed = new URL(raw);
+    if (!['http:', 'https:'].includes(parsed.protocol)) return null;
+    const host = parsed.hostname.replace(/^www\./, '').toLowerCase();
+
+    if (host === 'tiktok.com' || host.endsWith('.tiktok.com')) {
+      return {
+        url: raw,
+        platform: 'TikTok',
+        action: 'Ver video en TikTok',
+      };
+    }
+
+    if (host === 'youtu.be' || host === 'youtube.com' || host.endsWith('.youtube.com')) {
+      return {
+        url: raw,
+        platform: 'YouTube',
+        action: 'Ver video en YouTube',
+      };
+    }
+
+    return {
+      url: raw,
+      platform: 'Video de la propiedad',
+      action: 'Ver video',
+    };
+  } catch {
+    return null;
+  }
 };
 
 export default function PropertyDetail() {
@@ -164,12 +201,17 @@ export default function PropertyDetail() {
     );
   }
 
-  const amenities = [
-    ...listValue(property.amenities),
+  const structuredAmenities = [
     ...listValue(property.features),
     ...listValue(property.services),
   ].filter((item, index, values) => values.indexOf(item) === index);
 
+  const amenities = property._hasStructuredAmenities
+    ? structuredAmenities
+    : [...listValue(property.amenities), ...structuredAmenities]
+      .filter((item, index, values) => values.indexOf(item) === index);
+
+  const videoMeta = getVideoMeta(property.videoUrl);
   const propertyTypeLabel = labelFor(propertyTypeOptions, property.propertyType, 'Propiedad');
   const operation = normalizeOperation(property.operationType || property.transactionType);
   const operationLabel = labelFor(operationTypeOptions, operation, 'Disponible');
@@ -367,6 +409,30 @@ export default function PropertyDetail() {
             <h2>Descripción</h2>
             <div className="property-detail-description preline">{property.description || 'Descripción pendiente.'}</div>
           </section>
+
+          {videoMeta && (
+            <section className="property-detail-section property-detail-video-section">
+              <p className="property-detail-eyebrow">RECORRIDO EN VIDEO</p>
+              <div className="property-detail-video-card">
+                <div className="property-detail-video-card__icon" aria-hidden="true">
+                  <PlayCircle />
+                </div>
+                <div className="property-detail-video-card__copy">
+                  <span>{videoMeta.platform}</span>
+                  <h2>Conoce la propiedad en video</h2>
+                  <p>Abre el recorrido publicado por Amy y mira más detalles de la propiedad directamente en la plataforma del video.</p>
+                </div>
+                <a
+                  className="property-detail-video-card__link"
+                  href={videoMeta.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {videoMeta.action} <ExternalLink />
+                </a>
+              </div>
+            </section>
+          )}
 
           {amenities.length > 0 && (
             <section className="property-detail-section">

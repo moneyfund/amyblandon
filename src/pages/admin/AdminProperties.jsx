@@ -45,17 +45,40 @@ const asImageMeta = (image) => {
   return image;
 };
 
-const getCoverStorageImage = (property) => {
-  const images = (Array.isArray(property.images) ? property.images : [property.images])
+const getPdfImageCandidates = (property) => {
+  const gallery = (Array.isArray(property.images) ? property.images : [property.images])
     .map(asImageMeta)
     .filter(Boolean);
   const cover = asImageMeta(property.coverImage);
-  if (cover?.path) return cover;
+  const coverWithStorageMeta = cover?.path
+    ? cover
+    : gallery.find((image) => cover?.url && image.url === cover.url) || cover;
+  const seen = new Set();
 
-  const coverUrl = cover?.url || (typeof property.coverImage === 'string' ? property.coverImage : '');
-  return images.find((image) => image?.path && coverUrl && image.url === coverUrl)
-    || images.find((image) => image?.path)
-    || null;
+  return [coverWithStorageMeta, ...gallery].filter((image) => {
+    if (!image?.path && !image?.url) return false;
+    const key = image.path || image.url;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+
+const imageToTemporaryUrl = async (image) => {
+  let blob;
+  if (image.path && firebaseEnabled && storage) {
+    const bytes = await getBytes(storageRef(storage, image.path), 12 * 1024 * 1024);
+    blob = new Blob([bytes], { type: image.type || 'image/jpeg' });
+  } else if (image.url) {
+    const response = await fetch(image.url, { mode: 'cors', cache: 'no-store' });
+    if (!response.ok) throw new Error(`No se pudo descargar la imagen (${response.status}).`);
+    blob = await response.blob();
+  } else {
+    throw new Error('La imagen no tiene una ubicación válida.');
+  }
+
+  if (blob.type && !blob.type.startsWith('image/')) throw new Error('El archivo descargado no es una imagen.');
+  return URL.createObjectURL(blob);
 };
 
 export default function AdminProperties() {
@@ -133,28 +156,27 @@ export default function AdminProperties() {
     if (pdfGeneratingId) return;
     setPdfGeneratingId(property.id);
     setError('');
-    let temporaryCoverUrl = '';
+    const temporaryImageUrls = [];
 
     try {
-      let propertyForPdf = property;
-      const coverStorageImage = getCoverStorageImage(property);
-
-      if (firebaseEnabled && storage && coverStorageImage?.path) {
+      const candidates = getPdfImageCandidates(property);
+      for (const candidate of candidates) {
+        if (temporaryImageUrls.length === 3) break;
         try {
-          const bytes = await getBytes(storageRef(storage, coverStorageImage.path), 12 * 1024 * 1024);
-          const blob = new Blob([bytes], { type: coverStorageImage.type || 'image/jpeg' });
-          temporaryCoverUrl = URL.createObjectURL(blob);
-          propertyForPdf = { ...property, coverImage: temporaryCoverUrl };
-        } catch (storageError) {
-          console.warn('No se pudo preparar la portada desde Firebase Storage; se usará el respaldo por URL.', storageError);
+          temporaryImageUrls.push(await imageToTemporaryUrl(candidate));
+        } catch (imageError) {
+          console.warn('No se pudo preparar una fotografía para la ficha técnica.', imageError);
         }
       }
 
-      await downloadPropertyTechnicalSheetPdf(propertyForPdf);
+      await downloadPropertyTechnicalSheetPdf({
+        ...property,
+        pdfGalleryImages: temporaryImageUrls,
+      });
     } catch (pdfError) {
       setError(pdfError?.message || 'No se pudo generar la ficha técnica de esta propiedad.');
     } finally {
-      if (temporaryCoverUrl) URL.revokeObjectURL(temporaryCoverUrl);
+      temporaryImageUrls.forEach((url) => URL.revokeObjectURL(url));
       setPdfGeneratingId('');
     }
   };

@@ -19,6 +19,20 @@ import {
 } from '../../config/adminLabels.es';
 import { downloadPropertyTechnicalSheetPdf } from '../../utils/propertyTechnicalSheetPdf';
 
+const IMAGE_TIMEOUT_MS = 7000;
+const PDF_TIMEOUT_MS = 25000;
+
+const withTimeout = (promise, timeoutMs, message) => new Promise((resolve, reject) => {
+  const timer = window.setTimeout(() => reject(new Error(message)), timeoutMs);
+  promise.then((value) => {
+    window.clearTimeout(timer);
+    resolve(value);
+  }).catch((error) => {
+    window.clearTimeout(timer);
+    reject(error);
+  });
+});
+
 const formatDate = (value) => {
   if (!value) return '—';
   if (value?.toDate) return value.toDate().toLocaleDateString('es-NI');
@@ -67,17 +81,50 @@ const getPdfImageCandidates = (property) => {
 const fetchImageViaProxy = async (url) => {
   if (!url) throw new Error('La fotografía no tiene URL pública.');
   const proxyUrl = `/api/property-image?url=${encodeURIComponent(url)}`;
-  const response = await fetch(proxyUrl, { cache: 'no-store' });
+  const response = await withTimeout(
+    fetch(proxyUrl, { cache: 'no-store' }),
+    IMAGE_TIMEOUT_MS,
+    'El servidor tardó demasiado en recuperar una fotografía.',
+  );
   if (!response.ok) {
     const payload = await response.json().catch(() => null);
     const detail = payload?.error ? ` ${payload.error}` : '';
     throw new Error(`El proxy de imágenes respondió ${response.status}.${detail}`);
   }
-  const blob = await response.blob();
+  const blob = await withTimeout(
+    response.blob(),
+    IMAGE_TIMEOUT_MS,
+    'La fotografía tardó demasiado en descargarse.',
+  );
   if (blob.type && !blob.type.startsWith('image/')) {
     throw new Error(`El proxy devolvió un archivo no válido (${blob.type || 'sin tipo'}).`);
   }
   return blob;
+};
+
+const blobToImageElement = async (blob) => {
+  const objectUrl = URL.createObjectURL(blob);
+  const image = new Image();
+  image.decoding = 'async';
+
+  try {
+    await withTimeout(
+      new Promise((resolve, reject) => {
+        image.onload = resolve;
+        image.onerror = () => reject(new Error('El navegador no pudo decodificar la fotografía.'));
+        image.src = objectUrl;
+      }),
+      IMAGE_TIMEOUT_MS,
+      'La fotografía tardó demasiado en decodificarse.',
+    );
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
+
+  if (!image.naturalWidth || !image.naturalHeight) {
+    throw new Error('La fotografía se descargó, pero no contiene dimensiones válidas.');
+  }
+  return image;
 };
 
 const decodeImageForPdf = async (image) => {
@@ -85,7 +132,11 @@ const decodeImageForPdf = async (image) => {
 
   if (image.path && firebaseEnabled && storage) {
     try {
-      const bytes = await getBytes(storageRef(storage, image.path), 12 * 1024 * 1024);
+      const bytes = await withTimeout(
+        getBytes(storageRef(storage, image.path), 12 * 1024 * 1024),
+        IMAGE_TIMEOUT_MS,
+        'Firebase Storage tardó demasiado en entregar la fotografía.',
+      );
       blob = new Blob([bytes], { type: image.type || 'image/jpeg' });
     } catch (storageError) {
       console.warn('Firebase Storage no permitió leer la fotografía para el PDF; se intentará por el proxy de Vercel.', storageError);
@@ -98,16 +149,7 @@ const decodeImageForPdf = async (image) => {
 
   if (!blob) throw new Error('La imagen no tiene una ubicación válida o no pudo descargarse.');
   if (blob.type && !blob.type.startsWith('image/')) throw new Error('El archivo descargado no es una imagen.');
-  if (typeof window.createImageBitmap !== 'function') {
-    throw new Error('Este navegador no admite la decodificación necesaria para generar la ficha con fotografías.');
-  }
-
-  const bitmap = await window.createImageBitmap(blob);
-  if (!bitmap?.width || !bitmap?.height) {
-    bitmap?.close?.();
-    throw new Error('La fotografía se descargó, pero no pudo decodificarse correctamente.');
-  }
-  return bitmap;
+  return blobToImageElement(blob);
 };
 
 export default function AdminProperties() {
@@ -185,31 +227,48 @@ export default function AdminProperties() {
     if (pdfGeneratingId) return;
     setPdfGeneratingId(property.id);
     setError('');
-    const decodedImages = [];
+    let decodedImages = [];
 
     try {
-      const candidates = getPdfImageCandidates(property);
-      for (const candidate of candidates) {
-        if (decodedImages.length === 3) break;
-        try {
-          decodedImages.push(await decodeImageForPdf(candidate));
-        } catch (imageError) {
-          console.warn('No se pudo preparar una fotografía para la ficha técnica.', imageError);
-        }
+      const candidates = getPdfImageCandidates(property).slice(0, 6);
+      if (!candidates.length) {
+        throw new Error('Esta propiedad no tiene fotografías disponibles para la ficha técnica.');
       }
+
+      const results = await withTimeout(
+        Promise.allSettled(candidates.map((candidate) => decodeImageForPdf(candidate))),
+        18000,
+        'La preparación de las fotografías excedió el tiempo permitido.',
+      );
+      decodedImages = results
+        .filter((result) => result.status === 'fulfilled')
+        .map((result) => result.value)
+        .slice(0, 3);
+
+      results
+        .filter((result) => result.status === 'rejected')
+        .forEach((result) => console.warn('No se pudo preparar una fotografía para la ficha técnica.', result.reason));
 
       if (!decodedImages.length) {
-        throw new Error('No se pudo decodificar ninguna fotografía para la ficha técnica. El PDF no se generó para evitar otra versión sin imágenes.');
+        throw new Error('No se pudo cargar ninguna fotografía. Revisa las imágenes de la propiedad y vuelve a intentarlo.');
       }
 
-      await downloadPropertyTechnicalSheetPdf({
-        ...property,
-        pdfGalleryBitmaps: decodedImages,
-      });
+      await withTimeout(
+        downloadPropertyTechnicalSheetPdf({
+          ...property,
+          pdfGalleryBitmaps: decodedImages,
+        }),
+        PDF_TIMEOUT_MS,
+        'La generación del PDF excedió 25 segundos y fue cancelada. Inténtalo nuevamente.',
+      );
     } catch (pdfError) {
       setError(pdfError?.message || 'No se pudo generar la ficha técnica de esta propiedad.');
     } finally {
-      decodedImages.forEach((bitmap) => bitmap?.close?.());
+      decodedImages.forEach((image) => {
+        image.onload = null;
+        image.onerror = null;
+        image.src = '';
+      });
       setPdfGeneratingId('');
     }
   };

@@ -4,10 +4,10 @@ import AdminLayout from '../layouts/AdminLayout';
 import PublicLayout from '../layouts/PublicLayout';
 import {
   Dashboard,
-  AdminProperties,
   InquiriesAdmin,
   SettingsAdmin,
 } from '../pages/admin/AdminPages';
+import AdminProperties from '../pages/admin/AdminProperties';
 import ContentAdmin from '../pages/admin/ContentAdminV2';
 import PropertyWorkspace from '../pages/admin/PropertyWorkspace';
 import ImagesAdmin from '../pages/admin/ImagesAdmin';

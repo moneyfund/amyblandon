@@ -64,19 +64,44 @@ const getPdfImageCandidates = (property) => {
   });
 };
 
+const fetchImageViaProxy = async (url) => {
+  if (!url) throw new Error('La fotografía no tiene URL pública.');
+  const proxyUrl = `/api/property-image?url=${encodeURIComponent(url)}`;
+  const response = await fetch(proxyUrl, { cache: 'no-store' });
+  if (!response.ok) {
+    let detail = '';
+    try {
+      const payload = await response.json();
+      detail = payload?.error ? ` ${payload.error}` : '';
+    } catch {
+      detail = '';
+    }
+    throw new Error(`El proxy de imágenes respondió ${response.status}.${detail}`);
+  }
+  const blob = await response.blob();
+  if (blob.type && !blob.type.startsWith('image/')) {
+    throw new Error(`El proxy devolvió un archivo no válido (${blob.type || 'sin tipo'}).`);
+  }
+  return blob;
+};
+
 const imageToTemporaryUrl = async (image) => {
-  let blob;
+  let blob = null;
+
   if (image.path && firebaseEnabled && storage) {
-    const bytes = await getBytes(storageRef(storage, image.path), 12 * 1024 * 1024);
-    blob = new Blob([bytes], { type: image.type || 'image/jpeg' });
-  } else if (image.url) {
-    const response = await fetch(image.url, { mode: 'cors', cache: 'no-store' });
-    if (!response.ok) throw new Error(`No se pudo descargar la imagen (${response.status}).`);
-    blob = await response.blob();
-  } else {
-    throw new Error('La imagen no tiene una ubicación válida.');
+    try {
+      const bytes = await getBytes(storageRef(storage, image.path), 12 * 1024 * 1024);
+      blob = new Blob([bytes], { type: image.type || 'image/jpeg' });
+    } catch (storageError) {
+      console.warn('Firebase Storage no permitió leer la fotografía para el PDF; se intentará por el proxy de Vercel.', storageError);
+    }
   }
 
+  if (!blob && image.url) {
+    blob = await fetchImageViaProxy(image.url);
+  }
+
+  if (!blob) throw new Error('La imagen no tiene una ubicación válida o no pudo descargarse.');
   if (blob.type && !blob.type.startsWith('image/')) throw new Error('El archivo descargado no es una imagen.');
   return URL.createObjectURL(blob);
 };
@@ -167,6 +192,10 @@ export default function AdminProperties() {
         } catch (imageError) {
           console.warn('No se pudo preparar una fotografía para la ficha técnica.', imageError);
         }
+      }
+
+      if (!temporaryImageUrls.length) {
+        throw new Error('No se pudo cargar ninguna fotografía para la ficha técnica. El PDF no se generó para evitar descargar otra versión sin imágenes.');
       }
 
       await downloadPropertyTechnicalSheetPdf({

@@ -178,6 +178,38 @@ function drawImageCover(ctx, image, x, y, width, height) {
   return true;
 }
 
+function drawPremiumGallery(ctx, images, width, height) {
+  if (!images.length) {
+    drawImageCover(ctx, null, 0, 0, width, height);
+    return false;
+  }
+
+  ctx.fillStyle = COLORS.navy;
+  ctx.fillRect(0, 0, width, height);
+  const margin = 20;
+  const gap = 12;
+  const leftWidth = 790;
+  const rightWidth = width - (margin * 2) - gap - leftWidth;
+  const smallHeight = (height - (margin * 2) - gap) / 2;
+  const frames = [
+    { x: margin, y: margin, width: leftWidth, height: height - (margin * 2) },
+    { x: margin + leftWidth + gap, y: margin, width: rightWidth, height: smallHeight },
+    { x: margin + leftWidth + gap, y: margin + smallHeight + gap, width: rightWidth, height: smallHeight },
+  ];
+
+  frames.forEach((frame, index) => {
+    ctx.save();
+    roundedRectPath(ctx, frame.x, frame.y, frame.width, frame.height, 18);
+    ctx.clip();
+    drawImageCover(ctx, images[index] || null, frame.x, frame.y, frame.width, frame.height);
+    ctx.fillStyle = index === 0 ? 'rgba(0,25,41,.32)' : 'rgba(0,25,41,.20)';
+    ctx.fillRect(frame.x, frame.y, frame.width, frame.height);
+    ctx.restore();
+    strokeRoundedRect(ctx, frame.x, frame.y, frame.width, frame.height, 18, COLORS.goldLight, 2);
+  });
+  return true;
+}
+
 function drawMetricIcon(ctx, kind, x, y, size = 54) {
   fillRoundedRect(ctx, x, y, size, size, 12, COLORS.navy);
   ctx.save();
@@ -321,11 +353,12 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
   ctx.fillStyle = COLORS.ivory;
   ctx.fillRect(0, 0, PAGE.width, PAGE.height);
 
-  const gallery = Array.isArray(property.images) ? property.images : [property.images];
-  const coverUrl = imageUrl(property.coverImage) || gallery.map(imageUrl).find(Boolean) || '';
-  const cover = await loadImage(coverUrl);
+  const preparedGallery = Array.isArray(property.pdfGalleryImages)
+    ? property.pdfGalleryImages.map(imageUrl).filter(Boolean).slice(0, 3)
+    : [];
+  const galleryImages = (await Promise.all(preparedGallery.map(loadImage))).filter(Boolean);
   const heroHeight = 560;
-  const hasCover = drawImageCover(ctx, cover, 0, 0, PAGE.width, heroHeight);
+  const hasCover = drawPremiumGallery(ctx, galleryImages, PAGE.width, heroHeight);
 
   if (hasCover) {
     const sideOverlay = ctx.createLinearGradient(0, 0, PAGE.width, 0);

@@ -24,9 +24,53 @@ const asList = (value) => {
   return value ? [value] : [];
 };
 
+const storagePathFromDownloadUrl = (value) => {
+  if (typeof value !== 'string' || !value.trim()) return '';
+  try {
+    const parsed = new URL(value);
+    const allowedHost = parsed.hostname === 'firebasestorage.googleapis.com'
+      || parsed.hostname === 'storage.googleapis.com';
+    if (!allowedHost) return '';
+
+    const marker = '/o/';
+    const markerIndex = parsed.pathname.indexOf(marker);
+    if (markerIndex < 0) return '';
+
+    const encodedPath = parsed.pathname.slice(markerIndex + marker.length);
+    return decodeURIComponent(encodedPath);
+  } catch {
+    return '';
+  }
+};
+
+const normalizeImage = (image) => {
+  if (!image) return null;
+  if (typeof image === 'string') {
+    return {
+      url: image,
+      path: storagePathFromDownloadUrl(image),
+      name: '',
+      size: 0,
+      type: '',
+    };
+  }
+
+  if (typeof image === 'object') {
+    const url = image.url || image.src || '';
+    if (!url) return null;
+    return {
+      ...image,
+      url,
+      path: image.path || storagePathFromDownloadUrl(url),
+    };
+  }
+
+  return null;
+};
+
 const asImages = (value) => {
-  if (Array.isArray(value)) return value.filter(Boolean);
-  return value ? [value] : [];
+  const source = Array.isArray(value) ? value : value ? [value] : [];
+  return source.map(normalizeImage).filter(Boolean);
 };
 
 const normalize = (data = {}) => ({

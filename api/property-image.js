@@ -4,6 +4,20 @@ const ALLOWED_HOSTS = new Set([
   'amyblandon.firebasestorage.app',
 ]);
 
+const readRequestedUrl = (request) => {
+  try {
+    const host = request.headers?.host || 'amyblandon.vercel.app';
+    const requestUrl = new URL(request.url || '/', `https://${host}`);
+    const value = requestUrl.searchParams.get('url');
+    if (value) return value;
+  } catch {
+    // Se usa request.query como respaldo.
+  }
+
+  const queryValue = Array.isArray(request.query?.url) ? request.query.url[0] : request.query?.url;
+  return queryValue || '';
+};
+
 export default async function handler(request, response) {
   if (request.method !== 'GET') {
     response.setHeader('Allow', 'GET');
@@ -13,20 +27,7 @@ export default async function handler(request, response) {
   response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('X-Content-Type-Options', 'nosniff');
 
-  let rawUrl = '';
-  try {
-    const host = request.headers?.host || 'amyblandon.vercel.app';
-    const requestUrl = new URL(request.url || '/', `https://${host}`);
-    rawUrl = requestUrl.searchParams.get('url') || '';
-  } catch {
-    rawUrl = '';
-  }
-
-  if (!rawUrl) {
-    const queryValue = Array.isArray(request.query?.url) ? request.query.url[0] : request.query?.url;
-    rawUrl = queryValue || '';
-  }
-
+  const rawUrl = readRequestedUrl(request);
   if (!rawUrl) return response.status(400).json({ error: 'Falta la URL de imagen' });
 
   let target;

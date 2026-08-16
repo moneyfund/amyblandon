@@ -3,41 +3,30 @@ import SafeImage from '../common/SafeImage';
 import { homePageContent } from '../../content/homePage.es';
 import { useSiteImages } from '../../contexts/SiteImagesContext';
 
-function splitAboutParagraphs(value) {
+function splitParagraphs(value) {
   const text = String(value || '').trim();
   if (!text) return [];
-
-  const explicitParagraphs = text
+  return text
     .split(/\n\s*\n+/)
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
+}
 
-  if (explicitParagraphs.length > 1) return explicitParagraphs;
-
-  const visionMarker = 'Trabajo con una visión clara:';
-  const markerIndex = text.indexOf(visionMarker);
-  if (markerIndex > 0) {
-    return [
-      text.slice(0, markerIndex).trim(),
-      text.slice(markerIndex).trim(),
-    ].filter(Boolean);
-  }
-
-  return explicitParagraphs;
+function splitHeadline(value) {
+  const text = String(value || '').trim();
+  if (!text) return ['ASESORA INMOBILIARIA, SEGUROS', 'E INVERSIONES'];
+  const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  return lines.length ? lines : [text];
 }
 
 export default function AboutAmy({ content }) {
   const { images } = useSiteImages();
-  const about = content
-    ? {
-      label: homePageContent.about.label,
-      titleLines: ['ASESORA INMOBILIARIA, SEGUROS', 'E INVERSIONES'],
-      paragraphs: splitAboutParagraphs(content.aboutText),
-    }
-    : {
-      ...homePageContent.about,
-      titleLines: ['ASESORA INMOBILIARIA, SEGUROS', 'E INVERSIONES'],
-    };
+  const fallbackText = homePageContent.about.paragraphs.join('\n\n');
+  const about = {
+    label: content?.homeAboutLabel || homePageContent.about.label,
+    titleLines: splitHeadline(content?.homeAboutHeadline || 'ASESORA INMOBILIARIA, SEGUROS\nE INVERSIONES'),
+    paragraphs: splitParagraphs(content?.homeAboutText || fallbackText),
+  };
 
   return (
     <section className="home-about">
@@ -52,10 +41,12 @@ export default function AboutAmy({ content }) {
           />
         </RevealOnScroll>
         <RevealOnScroll className="home-about__copy" direction="right" delay={100}>
-          <p className="home-about__label">{about.label}</p>
-          <h2>{about.titleLines.filter(Boolean).map((line) => <span key={line}>{line}</span>)}</h2>
+          <p className="home-about__label content-preserve-format">{about.label}</p>
+          <h2>{about.titleLines.map((line, index) => <span key={`${line}-${index}`}>{line}</span>)}</h2>
           <div className="home-about__paragraphs">
-            {about.paragraphs.map((paragraph, index) => <p key={`${index}-${paragraph}`}>{paragraph}</p>)}
+            {about.paragraphs.map((paragraph, index) => (
+              <p className="content-preserve-format" key={`${index}-${paragraph}`}>{paragraph}</p>
+            ))}
           </div>
           <div className={`home-about__signature ${images.signature ? 'home-about__signature--loaded' : ''}`} aria-label="Firma de Amy Blandon">
             {images.signature ? <img src={images.signature} alt="Firma de Amy Blandon" loading="lazy" decoding="async" /> : null}

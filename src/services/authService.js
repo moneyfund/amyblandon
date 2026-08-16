@@ -20,22 +20,84 @@ export function friendlyAuthError(error) {
 
 const unavailable = () => Promise.reject(new Error('Firebase no está configurado. El acceso administrativo permanece protegido.'));
 
+let persistencePromise = null;
+
+/**
+ * Garantiza que Firebase Auth use persistencia LOCAL antes de leer o crear la sesión.
+ * De este modo la cuenta permanece autenticada al cambiar de pestaña, recargar o
+ * volver al panel, y solo se elimina al cerrar sesión explícitamente o borrar los
+ * datos del navegador.
+ */
+export function ensureAuthPersistence() {
+  if (!firebaseEnabled) return Promise.resolve(false);
+
+  if (!persistencePromise) {
+    persistencePromise = setPersistence(auth, browserLocalPersistence)
+      .then(() => true)
+      .catch((error) => {
+        // No bloqueamos completamente el acceso si un navegador impide storage,
+        // pero dejamos el diagnóstico disponible durante desarrollo.
+        if (import.meta.env.DEV) console.warn('No se pudo habilitar persistencia local de Firebase Auth.', error);
+        persistencePromise = null;
+        return false;
+      });
+  }
+
+  return persistencePromise;
+}
+
 export async function loginEmail(email, password) {
   if (!firebaseEnabled) return unavailable();
-  await setPersistence(auth, browserLocalPersistence);
+  await ensureAuthPersistence();
   return signInWithEmailAndPassword(auth, email, password);
 }
 
 export async function loginGoogle() {
   if (!firebaseEnabled) return unavailable();
-  await setPersistence(auth, browserLocalPersistence);
+  await ensureAuthPersistence();
   return signInWithPopup(auth, new GoogleAuthProvider());
 }
 
 export const logout = () => (firebaseEnabled ? signOut(auth) : Promise.resolve());
+
 export const listenAuth = (cb) => {
-  if (!firebaseEnabled) { cb(null); return () => {}; }
-  return onAuthStateChanged(auth, cb);
+  if (!firebaseEnabled) {
+    cb(null);
+    return () => {};
+  }
+
+  let active = true;
+  let unsubscribe = () => {};
+
+  const subscribe = async () => {
+    // La persistencia debe estar definida antes de que una ruta protegida decida
+    // si existe o no una sesión restaurable.
+    await ensureAuthPersistence();
+    if (!active) return;
+
+    // Firebase moderno expone authStateReady(): espera a que la sesión guardada
+    // en el navegador sea hidratada. Esto evita redirecciones prematuras al login.
+    if (typeof auth.authStateReady === 'function') {
+      try {
+        await auth.authStateReady();
+      } catch (error) {
+        if (import.meta.env.DEV) console.warn('No se pudo esperar la hidratación de Firebase Auth.', error);
+      }
+    }
+
+    if (!active) return;
+    unsubscribe = onAuthStateChanged(auth, cb);
+  };
+
+  subscribe().catch((error) => {
+    if (import.meta.env.DEV) console.warn('No se pudo preparar Firebase Auth antes de escuchar la sesión.', error);
+    if (active) unsubscribe = onAuthStateChanged(auth, cb);
+  });
+
+  return () => {
+    active = false;
+    unsubscribe();
+  };
 };
 
 function bootstrapDisplayName(user) {

@@ -8,21 +8,12 @@ export const defaultFirebaseConfig = {
   measurementId: 'G-DXWWNZXZX8',
 };
 
-const env = import.meta.env;
-const preferEnv = (key, fallback) => {
-  const value = env[key];
-  return typeof value === 'string' && value.trim() ? value.trim() : fallback;
-};
-
-export const firebaseConfig = {
-  apiKey: preferEnv('VITE_FIREBASE_API_KEY', defaultFirebaseConfig.apiKey),
-  authDomain: preferEnv('VITE_FIREBASE_AUTH_DOMAIN', defaultFirebaseConfig.authDomain),
-  projectId: preferEnv('VITE_FIREBASE_PROJECT_ID', defaultFirebaseConfig.projectId),
-  storageBucket: preferEnv('VITE_FIREBASE_STORAGE_BUCKET', defaultFirebaseConfig.storageBucket),
-  messagingSenderId: preferEnv('VITE_FIREBASE_MESSAGING_SENDER_ID', defaultFirebaseConfig.messagingSenderId),
-  appId: preferEnv('VITE_FIREBASE_APP_ID', defaultFirebaseConfig.appId),
-  measurementId: preferEnv('VITE_FIREBASE_MEASUREMENT_ID', defaultFirebaseConfig.measurementId),
-};
+// La web pública y el panel se sirven desde varios hosts (Vercel, GitHub Pages
+// y el dominio propio). Todos deben autenticarse contra el MISMO proyecto de
+// Firebase. No permitimos que variables VITE_FIREBASE_* de un proveedor de
+// despliegue sustituyan silenciosamente esta configuración y apunten Auth a
+// otro proyecto con una lista distinta de dominios autorizados.
+export const firebaseConfig = { ...defaultFirebaseConfig };
 
 export const requiredFirebaseKeys = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId'];
 export const hasRequiredFirebaseConfig = requiredFirebaseKeys.every((key) => typeof firebaseConfig[key] === 'string' && firebaseConfig[key].trim().length > 0);

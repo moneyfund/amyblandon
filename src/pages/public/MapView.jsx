@@ -97,7 +97,7 @@ export default function MapView({ embedded = false, properties }) {
         <MapContainer center={[12.8654, -85.2072]} zoom={7} scrollWheelZoom={false}>
           <TileLayer
             attribution="&copy; OpenStreetMap contributors"
-            url="https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <Fit items={mappedItems} />
           {mappedItems.map((property) => (

@@ -5,7 +5,7 @@ import RevealOnScroll from '../common/RevealOnScroll';
 import PropertyCard from '../properties/PropertyCard';
 import { getProperties } from '../../services/propertyService';
 
-export default function FeaturedProperties() {
+export default function FeaturedProperties({ content }) {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -31,15 +31,19 @@ export default function FeaturedProperties() {
     };
   }, []);
 
+  const eyebrow = content?.featuredEyebrow || 'SELECCIÓN ESPECIAL';
+  const title = content?.featuredTitle || 'Propiedades destacadas';
+  const viewAll = content?.featuredViewAll || 'Ver más propiedades';
+
   return (
     <section className="home-featured" aria-labelledby="home-featured-title">
       <div className="home-featured__heading">
         <div>
-          <p className="home-featured__eyebrow">SELECCIÓN ESPECIAL</p>
-          <h2 id="home-featured-title">Propiedades destacadas</h2>
+          <p className="home-featured__eyebrow content-preserve-format">{eyebrow}</p>
+          <h2 id="home-featured-title" className="content-preserve-format">{title}</h2>
         </div>
         <Link className="home-featured__view-all" to="/bienes-raices">
-          Ver más propiedades <ArrowRight size={18} aria-hidden="true" />
+          {viewAll} <ArrowRight size={18} aria-hidden="true" />
         </Link>
       </div>
 

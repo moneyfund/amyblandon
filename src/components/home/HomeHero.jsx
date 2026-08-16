@@ -28,23 +28,21 @@ function resolveHeroTitleLines(value) {
 export default function HomeHero({ content }) {
   const { images } = useSiteImages();
   const title = content?.heroTitle || homePageContent.hero.plainTitle;
-  const hero = content
-    ? {
-      plainTitle: title,
-      eyebrow: content.heroLabel || homePageContent.hero.eyebrow,
-      titleLines: resolveHeroTitleLines(title),
-      text: content.heroSubtitle || homePageContent.hero.text,
-      button: homePageContent.hero.button,
-    }
-    : homePageContent.hero;
+  const hero = {
+    plainTitle: title,
+    eyebrow: content?.heroLabel || homePageContent.hero.eyebrow,
+    titleLines: resolveHeroTitleLines(title),
+    text: content?.heroSubtitle || homePageContent.hero.text,
+    button: content?.heroButton || homePageContent.hero.button,
+  };
 
   return (
     <section className="home-hero" aria-label={hero.plainTitle}>
       <div className="home-hero__inner">
         <RevealOnScroll className="home-hero__copy">
-          <p className="home-kicker">{hero.eyebrow}</p>
+          <p className="home-kicker content-preserve-format">{hero.eyebrow}</p>
           <h1>{hero.titleLines.map((line, index) => <span key={`${line}-${index}`}>{line}</span>)}</h1>
-          <p>{hero.text}</p>
+          <p className="content-preserve-format">{hero.text}</p>
           <a className="amy-button" href={whatsappLink(amyContact.whatsappMessage, amyContact.phone)}>
             <MessageCircle size={20} />
             {hero.button}

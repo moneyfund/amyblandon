@@ -14,20 +14,6 @@ import { defaultSiteContent, getSiteContent } from '../../services/siteContentSe
 import { getProperties } from '../../services/propertyService';
 import MapView from './MapView';
 
-const services = [
-  { icon: Home, title: 'Compra de propiedades', text: 'Encuentra oportunidades alineadas con tu presupuesto, estilo de vida o visión de inversión.' },
-  { icon: Building2, title: 'Venta de propiedades', text: 'Te acompaño en la comercialización, presentación y captación de compradores potenciales.' },
-  { icon: ChartNoAxesCombined, title: 'Inversión inmobiliaria', text: 'Analizamos oportunidades con potencial de valorización, rentabilidad y seguridad patrimonial.' },
-  { icon: UserRoundCheck, title: 'Asesoría personalizada', text: 'Recibe orientación estratégica y clara antes de tomar una decisión inmobiliaria importante.' },
-];
-
-const process = [
-  ['01', 'Escucho tu objetivo', 'Entendemos qué buscas y qué resultado quieres conseguir.'],
-  ['02', 'Analizo oportunidades', 'Evaluamos opciones con criterio, contexto y visión patrimonial.'],
-  ['03', 'Te acompaño en la decisión', 'Resolvemos dudas para que avances con claridad y confianza.'],
-  ['04', 'Damos seguimiento', 'Estoy presente durante la negociación y cada etapa del proceso.'],
-];
-
 const quickCategories = [
   { value: '', label: 'Todas', hint: 'Ver portafolio', icon: Sparkles },
   { value: 'house', label: 'Casas', hint: 'Residencial', icon: Home },
@@ -41,6 +27,20 @@ const normalizeOperation = (value) => {
   if (value === 'renta') return 'rent';
   return value;
 };
+
+const servicesFor = (content) => [
+  { icon: Home, title: content.service1Title, text: content.service1Text },
+  { icon: Building2, title: content.service2Title, text: content.service2Text },
+  { icon: ChartNoAxesCombined, title: content.service3Title, text: content.service3Text },
+  { icon: UserRoundCheck, title: content.service4Title, text: content.service4Text },
+];
+
+const processFor = (content) => [
+  ['01', content.process1Title, content.process1Text],
+  ['02', content.process2Title, content.process2Text],
+  ['03', content.process3Title, content.process3Text],
+  ['04', content.process4Title, content.process4Text],
+];
 
 export default function Properties() {
   const { images } = useSiteImages();
@@ -104,6 +104,8 @@ export default function Properties() {
   const resultLabel = loading
     ? 'Buscar propiedades'
     : `Ver ${filtered.length} ${filtered.length === 1 ? 'propiedad' : 'propiedades'}`;
+  const services = servicesFor(content);
+  const process = processFor(content);
 
   return <div className="real-estate-page">
     <SEO title="Bienes raíces | Amy Blandón" />
@@ -113,9 +115,9 @@ export default function Properties() {
       <div className="re-search-hero__decor re-search-hero__decor--two" aria-hidden="true" />
       <div className="re-shell re-search-hero__inner">
         <RevealOnScroll className="re-search-hero__heading">
-          <p className="re-eyebrow">PORTAFOLIO INMOBILIARIO</p>
-          <h1>Encuentra tu próxima propiedad</h1>
-          <p>Explora oportunidades que encajen con lo que buscas.</p>
+          <p className="re-eyebrow content-preserve-format">{content.searchHeroEyebrow}</p>
+          <h1 className="content-preserve-format">{content.searchHeroTitle}</h1>
+          <p className="content-preserve-format">{content.searchHeroText}</p>
         </RevealOnScroll>
 
         <RevealOnScroll as="form" className="re-search-panel" delay={90} aria-label="Buscar propiedades" onSubmit={submitSearch}>
@@ -183,9 +185,9 @@ export default function Properties() {
       <div className="re-shell">
         <div className="re-results__top">
           <div>
-            <p className="re-eyebrow">PROPIEDADES</p>
-            <h2>Propiedades disponibles</h2>
-            <p>Explora las oportunidades que Amy ha seleccionado para venta o alquiler.</p>
+            <p className="re-eyebrow content-preserve-format">{content.catalogEyebrow}</p>
+            <h2 className="content-preserve-format">{content.catalogTitle}</h2>
+            <p className="content-preserve-format">{content.catalogText}</p>
           </div>
           <div className="re-view-toggle" aria-label="Cambiar vista">
             <button type="button" className={view === 'grid' ? 'active' : ''} onClick={() => setView('grid')}><List /> Lista</button>
@@ -201,7 +203,7 @@ export default function Properties() {
           : error ? <div className="re-empty"><Compass /><h3>No pudimos conectar con el catálogo</h3><p>{error}</p></div>
             : filtered.length === 0 ? <div className="re-empty"><Search /><h3>No encontramos coincidencias</h3><p>Prueba con otra ubicación, operación o tipo de propiedad.</p><button type="button" className="btn re-btn--gold" onClick={clear}>Ver todas las propiedades</button></div>
               : view === 'map' ? <MapView embedded properties={filtered} /> : <>
-                {featured.length > 0 && <div className="re-featured"><div className="re-subheading"><Sparkles /><div><h3>Propiedades destacadas</h3><p>Oportunidades que merecen una mirada especial.</p></div></div><div className="properties-grid">{featured.map((property) => <PropertyCard key={property.id} property={property} />)}</div></div>}
+                {featured.length > 0 && <div className="re-featured"><div className="re-subheading"><Sparkles /><div><h3 className="content-preserve-format">{content.featuredTitle}</h3><p className="content-preserve-format">{content.featuredText}</p></div></div><div className="properties-grid">{featured.map((property) => <PropertyCard key={property.id} property={property} />)}</div></div>}
                 {standardProperties.length > 0 && <div className="properties-grid">{standardProperties.map((property) => <PropertyCard key={property.id} property={property} />)}</div>}
               </>}
       </div>
@@ -213,32 +215,57 @@ export default function Properties() {
           <div className="re-hero__image">
             {heroImage ? <img src={heroImage} alt="Amy Blandón, asesora inmobiliaria" /> : <div className="re-hero__image-placeholder"><Building2 /><span>Asesoría inmobiliaria profesional</span></div>}
           </div>
-          <div className="re-hero__badge"><ShieldCheck /><span><b>Asesoría personalizada</b>Compra · Venta · Inversión</span></div>
+          <div className="re-hero__badge"><ShieldCheck /><span><b>{content.heroBadgeTitle}</b>{content.heroBadgeText}</span></div>
         </RevealOnScroll>
         <RevealOnScroll className="re-hero__content" direction="right" delay={100}>
-          <p className="re-eyebrow">{content.heroEyebrow}</p>
-          <h1>{content.heroTitle}</h1>
-          <p className="re-hero__lead">{content.heroText}</p>
+          <p className="re-eyebrow content-preserve-format">{content.heroEyebrow}</p>
+          <h1 className="content-preserve-format">{content.heroTitle}</h1>
+          <p className="re-hero__lead content-preserve-format">{content.heroText}</p>
           <div className="re-hero__actions">
-            <a className="btn re-btn--gold" href="#propiedades">Explorar propiedades <ArrowRight size={17} /></a>
-            <Link className="btn re-btn--outline" to="/contacto">Agendar asesoría</Link>
+            <a className="btn re-btn--gold" href="#propiedades">{content.heroPrimaryButton} <ArrowRight size={17} /></a>
+            <Link className="btn re-btn--outline" to="/contacto">{content.heroSecondaryButton}</Link>
           </div>
-          <div className="re-hero__trust"><Check /> Atención cercana <span /> <Check /> Decisiones informadas</div>
+          <div className="re-hero__trust"><Check /> {content.heroTrust1} <span /> <Check /> {content.heroTrust2}</div>
         </RevealOnScroll>
       </div>
     </section>
 
     <section className="re-section re-services">
       <div className="re-shell">
-        <RevealOnScroll className="re-heading re-heading--center"><p className="re-eyebrow">SERVICIO INTEGRAL</p><h2>¿Cómo puedo ayudarte?</h2><p>Soluciones inmobiliarias pensadas para acompañar tus objetivos con claridad y experiencia.</p></RevealOnScroll>
-        <div className="re-services__grid">{services.map(({ icon: Icon, title, text }, index) => <RevealOnScroll as="article" className="re-service" key={title} delay={index * 70}><span className="re-service__icon"><Icon /></span><h3>{title}</h3><p>{text}</p><span className="re-service__line" /></RevealOnScroll>)}</div>
+        <RevealOnScroll className="re-heading re-heading--center">
+          <p className="re-eyebrow content-preserve-format">{content.servicesKicker}</p>
+          <h2 className="content-preserve-format">{content.servicesTitle}</h2>
+          <p className="content-preserve-format">{content.servicesText}</p>
+        </RevealOnScroll>
+        <div className="re-services__grid">{services.map(({ icon: Icon, title, text }, index) => <RevealOnScroll as="article" className="re-service" key={`${index}-${title}`} delay={index * 70}><span className="re-service__icon"><Icon /></span><h3 className="content-preserve-format">{title}</h3><p className="content-preserve-format">{text}</p><span className="re-service__line" /></RevealOnScroll>)}</div>
       </div>
     </section>
 
     <SectorSocialSection sector="realEstate" />
 
-    <section className="re-section re-process"><div className="re-shell"><RevealOnScroll className="re-heading re-heading--center"><p className="re-eyebrow">UNA RUTA CLARA</p><h2>Un acompañamiento inmobiliario más claro y estratégico</h2><p>Un proceso cercano, estructurado y enfocado en proteger tus intereses.</p></RevealOnScroll><div className="re-process__grid">{process.map(([number, title, text], index) => <RevealOnScroll as="article" key={number} delay={index * 80}><span>{number}</span><h3>{title}</h3><p>{text}</p></RevealOnScroll>)}</div></div></section>
+    <section className="re-section re-process">
+      <div className="re-shell">
+        <RevealOnScroll className="re-heading re-heading--center">
+          <p className="re-eyebrow content-preserve-format">{content.processKicker}</p>
+          <h2 className="content-preserve-format">{content.processTitle}</h2>
+          <p className="content-preserve-format">{content.processText}</p>
+        </RevealOnScroll>
+        <div className="re-process__grid">{process.map(([number, title, text], index) => <RevealOnScroll as="article" key={number} delay={index * 80}><span>{number}</span><h3 className="content-preserve-format">{title}</h3><p className="content-preserve-format">{text}</p></RevealOnScroll>)}</div>
+      </div>
+    </section>
 
-    <section className="re-cta"><RevealOnScroll className="re-shell re-cta__inner"><div><p className="re-eyebrow">TU PRÓXIMO PASO</p><h2>{content.ctaTitle}</h2><p>{content.ctaText}</p></div><div className="re-cta__actions"><Link className="btn re-btn--gold" to="/contacto">Contactar ahora <ArrowRight /></Link><a className="btn re-btn--light" href="#propiedades">Ver propiedades</a></div></RevealOnScroll></section>
+    <section className="re-cta">
+      <RevealOnScroll className="re-shell re-cta__inner">
+        <div>
+          <p className="re-eyebrow content-preserve-format">{content.ctaEyebrow}</p>
+          <h2 className="content-preserve-format">{content.ctaTitle}</h2>
+          <p className="content-preserve-format">{content.ctaText}</p>
+        </div>
+        <div className="re-cta__actions">
+          <Link className="btn re-btn--gold" to="/contacto">{content.ctaPrimaryButton} <ArrowRight /></Link>
+          <a className="btn re-btn--light" href="#propiedades">{content.ctaSecondaryButton}</a>
+        </div>
+      </RevealOnScroll>
+    </section>
   </div>;
 }

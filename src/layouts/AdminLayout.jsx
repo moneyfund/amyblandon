@@ -3,6 +3,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { ExternalLink, LogOut, Menu, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSiteImages } from '../contexts/SiteImagesContext';
+import { useSiteTheme } from '../contexts/SiteThemeContext';
 import { firebaseEnabled } from '../firebase/firebase';
 import { logout } from '../services/authService';
 
@@ -30,6 +31,7 @@ const readCollapsedPreference = () => {
 export default function AdminLayout() {
   const { user, profile } = useAuth();
   const { images } = useSiteImages();
+  const { theme } = useSiteTheme();
   const [open, setOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(readCollapsedPreference);
   const navigate = useNavigate();
@@ -50,8 +52,15 @@ export default function AdminLayout() {
     navigate('/admin/login');
   };
 
+  const adminThemeStyle = {
+    '--admin-sidebar-bg': theme.footerBackground || '#001929',
+  };
+
   return (
-    <div className={`admin-shell ${sidebarCollapsed ? 'admin-shell--sidebar-collapsed' : ''}`}>
+    <div
+      className={`admin-shell ${sidebarCollapsed ? 'admin-shell--sidebar-collapsed' : ''}`}
+      style={adminThemeStyle}
+    >
       <aside className={open ? 'open' : ''}>
         <div className="admin-brand">
           <div className="admin-brand__logo">

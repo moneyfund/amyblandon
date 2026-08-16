@@ -3,20 +3,31 @@ import { useSiteImages } from '../../contexts/SiteImagesContext';
 import { defaultBrandLogo } from '../../content/defaultBrandLogo';
 
 export default function BrandLogo({ to = '/', className = '', image = false }) {
-  const { images } = useSiteImages();
+  const { images, loading } = useSiteImages();
 
   if (image) {
-    const logoSrc = images.brandLogo || defaultBrandLogo;
+    const managedLogo = typeof images.brandLogo === 'string' ? images.brandLogo.trim() : '';
+    const logoSrc = managedLogo || (!loading ? defaultBrandLogo : '');
+
     return (
-      <Link to={to} className={`brand-logo brand-logo--image ${className}`} aria-label="Amy Blandon, inicio">
+      <Link
+        to={to}
+        className={`brand-logo brand-logo--image ${className}`}
+        aria-label="Amy Blandon, inicio"
+        aria-busy={loading && !managedLogo ? 'true' : undefined}
+      >
         <span className="brand-logo__mark" aria-hidden="true">
-          <img
-            className="brand-logo__image"
-            src={logoSrc}
-            alt=""
-            loading="eager"
-            decoding="async"
-          />
+          {logoSrc ? (
+            <img
+              key={logoSrc}
+              className="brand-logo__image"
+              src={logoSrc}
+              alt=""
+              loading="eager"
+              decoding="async"
+              onLoad={(event) => event.currentTarget.classList.add('is-ready')}
+            />
+          ) : null}
         </span>
         <span className="brand-logo__tagline brand-logo__tagline--image">
           Asesora Inmobiliaria | Seguros | Inversiones

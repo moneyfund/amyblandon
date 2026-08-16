@@ -134,7 +134,10 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
             {locationLabel}
           </p>
         )}
-        <strong className="property-price property-price--after-location">{money(p.price, p.currency)}</strong>
+        <div className="property-price-row">
+          <strong className="property-price property-price--after-location">{money(p.price, p.currency)}</strong>
+          {p.priceNegotiable && <span className="property-price-negotiable">Negociable</span>}
+        </div>
         {(areaFeatures.length > 0 || roomFeatures.length > 0) && (
           <div className="property-features">
             {areaFeatures.length > 0 && (

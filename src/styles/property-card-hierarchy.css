@@ -4,7 +4,7 @@
   margin: 0 0 9px;
 }
 
-/* La única etiqueta pública es Venta/Renta y usa el dorado premium. */
+/* La única etiqueta pública sobre la imagen es Venta/Renta y usa el dorado premium. */
 .property-card .property-card__badge {
   background: var(--amy-gold);
   color: var(--amy-navy);
@@ -28,12 +28,36 @@
   color: inherit;
 }
 
+.property-card .property-price-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 16px;
+}
+
 .property-card .property-price--after-location {
   display: block;
-  margin-top: 16px;
+  margin-top: 0;
   font-size: 24px;
   font-weight: 800;
   -webkit-text-stroke: .18px currentColor;
+}
+
+.property-card .property-price-negotiable {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 4px 8px;
+  border: 1px solid rgba(180, 145, 67, .58);
+  background: rgba(180, 145, 67, .10);
+  color: var(--amy-navy);
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* Características en dos líneas deliberadas:
@@ -97,9 +121,19 @@
 }
 
 @media (max-width: 580px) {
-  .property-card .property-price--after-location {
+  .property-card .property-price-row {
+    gap: 8px;
     margin-top: 14px;
+  }
+
+  .property-card .property-price--after-location {
     font-size: 23px;
+  }
+
+  .property-card .property-price-negotiable {
+    min-height: 22px;
+    padding: 4px 7px;
+    font-size: 8.5px;
   }
 
   .property-card .property-features {

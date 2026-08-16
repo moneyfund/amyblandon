@@ -1,0 +1,37 @@
+/* Jerarquía editorial de las cards de propiedades.
+   Orden visual: título → país/departamento → ubicación → precio → características. */
+.property-card .property-body h3.property-card__title {
+  margin: 0 0 4px;
+}
+
+.property-card .property-region {
+  margin: 0 0 10px;
+  color: #8a9498;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.property-card .property-location {
+  margin: 0;
+}
+
+.property-card .property-price--after-location {
+  display: block;
+  margin-top: 16px;
+  font-size: 24px;
+}
+
+@media (max-width: 580px) {
+  .property-card .property-region {
+    font-size: 10px;
+    margin-bottom: 9px;
+  }
+
+  .property-card .property-price--after-location {
+    margin-top: 14px;
+    font-size: 23px;
+  }
+}

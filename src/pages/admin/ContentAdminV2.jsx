@@ -13,7 +13,13 @@ import {
   Contact,
 } from 'lucide-react';
 import { contentEditorSections, contentSectionOrder } from '../../config/contentEditorConfig';
+import { aboutContentDefaults, aboutEditorSection } from '../../config/aboutRedesignContent';
 import { defaultSiteContent, getSiteContent, saveSiteContent } from '../../services/siteContentService';
+
+const editorSections = {
+  ...contentEditorSections,
+  about: aboutEditorSection,
+};
 
 const tabIcons = {
   home: Home,
@@ -23,6 +29,13 @@ const tabIcons = {
   contact: Contact,
   footer: PanelBottom,
 };
+
+function defaultsForSection(key) {
+  if (key === 'about') {
+    return { ...(defaultSiteContent.about || {}), ...aboutContentDefaults };
+  }
+  return { ...(defaultSiteContent[key] || {}) };
+}
 
 function fieldPlaceholder(type) {
   if (type === 'email') return 'correo@ejemplo.com';
@@ -65,14 +78,14 @@ function EditorField({ definition, value, onChange }) {
 
 export default function ContentAdminV2() {
   const [tab, setTab] = useState('home');
-  const [data, setData] = useState(defaultSiteContent.home);
+  const [data, setData] = useState(() => defaultsForSection('home'));
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [dirty, setDirty] = useState(false);
 
-  const section = contentEditorSections[tab];
+  const section = editorSections[tab];
   const totalFields = useMemo(
     () => section.groups.reduce((total, group) => total + group.fields.length, 0),
     [section],
@@ -88,11 +101,11 @@ export default function ContentAdminV2() {
     getSiteContent(tab)
       .then((content) => {
         if (!active) return;
-        setData({ ...(defaultSiteContent[tab] || {}), ...(content || {}) });
+        setData({ ...defaultsForSection(tab), ...(content || {}) });
       })
       .catch(() => {
         if (!active) return;
-        setData(defaultSiteContent[tab] || {});
+        setData(defaultsForSection(tab));
         setError('No se pudo cargar el contenido guardado. Se muestran los textos predeterminados como respaldo.');
       })
       .finally(() => active && setLoading(false));
@@ -116,7 +129,7 @@ export default function ContentAdminV2() {
 
   const restoreDefaults = () => {
     if (!window.confirm('Se cargarán los textos recomendados de esta página en el formulario. No se publicarán hasta que presiones “Guardar y publicar”.')) return;
-    setData({ ...(defaultSiteContent[tab] || {}) });
+    setData(defaultsForSection(tab));
     setDirty(true);
     setMessage('Textos recomendados cargados. Revisa y guarda cuando estés conforme.');
     setError('');
@@ -180,7 +193,7 @@ export default function ContentAdminV2() {
               aria-current={tab === key ? 'page' : undefined}
             >
               <Icon size={19} aria-hidden="true" />
-              <span>{contentEditorSections[key].label}</span>
+              <span>{editorSections[key].label}</span>
             </button>
           );
         })}
@@ -188,7 +201,7 @@ export default function ContentAdminV2() {
 
       <div className="content-editor__section-intro">
         <div>
-          <span>{contentEditorSections[tab].label}</span>
+          <span>{editorSections[tab].label}</span>
           <h2>{section.description}</h2>
         </div>
         <p>{totalFields} campos editables</p>

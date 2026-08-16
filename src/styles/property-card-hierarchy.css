@@ -1,7 +1,14 @@
 /* Jerarquía editorial de las cards de propiedades.
    Orden visual: título → ubicación → precio → áreas → habitaciones/baños/parqueo. */
 .property-card .property-body h3.property-card__title {
+  width: 100%;
+  min-height: 55px;
+  max-height: 55px;
   margin: 0 0 9px;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 /* La única etiqueta pública sobre la imagen es Venta/Renta y usa el dorado premium. */
@@ -30,9 +37,9 @@
 
 .property-card .property-price-row {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   flex-wrap: wrap;
-  gap: 9px;
+  gap: 10px;
   margin-top: 16px;
 }
 
@@ -44,17 +51,16 @@
   -webkit-text-stroke: .18px currentColor;
 }
 
+/* “Negociable” funciona como texto secundario, no como etiqueta/botón. */
 .property-card .property-price-negotiable {
-  display: inline-flex;
-  align-items: center;
-  min-height: 24px;
-  padding: 4px 8px;
-  border: 1px solid rgba(180, 145, 67, .58);
-  background: rgba(180, 145, 67, .10);
-  color: var(--amy-navy);
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #727d82;
   font-size: 9px;
   font-weight: 800;
-  line-height: 1;
+  line-height: 1.2;
   letter-spacing: .08em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -65,28 +71,29 @@
    2) habitaciones + baños + parqueo */
 .property-card .property-features {
   display: grid;
-  gap: 13px;
+  gap: 11px;
 }
 
 .property-card .property-features__row {
-  width: 100%;
-  display: grid;
-  gap: 10px 14px;
-}
-
-.property-card .property-features__row--areas {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: max-content;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  gap: 24px;
 }
 
 .property-card .property-features__row--rooms {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
 }
 
 .property-card .property-feature-item {
   min-width: 0;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   color: #68767c;
 }
 
@@ -118,9 +125,15 @@
   color: #68767c;
   font-size: 10px;
   line-height: 1.25;
+  white-space: nowrap;
 }
 
 @media (max-width: 580px) {
+  .property-card .property-body h3.property-card__title {
+    min-height: 52px;
+    max-height: 52px;
+  }
+
   .property-card .property-price-row {
     gap: 8px;
     margin-top: 14px;
@@ -131,21 +144,47 @@
   }
 
   .property-card .property-price-negotiable {
-    min-height: 22px;
-    padding: 4px 7px;
     font-size: 8.5px;
   }
 
   .property-card .property-features {
-    gap: 12px;
+    gap: 10px;
+    overflow: hidden;
   }
 
   .property-card .property-features__row {
-    gap: 9px 11px;
+    gap: 18px;
+  }
+
+  .property-card .property-features__row--areas {
+    width: 100%;
+    gap: 18px;
+  }
+
+  /* Si habitaciones/baños/parqueo no caben, esta segunda línea se desliza horizontalmente. */
+  .property-card .property-features__row--rooms {
+    width: 100%;
+    max-width: 100%;
+    gap: 18px;
+    padding: 1px 2px 6px 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .property-card .property-features__row--rooms::-webkit-scrollbar {
+    display: none;
+  }
+
+  .property-card .property-features__row--rooms .property-feature-item {
+    scroll-snap-align: start;
   }
 
   .property-card .property-feature-item {
-    gap: 6px;
+    gap: 5px;
   }
 
   .property-card .property-feature-item b {

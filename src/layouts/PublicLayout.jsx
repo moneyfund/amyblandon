@@ -1,13 +1,15 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import { useSiteTheme } from '../contexts/SiteThemeContext';
+import { subscribeProperties } from '../services/propertyService';
 
 export default function PublicLayout() {
   const footerRef = useRef(null);
   const location = useLocation();
   const { theme } = useSiteTheme();
+  const [propertyRevision, setPropertyRevision] = useState(0);
   const isHomePage = location.pathname === '/';
   const isAboutPage = location.pathname === '/sobre-mi' || location.pathname === '/about';
   const isRealEstatePage = location.pathname === '/propiedades'
@@ -15,6 +17,7 @@ export default function PublicLayout() {
     || location.pathname === '/real-estate'
     || location.pathname === '/bienes-raices';
   const isInsurancePage = location.pathname === '/seguros' || location.pathname === '/insurance';
+  const isPropertyDetailPage = location.pathname.startsWith('/properties/');
 
   useEffect(() => {
     const footer = footerRef.current;
@@ -35,6 +38,25 @@ export default function PublicLayout() {
       document.documentElement.style.removeProperty('--public-footer-height');
     };
   }, []);
+
+  useEffect(() => {
+    if (!isPropertyDetailPage) return undefined;
+
+    let initialSnapshot = true;
+    const unsubscribe = subscribeProperties(
+      {},
+      () => {
+        if (initialSnapshot) {
+          initialSnapshot = false;
+          return;
+        }
+        setPropertyRevision((current) => current + 1);
+      },
+      () => {},
+    );
+
+    return () => unsubscribe?.();
+  }, [isPropertyDetailPage]);
 
   const pageClass = [
     'public-site',
@@ -81,7 +103,9 @@ export default function PublicLayout() {
 
   return <div className={pageClass} style={themeStyle} data-theme-preset={theme.preset}>
     <Navbar />
-    <main className="public-main"><Outlet /></main>
+    <main className="public-main">
+      <Outlet key={isPropertyDetailPage ? propertyRevision : 'public'} />
+    </main>
     <div ref={footerRef} className="public-footer-reveal" aria-hidden="false">
       <Footer />
     </div>

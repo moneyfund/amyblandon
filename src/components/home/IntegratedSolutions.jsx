@@ -36,8 +36,25 @@ const icons = {
   insurance: ShieldIcon,
 };
 
-export default function IntegratedSolutions() {
+export default function IntegratedSolutions({ content }) {
   const carouselRef = useRef(null);
+  const services = [
+    {
+      key: 'realEstate',
+      title: content?.solutionRealEstateTitle || homePageContent.services[0].title,
+      text: content?.solutionRealEstateText || homePageContent.services[0].text,
+    },
+    {
+      key: 'insurance',
+      title: content?.solutionInsuranceTitle || homePageContent.services[1].title,
+      text: content?.solutionInsuranceText || homePageContent.services[1].text,
+    },
+    {
+      key: 'investments',
+      title: content?.solutionInvestmentsTitle || homePageContent.services[2].title,
+      text: content?.solutionInvestmentsText || homePageContent.services[2].text,
+    },
+  ];
 
   const moveCarousel = (direction) => {
     const carousel = carouselRef.current;
@@ -50,41 +67,29 @@ export default function IntegratedSolutions() {
   return (
     <section className="home-solutions" aria-labelledby="solutions-title">
       <RevealOnScroll className="home-section-heading">
-        <p className="home-kicker">{homePageContent.servicesHeader.kicker}</p>
-        <h2 id="solutions-title">{homePageContent.servicesHeader.title}</h2>
+        <p className="home-kicker content-preserve-format">{content?.solutionsKicker || homePageContent.servicesHeader.kicker}</p>
+        <h2 id="solutions-title" className="content-preserve-format">{content?.solutionsTitle || homePageContent.servicesHeader.title}</h2>
       </RevealOnScroll>
 
       <div className="home-solutions__carousel">
-        <button
-          type="button"
-          className="home-solutions__arrow home-solutions__arrow--left"
-          onClick={() => moveCarousel(-1)}
-          aria-label="Ver solución anterior"
-        >
+        <button type="button" className="home-solutions__arrow home-solutions__arrow--left" onClick={() => moveCarousel(-1)} aria-label="Ver solución anterior">
           <ChevronLeft aria-hidden="true" />
         </button>
 
         <div className="home-solutions__grid" ref={carouselRef}>
-          {homePageContent.services.map((service, index) => {
+          {services.map((service, index) => {
             const Icon = icons[service.key];
             return (
               <RevealOnScroll as="article" className="home-solution" key={service.key} delay={index * 110}>
-                <span className="home-solution__icon" aria-hidden="true">
-                  <Icon />
-                </span>
-                <h3>{service.title}</h3>
-                <p>{service.text}</p>
+                <span className="home-solution__icon" aria-hidden="true"><Icon /></span>
+                <h3 className="content-preserve-format">{service.title}</h3>
+                <p className="content-preserve-format">{service.text}</p>
               </RevealOnScroll>
             );
           })}
         </div>
 
-        <button
-          type="button"
-          className="home-solutions__arrow home-solutions__arrow--right"
-          onClick={() => moveCarousel(1)}
-          aria-label="Ver siguiente solución"
-        >
+        <button type="button" className="home-solutions__arrow home-solutions__arrow--right" onClick={() => moveCarousel(1)} aria-label="Ver siguiente solución">
           <ChevronRight aria-hidden="true" />
         </button>
       </div>

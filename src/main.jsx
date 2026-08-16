@@ -58,6 +58,7 @@ import './styles/insurance-coverage-colors-final.css';
 import './styles/about-impact-clean.css';
 import './styles/property-technical-sheet-admin.css';
 import './styles/mobile-footer-reveal.css';
+import './styles/footer-refinements.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

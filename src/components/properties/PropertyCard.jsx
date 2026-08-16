@@ -7,12 +7,29 @@ import { labelFor, operationTypeOptions, propertyTypeOptions } from '../../confi
 const hasValue = (value) => value !== undefined && value !== null && value !== '' && Number(value) !== 0;
 const imageUrl = (image) => typeof image === 'string' ? image : image?.url || '';
 
+const firstText = (...values) => values.find((value) => typeof value === 'string' && value.trim())?.trim() || '';
+
+const propertyRegionLabel = (property = {}) => {
+  const country = firstText(property.country, 'Nicaragua');
+  const department = firstText(
+    property.department,
+    property.state,
+    property.region,
+    property.province,
+    property.city,
+  );
+
+  if (!department || department.toLowerCase() === country.toLowerCase()) return country;
+  return `${country} · ${department}`;
+};
+
 export default function PropertyCard({ property: p = {}, onSelect }) {
   const { toggle, isFavorite } = useFavorites();
   const location = useLocation();
   const identifier = p.slug || p.id;
   const detailPath = identifier ? `/properties/${encodeURIComponent(identifier)}` : '/propiedades';
   const coverImage = imageUrl(p.coverImage) || imageUrl(Array.isArray(p.images) ? p.images[0] : p.images);
+  const regionLabel = propertyRegionLabel(p);
 
   const shareUrl = () => {
     const { origin, pathname, hash } = window.location;
@@ -62,14 +79,15 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
         )}
       </Link>
       <div className="property-body">
-        <strong className="property-price">{money(p.price, p.currency)}</strong>
-        <h3><Link to={detailPath}>{p.title || 'Propiedad sin título'}</Link></h3>
+        <h3 className="property-card__title"><Link to={detailPath}>{p.title || 'Propiedad sin título'}</Link></h3>
+        <p className="property-region">{regionLabel}</p>
         {(p.address || p.publicAddress || p.city || p.state) && (
           <p className="property-location">
             <MapPin size={15} />
             {p.address || p.publicAddress || [p.city, p.state].filter(Boolean).join(', ')}
           </p>
         )}
+        <strong className="property-price property-price--after-location">{money(p.price, p.currency)}</strong>
         {(features.length > 0 || p.propertyType) && (
           <div className="property-features">
             {features.map(({ icon: Icon, value, label }) => (

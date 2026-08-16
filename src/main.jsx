@@ -59,6 +59,7 @@ import './styles/about-impact-clean.css';
 import './styles/property-technical-sheet-admin.css';
 import './styles/footer-refinements.css';
 import './styles/content-admin-v3.css';
+import './styles/property-card-hierarchy.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

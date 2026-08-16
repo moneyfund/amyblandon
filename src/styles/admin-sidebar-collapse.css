@@ -143,6 +143,151 @@
   }
 }
 
+/* En teléfono el flujo queda: encabezado -> progreso -> formulario.
+   La tira lateral de pasos se elimina porque los controles Anterior/Siguiente
+   ya permiten navegar y el resumen superior muestra el paso actual. */
+@media (max-width: 760px) {
+  .property-workspace--wizard {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding-bottom: 28px;
+    overflow: visible;
+  }
+
+  .property-workspace--wizard .property-workspace__header {
+    width: 100%;
+    min-width: 0;
+    gap: 14px;
+  }
+
+  .property-workspace--wizard .property-workspace__header h1 {
+    font-size: clamp(27px, 8vw, 34px);
+  }
+
+  .property-workspace--wizard .property-workspace__header > .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .property-workspace--wizard .property-workspace__summary {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    gap: 14px;
+    padding: 14px;
+    overflow: hidden;
+  }
+
+  .property-workspace--wizard .property-workspace__completion {
+    width: 100%;
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .property-workspace--wizard .property-workspace__completion > div {
+    min-width: 0;
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+
+  .property-workspace--wizard .property-workspace__completion progress {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .property-workspace--wizard .property-workspace__wizard-summary {
+    width: 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .property-workspace--wizard .property-workspace__wizard-step-count {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .property-workspace--wizard .property-workspace__wizard-progress {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .property-workspace--wizard .property-workspace__summary-state {
+    width: 100%;
+    min-width: 0;
+    justify-content: flex-start;
+  }
+
+  .property-workspace--wizard .property-workspace__layout {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .property-workspace--wizard .property-workspace__navigation {
+    display: none !important;
+  }
+
+  .property-workspace--wizard .property-workspace__form {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    gap: 14px;
+  }
+
+  .property-workspace--wizard .property-workspace__wizard-intro,
+  .property-workspace--wizard .property-workspace__section,
+  .property-workspace--wizard .property-workspace__messages,
+  .property-workspace--wizard .property-workspace__sticky-actions {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .property-workspace--wizard .property-workspace__wizard-intro {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .property-workspace--wizard .property-workspace__wizard-intro > div:first-child {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .property-workspace--wizard .property-workspace__wizard-intro h2,
+  .property-workspace--wizard .property-workspace__wizard-intro p {
+    overflow-wrap: anywhere;
+  }
+
+  .property-workspace--wizard .property-workspace__section {
+    margin: 0;
+    padding: 18px 14px;
+  }
+
+  .property-workspace--wizard .property-workspace__grid,
+  .property-workspace--wizard .property-workspace__field,
+  .property-workspace--wizard .property-workspace__inline-field,
+  .property-workspace--wizard .property-map-picker,
+  .property-workspace--wizard .property-workspace__dropzone,
+  .property-workspace--wizard .property-workspace__upload-progress {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .property-workspace--wizard .property-workspace__field input,
+  .property-workspace--wizard .property-workspace__field select,
+  .property-workspace--wizard .property-workspace__field textarea {
+    min-width: 0;
+  }
+}
+
 @media (max-width: 480px) {
   .admin-shell > main {
     padding: 10px;
@@ -150,6 +295,14 @@
 
   .admin-top {
     align-items: center;
+  }
+
+  .property-workspace--wizard .property-workspace__summary {
+    border-radius: 14px;
+  }
+
+  .property-workspace--wizard .property-workspace__wizard-intro {
+    border-radius: 13px;
   }
 }
 

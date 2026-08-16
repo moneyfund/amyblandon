@@ -1,188 +1,249 @@
-import { useEffect, useState } from 'react';
-import { getSiteContent, saveSiteContent } from '../../services/siteContentService';
-import { contentFieldLabels, contentSectionLabels } from '../../config/adminLabels.es';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  AlignLeft,
+  Building2,
+  CheckCircle2,
+  ExternalLink,
+  Home,
+  PanelBottom,
+  RefreshCcw,
+  Save,
+  ShieldCheck,
+  UserRound,
+  Contact,
+} from 'lucide-react';
+import { contentEditorSections, contentSectionOrder } from '../../config/contentEditorConfig';
+import { defaultSiteContent, getSiteContent, saveSiteContent } from '../../services/siteContentService';
 
-const contentSections = {
-  home: [
-    'heroTitle',
-    'heroSubtitle',
-    'heroLabel',
-    'aboutTitle',
-    'aboutText',
-    'strategicTitle',
-    'strategicLabel',
-  ],
-  about: ['title', 'subtitle', 'biography', 'mission', 'values'],
-  realEstate: ['heroEyebrow', 'heroTitle', 'heroText', 'ctaTitle', 'ctaText'],
-  contact: [],
+const tabIcons = {
+  home: Home,
+  about: UserRound,
+  realEstate: Building2,
+  insurance: ShieldCheck,
+  contact: Contact,
+  footer: PanelBottom,
 };
 
-const contactGroups = [
-  {
-    id: 'shared',
-    eyebrow: 'GENERAL',
-    title: 'Contacto compartido',
-    text: 'Estos datos se comparten entre Bienes Raíces y Seguros. El mismo teléfono y WhatsApp se usan en ambos rubros.',
-    fields: ['phone', 'whatsapp', 'address', 'schedule'],
-  },
-  {
-    id: 'footer',
-    eyebrow: 'FOOTER',
-    title: 'Redes generales del footer',
-    text: 'Estas son las cuentas generales que aparecerán en el footer de toda la web. Amy puede elegir aquí las redes que considere más importantes, sin afectar las redes específicas de cada rubro.',
-    fields: ['email', 'facebook', 'instagram', 'tiktok'],
-  },
-  {
-    id: 'real-estate',
-    eyebrow: 'BR',
-    title: 'Redes de Bienes Raíces',
-    text: 'Estos enlaces aparecerán exclusivamente dentro de la página pública de Bienes Raíces, en una sección dedicada a este rubro.',
-    fields: ['realEstateEmail', 'realEstateFacebook', 'realEstateInstagram', 'realEstateTiktok'],
-  },
-  {
-    id: 'insurance',
-    eyebrow: 'SEGUROS',
-    title: 'Redes de Seguros',
-    text: 'Estos enlaces aparecerán exclusivamente dentro de la página pública de Seguros, completamente separados de las redes de Bienes Raíces.',
-    fields: ['insuranceEmail', 'insuranceFacebook', 'insuranceInstagram', 'insuranceTiktok'],
-  },
-];
-
-const urlFields = new Set([
-  'facebook', 'instagram', 'tiktok',
-  'realEstateFacebook', 'realEstateInstagram', 'realEstateTiktok',
-  'insuranceFacebook', 'insuranceInstagram', 'insuranceTiktok',
-]);
-const emailFields = new Set(['email', 'realEstateEmail', 'insuranceEmail']);
-
-function fieldPlaceholder(field) {
-  if (emailFields.has(field)) return 'correo@ejemplo.com';
-  if (field.toLowerCase().includes('facebook')) return 'https://facebook.com/usuario';
-  if (field.toLowerCase().includes('instagram')) return 'https://instagram.com/usuario';
-  if (field.toLowerCase().includes('tiktok')) return 'https://tiktok.com/@usuario';
-  if (field === 'phone' || field === 'whatsapp') return '+505 0000 0000';
+function fieldPlaceholder(type) {
+  if (type === 'email') return 'correo@ejemplo.com';
+  if (type === 'url') return 'https://...';
+  if (type === 'tel') return '+505 0000 0000';
   return '';
 }
 
-function ContactField({ field, value, onChange }) {
-  const isUrl = urlFields.has(field);
-  const isEmail = emailFields.has(field);
-  const isLongText = ['address', 'schedule'].includes(field);
+function EditorField({ definition, value, onChange }) {
+  const [field, label, type = 'text', rows = 3, help = ''] = definition;
+  const longField = type === 'textarea';
 
   return (
-    <label className="contact-admin-field">
-      <span>{contentFieldLabels[field] || field}</span>
-      {isLongText ? (
-        <textarea value={value || ''} onChange={(event) => onChange(event.target.value)} />
+    <label className={`content-editor__field ${longField ? 'content-editor__field--wide' : ''}`}>
+      <span className="content-editor__field-label">{label}</span>
+      {longField ? (
+        <textarea
+          rows={rows}
+          value={value || ''}
+          onChange={(event) => onChange(field, event.target.value)}
+          spellCheck="true"
+        />
       ) : (
         <input
-          type={isUrl ? 'url' : (isEmail ? 'email' : 'text')}
+          type={type}
           value={value || ''}
-          onChange={(event) => onChange(event.target.value)}
-          placeholder={fieldPlaceholder(field)}
+          onChange={(event) => onChange(field, event.target.value)}
+          placeholder={fieldPlaceholder(type)}
+          spellCheck={type === 'text'}
         />
       )}
-      {isUrl && <small className="admin-help">Pega el enlace completo del perfil, incluyendo https://</small>}
-      {field === 'email' && <small className="admin-help">Este correo pertenece al contacto general y al footer.</small>}
-      {field === 'phone' && <small className="admin-help">Teléfono compartido para Bienes Raíces y Seguros.</small>}
-      {field === 'whatsapp' && <small className="admin-help">WhatsApp compartido para ambos rubros.</small>}
+      {(help || longField) && (
+        <small className="content-editor__help">
+          {help || 'Los saltos de línea que escribas aquí se respetarán en la web cuando este texto admita varias líneas.'}
+        </small>
+      )}
     </label>
   );
 }
 
 export default function ContentAdminV2() {
   const [tab, setTab] = useState('home');
-  const [data, setData] = useState({});
+  const [data, setData] = useState(defaultSiteContent.home);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [saving, setSaving] = useState(false);
+  const [dirty, setDirty] = useState(false);
+
+  const section = contentEditorSections[tab];
+  const totalFields = useMemo(
+    () => section.groups.reduce((total, group) => total + group.fields.length, 0),
+    [section],
+  );
 
   useEffect(() => {
+    let active = true;
+    setLoading(true);
     setMessage('');
     setError('');
+    setDirty(false);
+
     getSiteContent(tab)
-      .then(setData)
-      .catch(() => setError('No se pudo cargar el contenido de esta sección.'));
+      .then((content) => {
+        if (!active) return;
+        setData({ ...(defaultSiteContent[tab] || {}), ...(content || {}) });
+      })
+      .catch(() => {
+        if (!active) return;
+        setData(defaultSiteContent[tab] || {});
+        setError('No se pudo cargar el contenido guardado. Se muestran los textos predeterminados como respaldo.');
+      })
+      .finally(() => active && setLoading(false));
+
+    return () => {
+      active = false;
+    };
   }, [tab]);
 
-  const setField = (field, value) => setData((current) => ({ ...current, [field]: value }));
+  const setField = (field, value) => {
+    setDirty(true);
+    setMessage('');
+    setData((current) => ({ ...current, [field]: value }));
+  };
+
+  const changeTab = (nextTab) => {
+    if (nextTab === tab) return;
+    if (dirty && !window.confirm('Tienes cambios sin guardar. ¿Quieres cambiar de página y descartarlos?')) return;
+    setTab(nextTab);
+  };
+
+  const restoreDefaults = () => {
+    if (!window.confirm('Se cargarán los textos recomendados de esta página en el formulario. No se publicarán hasta que presiones “Guardar y publicar”.')) return;
+    setData({ ...(defaultSiteContent[tab] || {}) });
+    setDirty(true);
+    setMessage('Textos recomendados cargados. Revisa y guarda cuando estés conforme.');
+    setError('');
+  };
 
   const save = async (event) => {
     event.preventDefault();
+    if (saving || loading) return;
     setSaving(true);
     setMessage('');
     setError('');
+
     try {
       await saveSiteContent(tab, data);
-      setMessage('Contenido guardado correctamente.');
-    } catch {
-      setError('No se pudo guardar el contenido.');
+      setDirty(false);
+      setMessage('Cambios guardados y publicados correctamente.');
+    } catch (saveError) {
+      console.error('No se pudo guardar el contenido web:', saveError);
+      setError('No se pudo guardar el contenido. Revisa tu conexión e inténtalo nuevamente.');
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <>
-      <div className="admin-heading">
+    <div className="content-editor">
+      <div className="admin-heading content-editor__heading">
         <div>
-          <p className="admin-eyebrow">Web pública</p>
-          <h1>Editar contenido de la web</h1>
-          <p>Administra textos, contacto general y redes específicas de cada rubro desde un solo lugar.</p>
+          <p className="admin-eyebrow">CONTENIDO WEB</p>
+          <h1>Editor completo de la web pública</h1>
+          <p>
+            Administra los textos de cada página sin tocar el código. Los cambios se guardan en Firebase y se reflejan en la web pública.
+          </p>
+        </div>
+        <div className="content-editor__heading-actions">
+          <a className="content-editor__preview" href={section.route} target="_blank" rel="noreferrer">
+            Ver página <ExternalLink size={17} />
+          </a>
         </div>
       </div>
 
-      <div className="quick-actions admin-tabs">
-        {Object.keys(contentSections).map((section) => (
-          <button
-            key={section}
-            type="button"
-            className={`btn ${tab === section ? 'primary' : 'secondary'}`}
-            onClick={() => setTab(section)}
-          >
-            {contentSectionLabels[section]}
-          </button>
-        ))}
+      <div className="content-editor__format-note">
+        <AlignLeft size={20} aria-hidden="true" />
+        <div>
+          <strong>El formato del texto se conserva</strong>
+          <p>
+            Puedes copiar y pegar párrafos. Usa <b>Enter</b> para crear un salto de línea y doble Enter para separar ideas; la web respetará esa estructura en los campos de texto largo.
+          </p>
+        </div>
       </div>
 
-      <form className={`admin-form ${tab === 'contact' ? 'contact-admin-form' : ''}`} onSubmit={save}>
-        {tab === 'contact' ? (
-          <div className="contact-admin-groups">
-            {contactGroups.map((group) => (
-              <fieldset className={`contact-admin-group contact-admin-group--${group.id}`} key={group.id}>
-                <legend><span>{group.eyebrow}</span>{group.title}</legend>
-                <p className="contact-admin-group__description">{group.text}</p>
-                <div className="contact-admin-group__grid">
-                  {group.fields.map((field) => (
-                    <ContactField
-                      key={field}
-                      field={field}
-                      value={data[field]}
-                      onChange={(value) => setField(field, value)}
-                    />
-                  ))}
+      <nav className="content-editor__tabs" aria-label="Páginas editables">
+        {contentSectionOrder.map((key) => {
+          const Icon = tabIcons[key];
+          return (
+            <button
+              key={key}
+              type="button"
+              className={tab === key ? 'active' : ''}
+              onClick={() => changeTab(key)}
+              aria-current={tab === key ? 'page' : undefined}
+            >
+              <Icon size={19} aria-hidden="true" />
+              <span>{contentEditorSections[key].label}</span>
+            </button>
+          );
+        })}
+      </nav>
+
+      <div className="content-editor__section-intro">
+        <div>
+          <span>{contentEditorSections[tab].label}</span>
+          <h2>{section.description}</h2>
+        </div>
+        <p>{totalFields} campos editables</p>
+      </div>
+
+      {loading ? (
+        <div className="content-editor__loading">
+          <span className="spinner" aria-hidden="true" />
+          <p>Cargando contenido...</p>
+        </div>
+      ) : (
+        <form onSubmit={save} className="content-editor__form">
+          {section.groups.map((group, groupIndex) => (
+            <fieldset className="content-editor__group" key={`${tab}-${group.title}`}>
+              <legend>
+                <span>{String(groupIndex + 1).padStart(2, '0')}</span>
+                <div>
+                  <strong>{group.title}</strong>
+                  {group.description && <small>{group.description}</small>}
                 </div>
-              </fieldset>
-            ))}
-          </div>
-        ) : (
-          contentSections[tab].map((field) => (
-            <label key={field}>
-              {contentFieldLabels[field] || field}
-              <textarea
-                value={data[field] || ''}
-                onChange={(event) => setField(field, event.target.value)}
-              />
-            </label>
-          ))
-        )}
+              </legend>
+              <div className="content-editor__grid">
+                {group.fields.map((definition) => (
+                  <EditorField
+                    key={definition[0]}
+                    definition={definition}
+                    value={data[definition[0]]}
+                    onChange={setField}
+                  />
+                ))}
+              </div>
+            </fieldset>
+          ))}
 
-        <div className="contact-admin-actions">
-          <button className="btn primary" disabled={saving}>{saving ? 'Guardando...' : 'Guardar contenido'}</button>
-          {message && <p className="success">{message}</p>}
-          {error && <p className="error">{error}</p>}
-        </div>
-      </form>
-    </>
+          <div className="content-editor__actions">
+            <button type="button" className="content-editor__reset" onClick={restoreDefaults} disabled={saving}>
+              <RefreshCcw size={17} /> Restaurar textos recomendados
+            </button>
+            <div className="content-editor__save-wrap">
+              {dirty && <span className="content-editor__dirty">Cambios sin guardar</span>}
+              <button className="content-editor__save" type="submit" disabled={saving}>
+                {saving ? <span className="spinner" /> : <Save size={18} />}
+                {saving ? 'Guardando...' : 'Guardar y publicar'}
+              </button>
+            </div>
+          </div>
+
+          {(message || error) && (
+            <div className={`content-editor__status ${error ? 'content-editor__status--error' : 'content-editor__status--success'}`} role="status">
+              {!error && <CheckCircle2 size={18} />}
+              <span>{error || message}</span>
+            </div>
+          )}
+        </form>
+      )}
+    </div>
   );
 }

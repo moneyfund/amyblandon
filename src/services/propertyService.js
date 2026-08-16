@@ -5,6 +5,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   query,
   serverTimestamp,
   setDoc,
@@ -100,20 +101,45 @@ const timestampValue = (value) => {
   return Number(value) || 0;
 };
 
-export async function getProperties({ admin = false } = {}) {
-  if (!firebaseEnabled) return demoProperties.map(normalize);
-
-  const source = admin
-    ? collection(db, collectionName)
-    : query(collection(db, collectionName), where('publicationStatus', '==', 'published'));
-  const snapshot = await getDocs(source);
-  const properties = snapshot.docs.map((item) => normalize({ id: item.id, ...item.data() }));
-
+const sortProperties = (properties, admin = false) => {
   if (admin) {
-    return properties.sort((a, b) => timestampValue(b.updatedAt) - timestampValue(a.updatedAt));
+    return [...properties].sort((a, b) => timestampValue(b.updatedAt) - timestampValue(a.updatedAt));
   }
 
-  return properties.sort((a, b) => Number(a.displayOrder || 0) - Number(b.displayOrder || 0));
+  return [...properties].sort((a, b) => Number(a.displayOrder || 0) - Number(b.displayOrder || 0));
+};
+
+const propertiesSource = (admin = false) => (admin
+  ? collection(db, collectionName)
+  : query(collection(db, collectionName), where('publicationStatus', '==', 'published')));
+
+const propertiesFromSnapshot = (snapshot, admin = false) => sortProperties(
+  snapshot.docs.map((item) => normalize({ id: item.id, ...item.data() })),
+  admin,
+);
+
+export async function getProperties({ admin = false } = {}) {
+  if (!firebaseEnabled) return sortProperties(demoProperties.map(normalize), admin);
+
+  const snapshot = await getDocs(propertiesSource(admin));
+  return propertiesFromSnapshot(snapshot, admin);
+}
+
+export function subscribeProperties({ admin = false } = {}, onData, onError) {
+  if (typeof onData !== 'function') return () => {};
+
+  if (!firebaseEnabled) {
+    onData(sortProperties(demoProperties.map(normalize), admin));
+    return () => {};
+  }
+
+  return onSnapshot(
+    propertiesSource(admin),
+    (snapshot) => onData(propertiesFromSnapshot(snapshot, admin)),
+    (error) => {
+      if (typeof onError === 'function') onError(error);
+    },
+  );
 }
 
 export async function getProperty(id) {

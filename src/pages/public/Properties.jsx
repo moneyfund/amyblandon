@@ -11,7 +11,7 @@ import SEO from '../../components/common/SEO';
 import { useSiteImages } from '../../contexts/SiteImagesContext';
 import { propertyTypeOptions } from '../../config/adminLabels.es';
 import { defaultSiteContent, getSiteContent } from '../../services/siteContentService';
-import { getProperties } from '../../services/propertyService';
+import { subscribeProperties } from '../../services/propertyService';
 import MapView from './MapView';
 
 const quickCategories = [
@@ -54,13 +54,31 @@ export default function Properties() {
   const [view, setView] = useState('grid');
 
   useEffect(() => {
-    Promise.all([getProperties(), getSiteContent('realEstate')])
-      .then(([items, pageContent]) => {
+    let active = true;
+
+    getSiteContent('realEstate')
+      .then((pageContent) => active && setContent(pageContent))
+      .catch(() => {});
+
+    const unsubscribe = subscribeProperties(
+      {},
+      (items) => {
+        if (!active) return;
         setProperties(items);
-        setContent(pageContent);
-      })
-      .catch(() => setError('No pudimos cargar las propiedades en este momento. Intenta nuevamente.'))
-      .finally(() => setLoading(false));
+        setError('');
+        setLoading(false);
+      },
+      () => {
+        if (!active) return;
+        setError('No pudimos cargar las propiedades en este momento. Intenta nuevamente.');
+        setLoading(false);
+      },
+    );
+
+    return () => {
+      active = false;
+      unsubscribe?.();
+    };
   }, []);
 
   const filtered = useMemo(() => properties.filter((property) => {

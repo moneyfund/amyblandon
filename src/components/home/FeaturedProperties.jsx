@@ -3,7 +3,7 @@ import { ArrowRight, Building2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import RevealOnScroll from '../common/RevealOnScroll';
 import PropertyCard from '../properties/PropertyCard';
-import { getProperties } from '../../services/propertyService';
+import { subscribeProperties } from '../../services/propertyService';
 
 export default function FeaturedProperties({ content }) {
   const [properties, setProperties] = useState([]);
@@ -13,21 +13,25 @@ export default function FeaturedProperties({ content }) {
   useEffect(() => {
     let active = true;
 
-    getProperties()
-      .then((items) => {
+    const unsubscribe = subscribeProperties(
+      {},
+      (items) => {
         if (!active) return;
         setProperties(items.filter((property) => Boolean(property.featured)));
         setError(false);
-      })
-      .catch(() => {
+        setLoading(false);
+      },
+      () => {
         if (!active) return;
         setProperties([]);
         setError(true);
-      })
-      .finally(() => active && setLoading(false));
+        setLoading(false);
+      },
+    );
 
     return () => {
       active = false;
+      unsubscribe?.();
     };
   }, []);
 

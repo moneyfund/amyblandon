@@ -147,21 +147,36 @@
     font-size: 8.5px;
   }
 
+  /* En móvil se fuerzan dos filas reales, una debajo de la otra. */
   .property-card .property-features {
+    width: 100%;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch;
     gap: 10px;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .property-card .property-features__row {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 auto;
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
     gap: 18px;
   }
 
+  /* Fila 1: Área total + Área construida. */
   .property-card .property-features__row--areas {
     width: 100%;
+    overflow: visible;
     gap: 18px;
   }
 
-  /* Si habitaciones/baños/parqueo no caben, esta segunda línea se desliza horizontalmente. */
+  /* Fila 2: Habitaciones + Baños + Parqueo.
+     Si no cabe, solo esta fila puede desplazarse horizontalmente. */
   .property-card .property-features__row--rooms {
     width: 100%;
     max-width: 100%;

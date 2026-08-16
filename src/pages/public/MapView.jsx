@@ -6,7 +6,7 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import PropertyCard from '../../components/properties/PropertyCard';
-import { getProperties } from '../../services/propertyService';
+import { subscribeProperties } from '../../services/propertyService';
 import { money } from '../../utils/format';
 
 L.Icon.Default.mergeOptions({
@@ -57,23 +57,27 @@ export default function MapView({ embedded = false, properties }) {
     if (Array.isArray(properties)) {
       setItems(properties);
       setLoadError('');
-      return;
+      return undefined;
     }
 
     let active = true;
-    getProperties()
-      .then((result) => {
-        if (active) setItems(Array.isArray(result) ? result : []);
-      })
-      .catch(() => {
-        if (active) {
-          setItems([]);
-          setLoadError('No se pudieron cargar las ubicaciones en este momento.');
-        }
-      });
+    const unsubscribe = subscribeProperties(
+      {},
+      (result) => {
+        if (!active) return;
+        setItems(Array.isArray(result) ? result : []);
+        setLoadError('');
+      },
+      () => {
+        if (!active) return;
+        setItems([]);
+        setLoadError('No se pudieron cargar las ubicaciones en este momento.');
+      },
+    );
 
     return () => {
       active = false;
+      unsubscribe?.();
     };
   }, [properties]);
 
@@ -93,7 +97,7 @@ export default function MapView({ embedded = false, properties }) {
         <MapContainer center={[12.8654, -85.2072]} zoom={7} scrollWheelZoom={false}>
           <TileLayer
             attribution="&copy; OpenStreetMap contributors"
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            url="https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png"
           />
           <Fit items={mappedItems} />
           {mappedItems.map((property) => (

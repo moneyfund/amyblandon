@@ -114,8 +114,8 @@ export default function Properties() {
       <div className="re-shell re-search-hero__inner">
         <RevealOnScroll className="re-search-hero__heading">
           <p className="re-eyebrow">PORTAFOLIO INMOBILIARIO</p>
-          <h1>Encuentra una propiedad que encaje con tu próxima decisión.</h1>
-          <p>Busca por ubicación, elige cómo quieres invertir y encuentra el tipo de propiedad que necesitas.</p>
+          <h1>Encuentra tu próxima propiedad</h1>
+          <p>Explora oportunidades que encajen con lo que buscas.</p>
         </RevealOnScroll>
 
         <RevealOnScroll as="form" className="re-search-panel" delay={90} aria-label="Buscar propiedades" onSubmit={submitSearch}>

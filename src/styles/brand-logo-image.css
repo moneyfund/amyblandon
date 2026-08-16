@@ -35,6 +35,14 @@
   object-position: center;
   pointer-events: none;
   user-select: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .16s ease;
+}
+
+.public-navbar .brand-logo__image.is-ready {
+  opacity: 1;
+  visibility: visible;
 }
 
 .public-navbar .brand-logo__tagline--image {
@@ -164,5 +172,11 @@
     width: 100%;
     max-width: none;
     font-size: 7.05px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .public-navbar .brand-logo__image {
+    transition: none;
   }
 }

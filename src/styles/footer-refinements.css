@@ -1,0 +1,119 @@
+/* Ajustes finos del footer público: escala de marca y CTA WhatsApp alineado al hero. */
+.public-footer .brand-logo--image {
+  width: 272px;
+  min-width: 272px;
+  max-width: 272px;
+  gap: 6px;
+}
+
+.public-footer .brand-logo__mark {
+  height: 54px;
+}
+
+.public-footer .brand-logo__tagline--image {
+  font-size: 9px;
+}
+
+.public-footer__question {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.public-footer__question h2 {
+  width: 100%;
+  text-align: center;
+}
+
+.public-footer__whatsapp {
+  min-height: 51px;
+  margin-top: 22px;
+  padding: 14px 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #fff !important;
+  background: var(--amy-gold);
+  border: 1px solid var(--amy-gold);
+  border-radius: 999px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .12);
+  font-family: var(--font-reference);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.65;
+  text-decoration: none;
+  transition: background .25s ease, border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+}
+
+.public-footer__whatsapp svg {
+  flex: 0 0 auto;
+  color: #fff;
+}
+
+.public-footer__whatsapp:hover {
+  color: #fff !important;
+  background: #d5a33e;
+  border-color: #d5a33e;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, .16);
+}
+
+@media (max-width: 1080px) {
+  .public-footer .brand-logo--image {
+    width: 229px;
+    min-width: 229px;
+    max-width: 229px;
+  }
+
+  .public-footer .brand-logo__mark {
+    height: 45px;
+  }
+
+  .public-footer .brand-logo__tagline--image {
+    font-size: 7.6px;
+  }
+}
+
+@media (max-width: 820px) {
+  .public-footer .brand-logo--image {
+    width: 176px;
+    min-width: 176px;
+    max-width: 176px;
+    gap: 4px;
+  }
+
+  .public-footer .brand-logo__mark {
+    height: 34px;
+  }
+
+  .public-footer .brand-logo__tagline--image {
+    font-size: 6px;
+  }
+
+  .public-footer__question {
+    align-items: center;
+  }
+
+  .public-footer__whatsapp {
+    min-height: 50px;
+    padding: 13px 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .public-footer .brand-logo--image {
+    width: min(168px, 49vw);
+    min-width: 0;
+    max-width: 168px;
+  }
+
+  .public-footer .brand-logo__mark {
+    height: 33px;
+  }
+
+  .public-footer .brand-logo__tagline--image {
+    font-size: 5.7px;
+  }
+}

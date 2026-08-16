@@ -37,7 +37,10 @@ export default function FeaturedProperties({ content }) {
 
   const eyebrow = content?.featuredEyebrow || 'SELECCIÓN ESPECIAL';
   const title = content?.featuredTitle || 'Propiedades destacadas';
-  const viewAll = content?.featuredViewAll || 'Ver más propiedades';
+  const savedViewAll = content?.featuredViewAll?.trim();
+  const viewAll = !savedViewAll || savedViewAll === 'Ver más propiedades'
+    ? 'Explora más propiedades'
+    : savedViewAll;
 
   return (
     <section className="home-featured" aria-labelledby="home-featured-title">

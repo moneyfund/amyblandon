@@ -1,81 +1,36 @@
+import { useEffect, useState } from 'react';
 import { Clock, Home, MapPin, MessageCircle, ShieldCheck, TrendingUp, Users } from 'lucide-react';
 import RevealOnScroll from '../../components/common/RevealOnScroll';
 import building from '../../assets/icons/building.svg';
 import graph from '../../assets/icons/graph.svg';
 import secure from '../../assets/icons/secure.svg';
 import SEO from '../../components/common/SEO';
-import { amyContact, homePageContent } from '../../content/homePage.es';
+import { amyContact } from '../../content/homePage.es';
 import { useSiteImages } from '../../contexts/SiteImagesContext';
+import { defaultSiteContent, getSiteContent } from '../../services/siteContentService';
 import { whatsappLink } from '../../utils/whatsapp';
 
 const icons = { realEstate: building, investments: graph, insurance: secure };
 
-const heroSpecialties = [
-  { label: 'Bienes raíces', icon: Home },
-  { label: 'Seguros', icon: ShieldCheck },
-  { label: 'Inversiones', icon: TrendingUp },
-];
-
-const impactStats = [
-  { value: '+5', label: 'Años de experiencia', icon: Clock },
-  { value: '+220', label: 'Personas aseguradas', icon: Users },
-  { value: '+20', label: 'Propiedades vendidas', icon: Home },
-];
-
 // Frontera real de Nicaragua basada en coordenadas cartográficas de Natural Earth.
-// Se proyecta al SVG conservando sus proporciones, en lugar de dibujar una silueta aproximada.
 const nicaraguaBoundary = [
-  [-85.71254, 11.088445],
-  [-86.058488, 11.403439],
-  [-86.52585, 11.806877],
-  [-86.745992, 12.143962],
-  [-87.167516, 12.458258],
-  [-87.668493, 12.90991],
-  [-87.557467, 13.064552],
-  [-87.392386, 12.914018],
-  [-87.316654, 12.984686],
-  [-87.005769, 13.025794],
-  [-86.880557, 13.254204],
-  [-86.733822, 13.263093],
-  [-86.755087, 13.754845],
-  [-86.520708, 13.778487],
-  [-86.312142, 13.771356],
-  [-86.096264, 14.038187],
-  [-85.801295, 13.836055],
-  [-85.698665, 13.960078],
-  [-85.514413, 14.079012],
-  [-85.165365, 14.35437],
-  [-85.148751, 14.560197],
-  [-85.052787, 14.551541],
-  [-84.924501, 14.790493],
-  [-84.820037, 14.819587],
-  [-84.649582, 14.666805],
-  [-84.449336, 14.621614],
-  [-84.228342, 14.748764],
-  [-83.975721, 14.749436],
-  [-83.628585, 14.880074],
-  [-83.489989, 15.016267],
-  [-83.147219, 14.995829],
-  [-83.233234, 14.899866],
-  [-83.284162, 14.676624],
-  [-83.182126, 14.310703],
-  [-83.4125, 13.970078],
-  [-83.519832, 13.567699],
-  [-83.552207, 13.127054],
-  [-83.498515, 12.869292],
-  [-83.473323, 12.419087],
-  [-83.626104, 12.32085],
-  [-83.719613, 11.893124],
-  [-83.650858, 11.629032],
-  [-83.85547, 11.373311],
-  [-83.808936, 11.103044],
-  [-83.655612, 10.938764],
-  [-83.895054, 10.726839],
-  [-84.190179, 10.79345],
-  [-84.355931, 10.999226],
-  [-84.673069, 11.082657],
-  [-84.903003, 10.952303],
-  [-85.561852, 11.217119],
+  [-85.71254, 11.088445], [-86.058488, 11.403439], [-86.52585, 11.806877],
+  [-86.745992, 12.143962], [-87.167516, 12.458258], [-87.668493, 12.90991],
+  [-87.557467, 13.064552], [-87.392386, 12.914018], [-87.316654, 12.984686],
+  [-87.005769, 13.025794], [-86.880557, 13.254204], [-86.733822, 13.263093],
+  [-86.755087, 13.754845], [-86.520708, 13.778487], [-86.312142, 13.771356],
+  [-86.096264, 14.038187], [-85.801295, 13.836055], [-85.698665, 13.960078],
+  [-85.514413, 14.079012], [-85.165365, 14.35437], [-85.148751, 14.560197],
+  [-85.052787, 14.551541], [-84.924501, 14.790493], [-84.820037, 14.819587],
+  [-84.649582, 14.666805], [-84.449336, 14.621614], [-84.228342, 14.748764],
+  [-83.975721, 14.749436], [-83.628585, 14.880074], [-83.489989, 15.016267],
+  [-83.147219, 14.995829], [-83.233234, 14.899866], [-83.284162, 14.676624],
+  [-83.182126, 14.310703], [-83.4125, 13.970078], [-83.519832, 13.567699],
+  [-83.552207, 13.127054], [-83.498515, 12.869292], [-83.473323, 12.419087],
+  [-83.626104, 12.32085], [-83.719613, 11.893124], [-83.650858, 11.629032],
+  [-83.85547, 11.373311], [-83.808936, 11.103044], [-83.655612, 10.938764],
+  [-83.895054, 10.726839], [-84.190179, 10.79345], [-84.355931, 10.999226],
+  [-84.673069, 11.082657], [-84.903003, 10.952303], [-85.561852, 11.217119],
   [-85.71254, 11.088445],
 ];
 
@@ -121,6 +76,29 @@ const mapRoutePoints = mapPoints.map((point) => `${point.x.toFixed(2)},${point.y
 
 export default function About() {
   const { images } = useSiteImages();
+  const [content, setContent] = useState(defaultSiteContent.about);
+
+  useEffect(() => {
+    getSiteContent('about').then(setContent).catch(() => setContent(defaultSiteContent.about));
+  }, []);
+
+  const heroSpecialties = [
+    { label: content.specialtyRealEstate, icon: Home },
+    { label: content.specialtyInsurance, icon: ShieldCheck },
+    { label: content.specialtyInvestments, icon: TrendingUp },
+  ];
+
+  const services = [
+    { key: 'realEstate', title: content.serviceRealEstateTitle, text: content.serviceRealEstateText },
+    { key: 'insurance', title: content.serviceInsuranceTitle, text: content.serviceInsuranceText },
+    { key: 'investments', title: content.serviceInvestmentsTitle, text: content.serviceInvestmentsText },
+  ];
+
+  const impactStats = [
+    { value: content.stat1Value, label: content.stat1Label, icon: Clock },
+    { value: content.stat2Value, label: content.stat2Label, icon: Users },
+    { value: content.stat3Value, label: content.stat3Label, icon: Home },
+  ];
 
   return <div className="about-page">
     <SEO title="Sobre Mi | Amy Blandon" description="Asesoría inmobiliaria, seguros e inversiones con una visión estratégica para proteger y hacer crecer tu patrimonio." />
@@ -144,15 +122,15 @@ export default function About() {
 
         <RevealOnScroll className="about-page__content" direction="right" delay={120}>
           <h1 className="about-page__multicolor-title">
-            <span className="about-page__title-navy">ASESORA INMOBILIARIA,</span>
-            <span className="about-page__title-gold">SEGUROS</span>
-            <span className="about-page__title-navy">E INVERSIONES</span>
+            <span className="about-page__title-navy content-preserve-format">{content.heroTitlePrimary}</span>
+            <span className="about-page__title-gold content-preserve-format">{content.heroTitleGold}</span>
+            <span className="about-page__title-navy content-preserve-format">{content.heroTitleSecondary}</span>
           </h1>
           <div className="about-page__intro-copy about-page__intro-copy--strategic">
-            <p className="about-page__intro-lead">Asesora Estratégica en Bienes Raíces, Seguros e Inversiones</p>
-            <p>Creo que las mejores decisiones financieras no se toman por impulso, sino con estrategia, información y la asesoría correcta.</p>
-            <p>Mi misión es acompañar a familias, profesionales y empresarios a proteger su patrimonio, identificar oportunidades de crecimiento e inversión y tomar decisiones inmobiliarias con seguridad y confianza.</p>
-            <p>Mi compromiso es ayudarte a construir un futuro más sólido a través de decisiones que generen valor, estabilidad y tranquilidad.</p>
+            <p className="about-page__intro-lead content-preserve-format">{content.heroIntroLead}</p>
+            <p className="content-preserve-format">{content.heroIntro1}</p>
+            <p className="content-preserve-format">{content.heroIntro2}</p>
+            <p className="content-preserve-format">{content.heroIntro3}</p>
           </div>
           <div className="about-page__hero-tags" aria-label="Áreas de especialidad">
             {heroSpecialties.map(({ label, icon: Icon }) => (
@@ -163,7 +141,7 @@ export default function About() {
             ))}
           </div>
           <a className="btn about-page__button about-page__button--pill" href={whatsappLink(amyContact.whatsappMessage, amyContact.phone)}>
-            <MessageCircle size={18} />Ir a WhatsApp
+            <MessageCircle size={18} />{content.whatsappButton}
           </a>
         </RevealOnScroll>
       </div>
@@ -171,23 +149,23 @@ export default function About() {
 
     <section className="about-page__purpose">
       <RevealOnScroll>
-        <p className="section-kicker">Propósito profesional</p>
-        <h2>Decisiones con estructura, calma y visión de futuro.</h2>
-        <p>Mi propósito es acompañarte a tomar decisiones que te den tranquilidad hoy y construyan tu futuro mañana.</p>
+        <p className="section-kicker content-preserve-format">{content.purposeKicker}</p>
+        <h2 className="content-preserve-format">{content.purposeTitle}</h2>
+        <p className="content-preserve-format">{content.purposeText}</p>
       </RevealOnScroll>
     </section>
 
     <section className="about-page__services">
       <div className="about-page__section-heading">
-        <p className="section-kicker">Áreas de asesoría</p>
-        <h2>Soluciones integrales para tu patrimonio</h2>
+        <p className="section-kicker content-preserve-format">{content.servicesKicker}</p>
+        <h2 className="content-preserve-format">{content.servicesTitle}</h2>
       </div>
       <div className="about-page__service-grid">
-        {homePageContent.services.map((service, index) => (
+        {services.map((service, index) => (
           <RevealOnScroll as="article" className="about-page__service" delay={index * 100} key={service.key}>
             <div className="about-page__service-icon"><img src={icons[service.key]} alt="" width="54" /></div>
-            <h3>{service.title}</h3>
-            <p>{service.text}</p>
+            <h3 className="content-preserve-format">{service.title}</h3>
+            <p className="content-preserve-format">{service.text}</p>
           </RevealOnScroll>
         ))}
       </div>
@@ -196,12 +174,9 @@ export default function About() {
     <section className="about-page__impact">
       <div className="about-page__impact-inner">
         <RevealOnScroll className="about-page__impact-copy" direction="left">
-          <p className="section-kicker">Nicaragua · Visión estratégica</p>
-          <h2>Una asesoría conectada con tus decisiones y con el territorio.</h2>
-          <p>
-            Cada decisión patrimonial merece contexto. Integro bienes raíces, seguros e inversiones para construir una
-            estrategia clara, personalizada y preparada para crecer contigo.
-          </p>
+          <p className="section-kicker content-preserve-format">{content.impactKicker}</p>
+          <h2 className="content-preserve-format">{content.impactTitle}</h2>
+          <p className="content-preserve-format">{content.impactText}</p>
 
           <div className="about-page__impact-stats">
             {impactStats.map(({ value, label, icon: Icon }) => (
@@ -217,8 +192,8 @@ export default function About() {
         <RevealOnScroll className="about-page__map-card" direction="right" delay={100}>
           <div className="about-page__map-heading">
             <div>
-              <span className="about-page__map-kicker">Cobertura estratégica</span>
-              <strong>Nicaragua</strong>
+              <span className="about-page__map-kicker content-preserve-format">{content.mapKicker}</span>
+              <strong className="content-preserve-format">{content.mapTitle}</strong>
             </div>
             <MapPin size={24} aria-hidden="true" />
           </div>
@@ -238,10 +213,8 @@ export default function About() {
                   <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
                 </filter>
               </defs>
-
               <polygon className="about-page__map-outline" points={nicaraguaPolygonPoints} />
               <polyline className="about-page__map-route" points={mapRoutePoints} />
-
               {mapPoints.map((point, index) => (
                 <g className="about-page__map-marker" key={point.label} style={{ '--delay': `${index * 0.55}s` }}>
                   <circle className="about-page__map-pulse" cx={point.x} cy={point.y} r="13" />
@@ -253,8 +226,8 @@ export default function About() {
           </div>
 
           <div className="about-page__map-footer">
-            <span className="about-page__map-live"><i /> Presencia en movimiento</span>
-            <span>Asesoría que trasciende una sola operación.</span>
+            <span className="about-page__map-live"><i /> {content.mapLiveLabel}</span>
+            <span className="content-preserve-format">{content.mapFooterText}</span>
           </div>
         </RevealOnScroll>
       </div>

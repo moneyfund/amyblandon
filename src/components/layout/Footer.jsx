@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone } from 'lucide-react';
+import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import RevealOnScroll from '../common/RevealOnScroll';
 import BrandLogo from './BrandLogo';
@@ -74,6 +74,7 @@ export default function Footer() {
         <RevealOnScroll as="div" className="public-footer__col public-footer__question" delay={110}>
           <h2>{homePageContent.footer.question}</h2>
           <a className="public-footer__whatsapp" href={whatsappLink(amyContact.whatsappMessage, whatsapp)}>
+            <MessageCircle size={20} />
             Ir a WhatsApp
           </a>
         </RevealOnScroll>

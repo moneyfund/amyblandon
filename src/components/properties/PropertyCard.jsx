@@ -1,27 +1,68 @@
-import { Bath, BedDouble, Car, Heart, MapPin, Ruler, Share2, Waves } from 'lucide-react';
+import { Bath, BedDouble, Car, Heart, Ruler, Share2 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { money } from '../../utils/format';
 import { useFavorites } from '../../hooks/useFavorites';
-import { labelFor, operationTypeOptions, propertyTypeOptions } from '../../config/adminLabels.es';
+import { labelFor, operationTypeOptions } from '../../config/adminLabels.es';
 
 const hasValue = (value) => value !== undefined && value !== null && value !== '' && Number(value) !== 0;
 const imageUrl = (image) => typeof image === 'string' ? image : image?.url || '';
 
 const firstText = (...values) => values.find((value) => typeof value === 'string' && value.trim())?.trim() || '';
 
-const propertyRegionLabel = (property = {}) => {
+const propertyLocationLabel = (property = {}) => {
   const country = firstText(property.country, 'Nicaragua');
   const department = firstText(
     property.department,
     property.state,
     property.region,
     property.province,
+  );
+  const neighborhood = firstText(
+    property.sector,
+    property.neighborhood,
+    property.barrio,
     property.city,
   );
 
-  if (!department || department.toLowerCase() === country.toLowerCase()) return country;
-  return `${country} · ${department}`;
+  return [neighborhood, department, country]
+    .filter(Boolean)
+    .filter((value, index, values) => (
+      values.findIndex((item) => item.toLowerCase() === value.toLowerCase()) === index
+    ))
+    .join(', ');
 };
+
+function UbiIcon() {
+  return (
+    <svg
+      className="property-location__ubi-icon"
+      viewBox="0 0 15 18"
+      width="15"
+      height="15"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="7.5" cy="5" r="3.25" />
+      <path d="M7.5 8.25v7.25" />
+    </svg>
+  );
+}
+
+function FeatureItem({ icon: Icon, value, label }) {
+  return (
+    <div className="property-feature-item">
+      <Icon size={16} aria-hidden="true" />
+      <div>
+        <b>{value}</b>
+        <span>{label}</span>
+      </div>
+    </div>
+  );
+}
 
 export default function PropertyCard({ property: p = {}, onSelect }) {
   const { toggle, isFavorite } = useFavorites();
@@ -29,7 +70,8 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
   const identifier = p.slug || p.id;
   const detailPath = identifier ? `/properties/${encodeURIComponent(identifier)}` : '/propiedades';
   const coverImage = imageUrl(p.coverImage) || imageUrl(Array.isArray(p.images) ? p.images[0] : p.images);
-  const regionLabel = propertyRegionLabel(p);
+  const locationLabel = propertyLocationLabel(p);
+  const areaUnit = p.areaUnit || 'm²';
 
   const shareUrl = () => {
     const { origin, pathname, hash } = window.location;
@@ -37,16 +79,23 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
     return `${origin}${detailPath}`;
   };
 
-  const features = [
+  const areaFeatures = [
+    hasValue(p.landArea || p.area) && {
+      icon: Ruler,
+      value: `${p.landArea || p.area} ${areaUnit}`,
+      label: 'Área total',
+    },
+    hasValue(p.constructionArea || p.builtArea) && {
+      icon: Ruler,
+      value: `${p.constructionArea || p.builtArea} ${areaUnit}`,
+      label: 'Área construida',
+    },
+  ].filter(Boolean);
+
+  const roomFeatures = [
     hasValue(p.bedrooms) && { icon: BedDouble, value: p.bedrooms, label: 'Habitaciones' },
     hasValue(p.bathrooms) && { icon: Bath, value: p.bathrooms, label: 'Baños' },
     hasValue(p.parkingSpaces) && { icon: Car, value: p.parkingSpaces, label: 'Parqueo' },
-    hasValue(p.pool) && { icon: Waves, value: p.pool, label: 'Piscina' },
-    hasValue(p.builtArea || p.constructionArea || p.area) && {
-      icon: Ruler,
-      value: p.builtArea || p.constructionArea || p.area,
-      label: 'Área total',
-    },
   ].filter(Boolean);
 
   const share = async () => {
@@ -70,7 +119,6 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
       <Link to={detailPath} className="property-image" aria-label={`Ver ${p.title || 'propiedad'}`}>
         <span className="property-card__badges">
           <span className="property-card__badge">{labelFor(operationTypeOptions, p.operationType || p.transactionType, 'Disponible')}</span>
-          {p.featured && <span className="property-card__badge property-card__badge--featured">Destacada</span>}
         </span>
         {coverImage ? (
           <img src={coverImage} alt={p.title || 'Propiedad'} />
@@ -80,20 +128,25 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
       </Link>
       <div className="property-body">
         <h3 className="property-card__title"><Link to={detailPath}>{p.title || 'Propiedad sin título'}</Link></h3>
-        <p className="property-region">{regionLabel}</p>
-        {(p.address || p.publicAddress || p.city || p.state) && (
+        {locationLabel && (
           <p className="property-location">
-            <MapPin size={15} />
-            {p.address || p.publicAddress || [p.city, p.state].filter(Boolean).join(', ')}
+            <UbiIcon />
+            {locationLabel}
           </p>
         )}
         <strong className="property-price property-price--after-location">{money(p.price, p.currency)}</strong>
-        {(features.length > 0 || p.propertyType) && (
+        {(areaFeatures.length > 0 || roomFeatures.length > 0) && (
           <div className="property-features">
-            {features.map(({ icon: Icon, value, label }) => (
-              <span key={label}><Icon size={16} /><b>{value}{label === 'Área total' ? ' m²' : ''}</b>{label}</span>
-            ))}
-            {p.propertyType && <span><b>{labelFor(propertyTypeOptions, p.propertyType)}</b></span>}
+            {areaFeatures.length > 0 && (
+              <div className="property-features__row property-features__row--areas">
+                {areaFeatures.map((feature) => <FeatureItem key={feature.label} {...feature} />)}
+              </div>
+            )}
+            {roomFeatures.length > 0 && (
+              <div className="property-features__row property-features__row--rooms">
+                {roomFeatures.map((feature) => <FeatureItem key={feature.label} {...feature} />)}
+              </div>
+            )}
           </div>
         )}
         <div className="property-actions">

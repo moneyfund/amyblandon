@@ -14,8 +14,8 @@ export default function StrategicBanner({ content }) {
       style={{ '--strategic-image': `url("${images.strategicBanner}")` }}
     >
       <RevealOnScroll>
-        <p>{banner.kicker}</p>
-        <h2>{banner.title}</h2>
+        <p className="content-preserve-format">{banner.kicker}</p>
+        <h2 className="content-preserve-format">{banner.title}</h2>
       </RevealOnScroll>
     </section>
   );

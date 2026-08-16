@@ -1,0 +1,7 @@
+/* Ajuste exclusivo para la portada de Sobre mí en teléfonos.
+   Se crea espacio real bajo el navbar móvil para que la fotografía no quede detrás del logo. */
+@media (max-width: 560px) {
+  .about-page--editorial .about-editorial-hero__grid {
+    padding-top: 108px;
+  }
+}

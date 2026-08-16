@@ -60,6 +60,7 @@ import './styles/property-technical-sheet-admin.css';
 import './styles/footer-refinements.css';
 import './styles/content-admin-v3.css';
 import './styles/property-card-hierarchy.css';
+import './styles/about-mobile-hero-offset.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

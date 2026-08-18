@@ -1,0 +1,66 @@
+/* Ajustes finales exclusivos de /sobre-mi.
+   - Navbar transparente igual que Inicio.
+   - Indicador de descubrimiento centrado dentro de la columna azul.
+   - Áreas de asesoría con imagen familiar/seguros distinta a Bienes Raíces. */
+
+/* Navbar transparente: conservar el comportamiento visual de Inicio.
+   Al hacer scroll o abrir el menú vuelven a mandar los estilos sólidos existentes. */
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .brand-logo__tagline,
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .brand-logo__tagline--image,
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu,
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu > a:not(.public-navbar__phone),
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__toggle {
+  color:#fff !important;
+}
+
+/* El enlace activo y hover conservan el acento dorado, igual que en Inicio. */
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu > a:not(.public-navbar__phone):hover,
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu > a:not(.public-navbar__phone).active {
+  color:var(--site-accent,var(--amy-gold)) !important;
+}
+
+/* El CTA vive dentro de la columna azul; 50% lo centra realmente en esa columna. */
+.about-home-hero__copy .about-home-hero__discover {
+  left:50% !important;
+  transform:translateX(-50%) !important;
+}
+
+/* Áreas de asesoría: familia recibiendo asesoría profesional.
+   Imagen de Pexels distinta a la utilizada en Bienes Raíces. */
+.about-home-areas {
+  background-color:var(--about-navy) !important;
+  background-image:
+    linear-gradient(112deg,
+      rgba(0,25,41,.95) 0%,
+      rgba(0,25,41,.91) 40%,
+      rgba(0,25,41,.86) 72%,
+      rgba(0,25,41,.82) 100%),
+    url("https://images.pexels.com/photos/7642028/pexels-photo-7642028.jpeg?auto=compress&dpr=1&h=750&w=1260") !important;
+  background-size:cover !important;
+  background-position:center 46% !important;
+  background-repeat:no-repeat !important;
+}
+
+@media(max-width:1000px){
+  .about-home-areas {
+    background-image:
+      linear-gradient(118deg,
+        rgba(0,25,41,.96) 0%,
+        rgba(0,25,41,.92) 52%,
+        rgba(0,25,41,.86) 100%),
+      url("https://images.pexels.com/photos/7642028/pexels-photo-7642028.jpeg?auto=compress&dpr=1&h=750&w=1260") !important;
+    background-position:center 48% !important;
+  }
+}
+
+@media(max-width:640px){
+  .about-home-areas {
+    background-image:
+      linear-gradient(180deg,
+        rgba(0,25,41,.96) 0%,
+        rgba(0,25,41,.93) 58%,
+        rgba(0,25,41,.88) 100%),
+      url("https://images.pexels.com/photos/7642028/pexels-photo-7642028.jpeg?auto=compress&dpr=1&h=750&w=1260") !important;
+    background-position:center center !important;
+  }
+}

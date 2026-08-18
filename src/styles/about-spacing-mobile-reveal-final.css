@@ -1,0 +1,192 @@
+/* Ajustes finales solicitados para /sobre-mi.
+   1) Elimina el vacío excesivo entre Propósito y Filosofía.
+   2) En móvil, la primera vista es azul + foto baja + DESLIZA.
+   3) Al tocar DESLIZA, se revela el texto azul y enseguida la sección 2. */
+
+.about-home-hero__mobile-discover{
+  display:none;
+}
+
+/* ESCRITORIO / TABLET — secciones encadenadas, sin espacio muerto. */
+.public-site--about .about-home-purpose{
+  min-height:0 !important;
+  height:auto !important;
+  padding:76px 0 24px !important;
+}
+
+.public-site--about .about-home-purpose__grid,
+.public-site--about .about-home-purpose__heading,
+.public-site--about .about-home-purpose__body{
+  min-height:0 !important;
+  height:auto !important;
+}
+
+.public-site--about .about-home-philosophy{
+  min-height:0 !important;
+  height:auto !important;
+  padding:24px 0 88px !important;
+}
+
+.public-site--about .about-home-philosophy__grid{
+  min-height:0 !important;
+  height:auto !important;
+}
+
+@media(max-width:640px){
+  /* La portada móvil ocupa exactamente el alto útil bajo el navbar fijo. */
+  .public-site--about .about-home-hero{
+    background:var(--about-navy,#001929) !important;
+  }
+
+  .public-site--about .about-home-hero .about-home-hero__grid{
+    width:100% !important;
+    max-width:none !important;
+    min-height:0 !important;
+    margin:0 !important;
+    display:flex !important;
+    flex-direction:column !important;
+    background:var(--about-navy,#001929) !important;
+  }
+
+  /* Primera pantalla: aire azul arriba y la fotografía empieza más abajo. */
+  .public-site--about .about-home-hero__media{
+    order:1 !important;
+    position:relative !important;
+    width:100% !important;
+    height:calc(100svh - 76px) !important;
+    min-height:600px !important;
+    max-height:820px !important;
+    margin:0 !important;
+    padding:clamp(108px,18svh,165px) 15px 64px !important;
+    display:flex !important;
+    align-items:stretch !important;
+    background:var(--about-navy,#001929) !important;
+    overflow:hidden !important;
+  }
+
+  .public-site--about .about-home-hero__image-wrap{
+    width:100% !important;
+    height:100% !important;
+    min-height:0 !important;
+    margin:0 !important;
+    border-radius:230px 230px 0 0 !important;
+    overflow:hidden !important;
+    background:var(--about-navy,#001929) !important;
+    box-shadow:none !important;
+  }
+
+  .public-site--about .about-home-hero__image{
+    width:100% !important;
+    height:100% !important;
+    min-height:0 !important;
+    aspect-ratio:auto !important;
+    background:var(--about-navy,#001929) !important;
+  }
+
+  .public-site--about .about-home-hero__image img{
+    width:100% !important;
+    height:100% !important;
+    object-fit:cover !important;
+    object-position:center top !important;
+  }
+
+  /* Único elemento inferior visible en la primera pantalla. */
+  .public-site--about .about-home-hero__mobile-discover{
+    position:absolute !important;
+    left:50% !important;
+    bottom:9px !important;
+    z-index:10 !important;
+    transform:translateX(-50%) !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:1px !important;
+    width:max-content !important;
+    color:#fff !important;
+    font-size:9.5px !important;
+    font-weight:750 !important;
+    line-height:1.2 !important;
+    letter-spacing:.14em !important;
+    text-transform:uppercase !important;
+    text-align:center !important;
+    text-shadow:0 2px 12px rgba(0,25,41,.7) !important;
+  }
+
+  .public-site--about .about-home-hero__mobile-discover .about-home-hero__discover-arrows{
+    height:22px !important;
+    color:var(--about-gold-light,#e2be73) !important;
+  }
+
+  /* El CTA anterior no aparece en móvil; solo queda DESLIZA bajo la foto. */
+  .public-site--about .about-home-hero__discover--desktop{
+    display:none !important;
+  }
+
+  /* Segundo tramo del hero: todo el texto permanece sobre el mismo azul. */
+  .public-site--about .about-home-hero__copy{
+    order:2 !important;
+    position:relative !important;
+    min-height:0 !important;
+    height:auto !important;
+    padding:46px 20px 52px !important;
+    background:var(--about-navy,#001929) !important;
+    justify-content:flex-start !important;
+  }
+
+  .public-site--about #about-mobile-copy{
+    scroll-margin-top:76px !important;
+  }
+
+  .public-site--about .about-home-hero__copy h1{
+    max-width:100% !important;
+    font-size:clamp(34px,10.2vw,43px) !important;
+    line-height:1.055 !important;
+    letter-spacing:-.04em !important;
+  }
+
+  .public-site--about .about-home-hero__text{
+    max-width:100% !important;
+    margin:19px 0 0 !important;
+    font-size:15px !important;
+    line-height:1.67 !important;
+  }
+
+  /* Sección 2 aparece inmediatamente después del texto del hero. */
+  .public-site--about .about-home-purpose{
+    min-height:0 !important;
+    height:auto !important;
+    padding:48px 0 28px !important;
+  }
+
+  .public-site--about .about-home-purpose__grid{
+    gap:26px !important;
+  }
+
+  .public-site--about .about-home-purpose__body{
+    padding-top:0 !important;
+  }
+
+  .public-site--about .about-home-philosophy{
+    min-height:0 !important;
+    height:auto !important;
+    padding:28px 0 58px !important;
+  }
+
+  .public-site--about .about-home-purpose__grid,
+  .public-site--about .about-home-philosophy__grid{
+    min-height:0 !important;
+    height:auto !important;
+  }
+}
+
+@media(max-width:390px){
+  .public-site--about .about-home-hero__media{
+    min-height:570px !important;
+    padding-top:104px !important;
+  }
+
+  .public-site--about .about-home-hero__image-wrap{
+    border-radius:190px 190px 0 0 !important;
+  }
+}

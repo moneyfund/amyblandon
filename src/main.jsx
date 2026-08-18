@@ -54,6 +54,7 @@ import './styles/about-hero-refinement.css';
 import './styles/about-navbar-family-polish.css';
 import './styles/about-mobile-carousel.css';
 import './styles/about-spacing-mobile-reveal-final.css';
+import './styles/mobile-hero-composition-final.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

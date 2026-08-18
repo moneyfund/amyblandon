@@ -60,6 +60,7 @@ import './styles/real-estate-luxury-refinement.css';
 import './styles/real-estate-luxury-motion-v2.css';
 import './styles/real-estate-luxury-layout-v3.css';
 import './styles/about-editorial-sothebys.css';
+import './styles/about-br-final-refinements.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

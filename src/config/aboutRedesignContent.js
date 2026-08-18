@@ -2,24 +2,24 @@ export const aboutContentDefaults = {
   heroName: 'Amy Blandón',
   heroRole: 'Asesora Inmobiliaria | Seguros | Inversiones',
 
-  introKicker: '01 — SOBRE MÍ',
+  introKicker: 'SOBRE MÍ',
   introTitle: 'Personas primero. Decisiones con propósito.',
   introText: 'Soy Amy Blandón. Acompaño a personas y familias a tomar decisiones importantes sobre su patrimonio con cercanía, claridad y estrategia. Mi trabajo no empieza con una propiedad, una póliza o una inversión; empieza escuchando lo que quieres construir, proteger y hacer crecer.',
 
-  experienceKicker: '02 — MI EXPERIENCIA',
+  experienceKicker: 'MI EXPERIENCIA',
   experienceTitle: 'Diez años acompañando decisiones que construyen patrimonio.',
   experienceText: 'Hace 10 años inicié mi trayectoria profesional en el mundo de los seguros y la protección patrimonial. Ese camino me enseñó que detrás de cada decisión financiera hay una familia, un proyecto y algo que merece ser protegido.\n\nCon el tiempo, mi trabajo me llevó naturalmente al sector inmobiliario, donde descubrí que una propiedad no es solo una compra o una venta: puede ser hogar, patrimonio e inversión.\n\nHoy integro bienes raíces, seguros e inversiones en una misma asesoría para ayudarte a tomar decisiones con una visión más completa.',
 
-  methodKicker: '03 — MI FORMA DE TRABAJAR',
+  methodKicker: 'MI FORMA DE TRABAJAR',
   methodTitle: 'Una forma sencilla de acompañarte.',
   method1Title: 'Escuchar',
-  method1Text: 'Entender lo que necesitas, lo que quieres lograr y lo que realmente importa para ti.',
+  method1Text: 'Entender lo que necesitas.',
   method2Title: 'Analizar',
-  method2Text: 'Revisar opciones con criterio, información clara y una visión completa de tu patrimonio.',
+  method2Text: 'Revisar opciones con claridad.',
   method3Title: 'Acompañar',
-  method3Text: 'Estar presente para que tomes cada decisión con seguridad, claridad y confianza.',
+  method3Text: 'Estar presente en cada decisión.',
 
-  editorialPhilosophyKicker: '04 — MI FILOSOFÍA',
+  editorialPhilosophyKicker: 'MI FILOSOFÍA',
   editorialPhilosophyTitle: 'Construir. Proteger. Hacer crecer.',
   editorialPhilosophyText: 'Creo que una buena asesoría debe ayudarte a mirar más allá de una decisión aislada. Construir patrimonio, proteger lo que ya has logrado y hacer crecer tus oportunidades forman parte de una misma visión.\n\nMi compromiso es acompañarte con información clara, criterio y cercanía para que cada decisión tenga sentido para ti y para el futuro que quieres construir.',
 
@@ -43,7 +43,7 @@ export const aboutEditorSection = {
       ],
     },
     {
-      title: '01 — Presentación humana',
+      title: 'Presentación humana',
       fields: [
         ['introKicker', 'Etiqueta', 'text'],
         ['introTitle', 'Título', 'textarea', 2],
@@ -51,7 +51,7 @@ export const aboutEditorSection = {
       ],
     },
     {
-      title: '02 — Mi experiencia',
+      title: 'Mi experiencia',
       fields: [
         ['experienceKicker', 'Etiqueta', 'text'],
         ['experienceTitle', 'Título', 'textarea', 2],
@@ -59,7 +59,7 @@ export const aboutEditorSection = {
       ],
     },
     {
-      title: '03 — Mi forma de trabajar',
+      title: 'Mi forma de trabajar',
       fields: [
         ['methodKicker', 'Etiqueta', 'text'],
         ['methodTitle', 'Título', 'textarea', 2],
@@ -72,7 +72,7 @@ export const aboutEditorSection = {
       ],
     },
     {
-      title: '04 — Mi filosofía',
+      title: 'Mi filosofía',
       fields: [
         ['editorialPhilosophyKicker', 'Etiqueta', 'text'],
         ['editorialPhilosophyTitle', 'Título', 'textarea', 2],

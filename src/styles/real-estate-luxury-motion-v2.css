@@ -1,6 +1,7 @@
 /* Bienes Raíces — motion v2.
-   Cinco fondos premium de Nicaragua, crossfade + zoom progresivo al centro.
-   Las imágenes ahora se reciben desde el panel admin mediante variables CSS. */
+   Cinco fondos administrables, crossfade + zoom progresivo al centro.
+   Las imágenes provienen EXCLUSIVAMENTE del panel admin mediante variables CSS.
+   No existen URLs de respaldo ocultas para evitar que reaparezcan imágenes antiguas. */
 
 /* El conjunto título + buscador + categorías queda en el centro visual del hero. */
 @media (min-width:821px){
@@ -34,7 +35,7 @@
   will-change:opacity,transform;
 }
 
-/* Quinta capa: vive detrás del contenido pero por encima de las demás fotos. */
+/* Quinta capa. */
 .real-estate-page .re-search-hero__inner::before{
   content:"";
   position:absolute;
@@ -48,7 +49,7 @@
   opacity:0;
   background-image:
     linear-gradient(180deg,rgba(0,25,41,.31) 0%,rgba(0,25,41,.43) 54%,rgba(0,25,41,.53) 100%),
-    var(--re-br-slide-5, url("https://images.unsplash.com/photo-1642521713828-7e0b40bb3545?auto=format&fit=crop&w=2600&q=90")) !important;
+    var(--re-br-slide-5, none) !important;
   animation:reLuxuryZoomFive 35s linear infinite !important;
 }
 
@@ -57,40 +58,39 @@
   z-index:2;
 }
 
-/* 01 — primer slide administrable. */
+/* 01 */
 .real-estate-page .re-search-hero::after{
   background-image:
     linear-gradient(180deg,rgba(0,25,41,.30) 0%,rgba(0,25,41,.42) 55%,rgba(0,25,41,.53) 100%),
-    var(--re-br-slide-1, url("https://images.unsplash.com/photo-1691521335568-31b92876e124?auto=format&fit=crop&w=2600&q=90")) !important;
+    var(--re-br-slide-1, none) !important;
   animation:reLuxuryZoomOne 35s linear infinite !important;
 }
 
-/* 02 — segundo slide administrable. */
+/* 02 */
 .real-estate-page .re-search-hero > .re-search-hero__decor--one{
   background-image:
     linear-gradient(180deg,rgba(0,25,41,.29) 0%,rgba(0,25,41,.40) 55%,rgba(0,25,41,.51) 100%),
-    var(--re-br-slide-2, url("https://images.unsplash.com/photo-1648876672455-56cc2aa32b65?auto=format&fit=crop&w=2600&q=90")) !important;
+    var(--re-br-slide-2, none) !important;
   animation:reLuxuryZoomTwo 35s linear infinite !important;
 }
 
-/* 03 — tercer slide administrable. */
+/* 03 */
 .real-estate-page .re-search-hero > .re-search-hero__decor--two{
   background-image:
     linear-gradient(180deg,rgba(0,25,41,.28) 0%,rgba(0,25,41,.40) 55%,rgba(0,25,41,.52) 100%),
-    var(--re-br-slide-3, url("https://images.unsplash.com/photo-1561810746-95ab82a3348b?auto=format&fit=crop&w=2600&q=90")) !important;
+    var(--re-br-slide-3, none) !important;
   animation:reLuxuryZoomThree 35s linear infinite !important;
 }
 
-/* 04 — cuarto slide administrable. */
+/* 04 */
 .real-estate-page .re-search-hero::before{
   background-image:
     linear-gradient(180deg,rgba(0,25,41,.29) 0%,rgba(0,25,41,.41) 55%,rgba(0,25,41,.53) 100%),
-    var(--re-br-slide-4, url("https://images.unsplash.com/photo-1584904558330-f9772a6778c5?auto=format&fit=crop&w=2600&q=90")) !important;
+    var(--re-br-slide-4, none) !important;
   animation:reLuxuryZoomFour 35s linear infinite !important;
 }
 
-/* Cada slide dura ~7 s. Durante su permanencia escala de 1.00 a ~1.09;
-   el último tramo hace crossfade mientras el acercamiento continúa. */
+/* Cada slide dura ~7 s. */
 @keyframes reLuxuryZoomOne{
   0%   {opacity:1; transform:scale(1.000)}
   16%  {opacity:1; transform:scale(1.085)}
@@ -130,7 +130,6 @@
   100%   {opacity:0; transform:scale(1.110)}
 }
 
-/* Mantener el encuadre premium en teléfono sin convertir el zoom en un salto. */
 @media (max-width:820px){
   .real-estate-page .re-search-hero__inner{
     justify-content:center !important;

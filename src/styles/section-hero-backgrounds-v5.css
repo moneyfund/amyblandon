@@ -1,124 +1,12 @@
-/* Ajuste visual de heroes internos.
-   - Bienes raíces: imagen inmobiliaria premium + overlay azul marino, únicamente en el bloque superior de búsqueda.
-   - Seguros: elimina exclusivamente la textura/cuadrícula del hero actual. */
+/* Regla heredada que se conserva únicamente para Seguros.
+   El antiguo fondo estático de Bienes Raíces fue retirado por completo:
+   el hero inmobiliario ahora es gestionado exclusivamente por los estilos
+   real-estate-luxury-*.css para evitar interferencias con el slider. */
 
-/* =========================
-   BIENES RAÍCES — HERO BUSCADOR
-   ========================= */
-.public-site--real-estate .real-estate-page .re-search-hero {
-  background-image:
-    linear-gradient(112deg,
-      rgba(0, 25, 41, .94) 0%,
-      rgba(0, 25, 41, .88) 42%,
-      rgba(0, 25, 41, .80) 72%,
-      rgba(0, 25, 41, .75) 100%),
-    url("https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=2400&q=86") !important;
-  background-size: cover !important;
-  background-position: center 54% !important;
-  background-repeat: no-repeat !important;
-  border-bottom-color: rgba(201,154,68,.26) !important;
-}
-
-/* Elimina por completo la cuadrícula del fondo. */
-.public-site--real-estate .real-estate-page .re-search-hero::before {
-  display: none !important;
-  content: none !important;
-  background: none !important;
-}
-
-/* Mantiene solo una decoración dorada muy discreta sobre la fotografía. */
-.public-site--real-estate .real-estate-page .re-search-hero__decor--one {
-  opacity: .42;
-  border-color: rgba(201,154,68,.46) !important;
-  box-shadow:
-    0 0 0 72px rgba(201,154,68,.025),
-    0 0 0 144px rgba(255,255,255,.012) !important;
-}
-
-.public-site--real-estate .real-estate-page .re-search-hero__decor--two {
-  opacity: .26;
-}
-
-/* Texto del hero en blanco con acento dorado. */
-.public-site--real-estate .real-estate-page .re-search-hero__heading .re-eyebrow {
-  color: var(--site-accent, #c99a44) !important;
-  text-shadow: 0 1px 18px rgba(0,0,0,.24);
-}
-
-.public-site--real-estate .real-estate-page .re-search-hero__heading h1 {
-  color: #fff !important;
-  text-shadow: 0 4px 28px rgba(0,0,0,.30) !important;
-}
-
-.public-site--real-estate .real-estate-page .re-search-hero__heading > p:last-child {
-  color: rgba(255,255,255,.88) !important;
-  text-shadow: 0 2px 20px rgba(0,0,0,.24);
-}
-
-/* El buscador continúa siendo una superficie blanca independiente y legible. */
-.public-site--real-estate .real-estate-page .re-search-panel {
-  background: rgba(255,255,255,.985) !important;
-  border-color: rgba(255,255,255,.78) !important;
-  box-shadow:
-    0 24px 60px rgba(0,25,41,.30),
-    0 0 0 1px rgba(201,154,68,.08) !important;
-}
-
-/* Categorías dentro del mismo bloque fotográfico: blanco + dorado activo. */
-.public-site--real-estate .real-estate-page .re-quick-categories__heading > span {
-  color: rgba(255,255,255,.78) !important;
-}
-
-.public-site--real-estate .real-estate-page .re-quick-categories__heading button {
-  color: rgba(255,255,255,.76) !important;
-}
-
-.public-site--real-estate .real-estate-page .re-category-button {
-  color: #fff !important;
-  text-shadow: 0 1px 12px rgba(0,0,0,.24);
-}
-
-.public-site--real-estate .real-estate-page .re-category-button:hover,
-.public-site--real-estate .real-estate-page .re-category-button.active {
-  color: var(--site-accent, #c99a44) !important;
-}
-
-/* =========================
-   SEGUROS — SOLO QUITAR CUADRÍCULA
-   ========================= */
 .public-site--insurance .insurance-page .insurance-hero::before {
   display: none !important;
   content: none !important;
   background: none !important;
   opacity: 0 !important;
   mask-image: none !important;
-}
-
-@media (max-width: 820px) {
-  .public-site--real-estate .real-estate-page .re-search-hero {
-    background-image:
-      linear-gradient(118deg,
-        rgba(0,25,41,.95) 0%,
-        rgba(0,25,41,.89) 52%,
-        rgba(0,25,41,.80) 100%),
-      url("https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1800&q=84") !important;
-    background-position: 58% center !important;
-  }
-}
-
-@media (max-width: 580px) {
-  .public-site--real-estate .real-estate-page .re-search-hero {
-    background-image:
-      linear-gradient(180deg,
-        rgba(0,25,41,.94) 0%,
-        rgba(0,25,41,.89) 58%,
-        rgba(0,25,41,.84) 100%),
-      url("https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=82") !important;
-    background-position: 62% center !important;
-  }
-
-  .public-site--real-estate .real-estate-page .re-search-hero__decor--one,
-  .public-site--real-estate .real-estate-page .re-search-hero__decor--two {
-    opacity: .18;
-  }
 }

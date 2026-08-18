@@ -1,27 +1,36 @@
-/* Ajustes finales de Sobre mí: hero enrasado y compacto, scroll cue visible y áreas con fondo inmobiliario. */
+/* Ajustes finales de Sobre mí: hero full-bleed, más alto y áreas con fondo exclusivo. */
 .about-home-hero{
-  background:#eef1ef;
+  position:relative;
+  background:var(--about-navy);
+  overflow:hidden;
 }
 
 .about-home-hero::before{
   display:none;
 }
 
-.about-home-hero__grid{
-  min-height:560px;
-  grid-template-columns:.92fr 1.08fr;
+/* El hero deja de usar el ancho centrado del shell para que la fotografía llegue al borde izquierdo. */
+.about-home-hero .about-home-hero__grid{
+  width:100%;
+  max-width:none;
+  margin:0;
+  min-height:595px;
+  grid-template-columns:46% 54%;
   align-items:stretch;
+  background:var(--about-navy);
 }
 
-/* La foto queda completamente enrasada con el bloque azul: sin padding superior/inferior. */
 .about-home-hero__media{
   position:relative;
   z-index:2;
-  height:560px;
+  width:100%;
+  height:595px;
   min-width:0;
   padding:0;
+  margin:0;
   display:flex;
   align-items:stretch;
+  background:var(--about-navy);
 }
 
 .about-home-hero__image-wrap{
@@ -30,6 +39,7 @@
   min-height:0;
   margin:0;
   overflow:hidden;
+  background:var(--about-navy);
   box-shadow:none;
 }
 
@@ -38,9 +48,11 @@
   height:100%;
   min-height:0;
   aspect-ratio:auto !important;
+  background:var(--about-navy);
 }
 
 .about-home-hero__image img{
+  display:block;
   width:100%;
   height:100%;
   object-fit:cover;
@@ -50,43 +62,37 @@
 .about-home-hero__copy{
   position:relative;
   z-index:1;
-  min-height:560px;
-  padding:96px 0 94px clamp(46px,5.6vw,82px);
+  min-width:0;
+  min-height:595px;
+  padding:104px clamp(34px,4vw,70px) 94px clamp(62px,6vw,104px);
   background:var(--about-navy);
   color:#fff;
 }
 
-/* Extiende el azul hasta el borde derecho del viewport sin alterar el empalme con la fotografía. */
+/* Ya no hace falta extender el azul artificialmente: toda la mitad derecha y cualquier hueco son azules. */
 .about-home-hero__copy::after{
-  content:"";
-  position:absolute;
-  z-index:-1;
-  top:0;
-  bottom:0;
-  left:100%;
-  width:50vw;
-  background:var(--about-navy);
+  display:none;
+  content:none;
 }
 
 .about-home-hero__copy h1{
-  max-width:670px;
-  font-size:clamp(40px,4.25vw,58px);
+  max-width:710px;
+  font-size:clamp(40px,4.25vw,60px);
   line-height:1.045;
 }
 
 .about-home-hero__text{
-  max-width:610px;
-  margin:21px 0 0;
+  max-width:630px;
+  margin:22px 0 0;
   font-size:16px;
   line-height:1.7;
 }
 
-/* Indicador centrado dentro de la columna azul y suficientemente alto para verse al cargar. */
 .about-home-hero__discover{
   position:absolute;
   z-index:6;
-  left:50%;
-  bottom:28px;
+  left:73%;
+  bottom:30px;
   transform:translateX(-50%);
   display:flex;
   flex-direction:column;
@@ -126,13 +132,8 @@
   animation:about-discover-down 1.5s ease-in-out infinite;
 }
 
-.about-home-hero__discover-arrow--one{
-  animation-delay:0s;
-}
-
-.about-home-hero__discover-arrow--two{
-  animation-delay:.17s;
-}
+.about-home-hero__discover-arrow--one{animation-delay:0s;}
+.about-home-hero__discover-arrow--two{animation-delay:.17s;}
 
 #mi-proposito{
   scroll-margin-top:110px;
@@ -144,7 +145,7 @@
   72%{transform:translateY(4px);opacity:.62}
 }
 
-/* ÁREAS DE ASESORÍA — misma lógica fotográfica + overlay azul del hero de Bienes Raíces. */
+/* ÁREAS DE ASESORÍA — fotografía exclusiva de reunión/asesoría financiera + overlay institucional. */
 .about-home-areas{
   background-color:var(--about-navy) !important;
   background-image:
@@ -153,23 +154,23 @@
       rgba(0,25,41,.90) 42%,
       rgba(0,25,41,.84) 72%,
       rgba(0,25,41,.80) 100%),
-    url("https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=2400&q=86") !important;
+    url("https://images.unsplash.com/photo-1758518727734-98f0a55983b6?auto=format&fit=crop&w=2400&q=86") !important;
   background-size:cover !important;
-  background-position:center 54% !important;
+  background-position:center 48% !important;
   background-repeat:no-repeat !important;
   border-top:1px solid rgba(201,154,68,.18);
   border-bottom:1px solid rgba(201,154,68,.18);
 }
 
 .about-home-area{
-  background:rgba(0,25,41,.48);
+  background:rgba(0,25,41,.50);
   border-color:rgba(255,255,255,.16);
   box-shadow:0 18px 42px rgba(0,0,0,.12);
   backdrop-filter:blur(3px);
 }
 
 .about-home-area:hover{
-  background:rgba(0,25,41,.60);
+  background:rgba(0,25,41,.62);
   border-color:rgba(226,190,115,.52);
 }
 
@@ -182,13 +183,14 @@
     background:var(--about-navy);
   }
 
-  .about-home-hero__grid{
+  .about-home-hero .about-home-hero__grid{
+    width:100%;
     min-height:0;
     grid-template-columns:1fr;
   }
 
   .about-home-hero__media{
-    height:min(620px,86vw);
+    height:min(640px,88vw);
     padding:0;
   }
 
@@ -196,7 +198,7 @@
     width:100%;
     height:100%;
     min-height:0;
-    margin:0 auto;
+    margin:0;
   }
 
   .about-home-hero__image{
@@ -206,12 +208,8 @@
   }
 
   .about-home-hero__copy{
-    min-height:390px;
-    padding:48px 0 88px;
-  }
-
-  .about-home-hero__copy::after{
-    display:none;
+    min-height:400px;
+    padding:50px 24px 92px;
   }
 
   .about-home-hero__copy h1{
@@ -223,6 +221,7 @@
   }
 
   .about-home-hero__discover{
+    left:50%;
     bottom:20px;
   }
 
@@ -232,20 +231,20 @@
         rgba(0,25,41,.96) 0%,
         rgba(0,25,41,.91) 52%,
         rgba(0,25,41,.85) 100%),
-      url("https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1800&q=84") !important;
-    background-position:58% center !important;
+      url("https://images.unsplash.com/photo-1758518727734-98f0a55983b6?auto=format&fit=crop&w=1800&q=84") !important;
+    background-position:52% center !important;
   }
 }
 
 @media(max-width:640px){
   .about-home-hero__media{
-    height:min(520px,118vw);
+    height:min(540px,122vw);
     padding:0;
   }
 
   .about-home-hero__copy{
-    min-height:350px;
-    padding:38px 0 76px;
+    min-height:365px;
+    padding:40px 18px 80px;
   }
 
   .about-home-hero__copy h1{
@@ -260,6 +259,7 @@
   }
 
   .about-home-hero__discover{
+    left:50%;
     bottom:13px;
     gap:1px;
     font-size:9.5px;
@@ -276,7 +276,7 @@
         rgba(0,25,41,.96) 0%,
         rgba(0,25,41,.92) 58%,
         rgba(0,25,41,.87) 100%),
-      url("https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=82") !important;
-    background-position:62% center !important;
+      url("https://images.unsplash.com/photo-1758518727734-98f0a55983b6?auto=format&fit=crop&w=1200&q=82") !important;
+    background-position:56% center !important;
   }
 }

@@ -1,0 +1,382 @@
+/* Bienes Raíces — hero inmersivo inspirado en el patrón visual de LuxuryEstate.
+   Mantiene la identidad Amy: azul institucional + dorado, búsqueda funcional y slider de Nicaragua. */
+
+/* Navbar transparente legible sobre fotografía. Al hacer scroll vuelven a mandar los estilos sólidos existentes. */
+.public-site--real-estate .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .brand-logo__tagline,
+.public-site--real-estate .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .brand-logo__tagline--image,
+.public-site--real-estate .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu,
+.public-site--real-estate .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu > a:not(.public-navbar__phone),
+.public-site--real-estate .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__toggle {
+  color:#fff !important;
+}
+
+.public-site--real-estate .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu > a:not(.public-navbar__phone):hover,
+.public-site--real-estate .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu > a:not(.public-navbar__phone).active {
+  color:var(--site-accent,var(--amy-gold,#c99a44)) !important;
+}
+
+/* HERO A PANTALLA COMPLETA */
+.real-estate-page .re-search-hero {
+  position:relative;
+  isolation:isolate;
+  width:100%;
+  min-height:100svh !important;
+  height:100svh;
+  overflow:hidden;
+  background:#001929 !important;
+  border:0 !important;
+}
+
+/* Cuatro fotografías de Nicaragua. Se mantiene una durante ~6 s y la transición dura ~1.2 s. */
+.real-estate-page .re-search-hero::after,
+.real-estate-page .re-search-hero::before,
+.real-estate-page .re-search-hero > .re-search-hero__decor {
+  content:"";
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  border:0 !important;
+  border-radius:0 !important;
+  pointer-events:none;
+  background-repeat:no-repeat !important;
+  background-size:cover !important;
+  background-position:center !important;
+  will-change:opacity,transform;
+  transform:scale(1.035);
+  z-index:0 !important;
+}
+
+/* Managua — arquitectura / vivienda. */
+.real-estate-page .re-search-hero::after {
+  background-image:
+    linear-gradient(180deg,rgba(0,25,41,.42),rgba(0,25,41,.54)),
+    url("https://images.unsplash.com/photo-1674844475812-4fed029a08cc?auto=format&fit=crop&w=2400&q=88") !important;
+  animation:reLuxurySlideOne 24s ease-in-out infinite;
+}
+
+/* San Juan del Sur — inversión y costa. */
+.real-estate-page .re-search-hero > .re-search-hero__decor--one {
+  background-image:
+    linear-gradient(180deg,rgba(0,25,41,.38),rgba(0,25,41,.52)),
+    url("https://images.unsplash.com/photo-1691521335568-31b92876e124?auto=format&fit=crop&w=2400&q=88") !important;
+  animation:reLuxurySlideTwo 24s ease-in-out infinite;
+}
+
+/* Granada — arquitectura y ciudad. */
+.real-estate-page .re-search-hero > .re-search-hero__decor--two {
+  background-image:
+    linear-gradient(180deg,rgba(0,25,41,.40),rgba(0,25,41,.54)),
+    url("https://images.unsplash.com/photo-1629760331705-71e8c6826106?auto=format&fit=crop&w=2400&q=88") !important;
+  animation:reLuxurySlideThree 24s ease-in-out infinite;
+}
+
+/* Volcán Telica — paisaje nicaragüense. */
+.real-estate-page .re-search-hero::before {
+  background-image:
+    linear-gradient(180deg,rgba(0,25,41,.38),rgba(0,25,41,.54)),
+    url("https://images.unsplash.com/photo-1642521713828-7e0b40bb3545?auto=format&fit=crop&w=2400&q=88") !important;
+  animation:reLuxurySlideFour 24s ease-in-out infinite;
+}
+
+@keyframes reLuxurySlideOne {
+  0%,20% {opacity:1;transform:scale(1.035)}
+  25%,95% {opacity:0;transform:scale(1.085)}
+  100% {opacity:1;transform:scale(1.035)}
+}
+@keyframes reLuxurySlideTwo {
+  0%,20% {opacity:0;transform:scale(1.035)}
+  25%,45% {opacity:1;transform:scale(1.06)}
+  50%,100% {opacity:0;transform:scale(1.09)}
+}
+@keyframes reLuxurySlideThree {
+  0%,45% {opacity:0;transform:scale(1.035)}
+  50%,70% {opacity:1;transform:scale(1.06)}
+  75%,100% {opacity:0;transform:scale(1.09)}
+}
+@keyframes reLuxurySlideFour {
+  0%,70% {opacity:0;transform:scale(1.035)}
+  75%,95% {opacity:1;transform:scale(1.065)}
+  100% {opacity:0;transform:scale(1.09)}
+}
+
+.real-estate-page .re-search-hero__inner {
+  position:relative;
+  z-index:3;
+  width:min(1380px,calc(100% - 80px)) !important;
+  max-width:none !important;
+  min-height:100svh;
+  margin:0 auto !important;
+  padding:clamp(132px,16vh,178px) 0 64px !important;
+  display:flex !important;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+.real-estate-page .re-search-hero__heading {
+  width:100%;
+  max-width:1000px;
+  margin:0 auto 34px !important;
+  text-align:center !important;
+  color:#fff;
+}
+
+.real-estate-page .re-search-hero__heading .re-eyebrow {
+  margin:0 0 18px !important;
+  color:var(--site-accent,var(--amy-gold,#c99a44)) !important;
+  font-size:13px !important;
+  font-weight:750 !important;
+  letter-spacing:.15em !important;
+  text-transform:uppercase;
+}
+
+.real-estate-page .re-search-hero__heading h1 {
+  margin:0 !important;
+  color:#fff !important;
+  font-size:clamp(40px,3.6vw,60px) !important;
+  font-weight:650 !important;
+  line-height:1.06 !important;
+  letter-spacing:-.04em !important;
+  text-shadow:0 3px 24px rgba(0,25,41,.38);
+}
+
+/* El subtítulo se elimina como se solicitó. */
+.real-estate-page .re-search-hero__heading > p:last-child {
+  display:none !important;
+}
+
+/* BUSCADOR — una sola píldora horizontal, proporciones de la referencia. */
+.real-estate-page .re-search-panel {
+  width:min(1135px,calc(100vw - 150px)) !important;
+  height:76px !important;
+  min-height:76px !important;
+  margin:0 auto !important;
+  padding:0 10px 0 0 !important;
+  display:grid !important;
+  grid-template-columns:220px 290px minmax(320px,1fr) 150px !important;
+  align-items:center !important;
+  gap:0 !important;
+  overflow:hidden !important;
+  border:0 !important;
+  border-radius:999px !important;
+  background:#fff !important;
+  box-shadow:0 20px 58px rgba(0,25,41,.28) !important;
+}
+
+.real-estate-page .re-search-panel__top,
+.real-estate-page .re-search-panel__bottom {
+  display:contents !important;
+}
+
+.real-estate-page .re-search-panel__operation,
+.real-estate-page .re-search-panel__type,
+.real-estate-page .re-search-panel__keyword {
+  min-width:0 !important;
+  width:auto !important;
+  height:50px !important;
+  min-height:50px !important;
+  margin:0 !important;
+  padding:0 22px !important;
+  display:flex !important;
+  align-items:center !important;
+  border:0 !important;
+  border-right:1px solid #e1e3e4 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+}
+
+.real-estate-page .re-search-panel__operation {grid-column:1 !important;grid-row:1 !important;}
+.real-estate-page .re-search-panel__type {grid-column:2 !important;grid-row:1 !important;}
+.real-estate-page .re-search-panel__keyword {grid-column:3 !important;grid-row:1 !important;}
+.real-estate-page .re-search-panel__submit {grid-column:4 !important;grid-row:1 !important;}
+
+.real-estate-page .re-search-panel__keyword > .re-search-panel__icon,
+.real-estate-page .re-search-panel__keyword-copy > small,
+.real-estate-page .re-search-panel__operation > span,
+.real-estate-page .re-search-panel__type > span {
+  display:none !important;
+}
+
+.real-estate-page .re-search-panel__keyword-copy {
+  width:100% !important;
+  min-width:0;
+}
+
+.real-estate-page .re-search-panel input,
+.real-estate-page .re-search-panel select {
+  width:100% !important;
+  height:48px !important;
+  min-height:48px !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  outline:0 !important;
+  background:transparent !important;
+  color:#182a30 !important;
+  font:500 16px/1.2 var(--font-reference) !important;
+  box-shadow:none !important;
+}
+
+.real-estate-page .re-search-panel input::placeholder {
+  color:#a9afb1 !important;
+  opacity:1;
+}
+
+.real-estate-page .re-search-panel__segments {
+  width:100%;
+  height:48px;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:16px !important;
+}
+
+.real-estate-page .re-search-panel__segments button:first-child {
+  display:none !important;
+}
+
+.real-estate-page .re-search-panel__segments button {
+  min-width:0 !important;
+  height:auto !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  color:#182a30 !important;
+  font-size:16px !important;
+  font-weight:500 !important;
+  box-shadow:none !important;
+}
+
+.real-estate-page .re-search-panel__segments button.active {
+  color:var(--site-accent,var(--amy-gold,#c99a44)) !important;
+  font-weight:700 !important;
+}
+
+.real-estate-page .re-search-panel__submit {
+  width:140px !important;
+  height:56px !important;
+  min-height:56px !important;
+  margin:0 0 0 auto !important;
+  padding:0 24px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:9px !important;
+  border:0 !important;
+  border-radius:999px !important;
+  background:var(--site-accent,var(--amy-gold,#c99a44)) !important;
+  color:#fff !important;
+  font-size:0 !important;
+  font-weight:750 !important;
+  box-shadow:none !important;
+  transition:transform .2s ease,background .2s ease,box-shadow .2s ease !important;
+}
+
+.real-estate-page .re-search-panel__submit::after {
+  content:"Buscar";
+  font-size:16px;
+  line-height:1;
+}
+
+.real-estate-page .re-search-panel__submit svg {
+  width:20px !important;
+  height:20px !important;
+}
+
+.real-estate-page .re-search-panel__submit:hover {
+  transform:translateY(-1px);
+  background:var(--amy-gold-light,#e2be73) !important;
+  box-shadow:0 9px 20px rgba(201,154,68,.25) !important;
+}
+
+/* El hero queda limpio como la referencia; las categorías continúan disponibles en el catálogo. */
+.real-estate-page .re-search-hero .re-quick-categories {
+  display:none !important;
+}
+
+@media(max-width:1100px){
+  .real-estate-page .re-search-panel {
+    width:min(960px,calc(100vw - 60px)) !important;
+    grid-template-columns:190px 240px minmax(260px,1fr) 140px !important;
+  }
+  .real-estate-page .re-search-panel__operation,
+  .real-estate-page .re-search-panel__type,
+  .real-estate-page .re-search-panel__keyword {
+    padding-inline:18px !important;
+  }
+}
+
+@media(max-width:820px){
+  .real-estate-page .re-search-hero {
+    min-height:100svh !important;
+    height:auto !important;
+  }
+
+  .real-estate-page .re-search-hero::after,
+  .real-estate-page .re-search-hero::before,
+  .real-estate-page .re-search-hero > .re-search-hero__decor {
+    background-position:center center !important;
+  }
+
+  .real-estate-page .re-search-hero__inner {
+    width:100% !important;
+    min-height:100svh;
+    padding:126px 18px 54px !important;
+  }
+
+  .real-estate-page .re-search-hero__heading {
+    margin-bottom:28px !important;
+  }
+
+  .real-estate-page .re-search-hero__heading h1 {
+    font-size:clamp(36px,10vw,48px) !important;
+  }
+
+  .real-estate-page .re-search-panel {
+    width:min(520px,100%) !important;
+    height:auto !important;
+    min-height:0 !important;
+    padding:10px !important;
+    grid-template-columns:1fr !important;
+    grid-template-rows:auto !important;
+    border-radius:28px !important;
+  }
+
+  .real-estate-page .re-search-panel__operation,
+  .real-estate-page .re-search-panel__type,
+  .real-estate-page .re-search-panel__keyword,
+  .real-estate-page .re-search-panel__submit {
+    grid-column:1 !important;
+    grid-row:auto !important;
+  }
+
+  .real-estate-page .re-search-panel__operation,
+  .real-estate-page .re-search-panel__type,
+  .real-estate-page .re-search-panel__keyword {
+    width:100% !important;
+    height:58px !important;
+    min-height:58px !important;
+    padding:0 16px !important;
+    border-right:0 !important;
+    border-bottom:1px solid #e6e8e8 !important;
+  }
+
+  .real-estate-page .re-search-panel__submit {
+    width:100% !important;
+    height:56px !important;
+    margin:10px 0 0 !important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .real-estate-page .re-search-hero::after,
+  .real-estate-page .re-search-hero::before,
+  .real-estate-page .re-search-hero > .re-search-hero__decor {
+    animation:none !important;
+  }
+  .real-estate-page .re-search-hero::after{opacity:1 !important;}
+  .real-estate-page .re-search-hero::before,
+  .real-estate-page .re-search-hero > .re-search-hero__decor{opacity:0 !important;}
+}

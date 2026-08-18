@@ -56,6 +56,7 @@ import './styles/about-mobile-carousel.css';
 import './styles/about-spacing-mobile-reveal-final.css';
 import './styles/mobile-hero-composition-final.css';
 import './styles/real-estate-luxury-slider.css';
+import './styles/real-estate-luxury-refinement.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

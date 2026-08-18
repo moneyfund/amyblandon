@@ -9,6 +9,7 @@ export const siteImages = {
   aboutHome: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1000&q=85',
   aboutPage: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1000&q=85',
   aboutPhilosophy: '',
+  aboutEditorialHero: 'https://images.pexels.com/photos/5849574/pexels-photo-5849574.jpeg?auto=compress&cs=tinysrgb&w=1800',
   signature: '',
   strategicBanner: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1800&q=85',
   realEstateHero: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=85',
@@ -94,6 +95,14 @@ export const siteImageSlots = [
     description: 'Fotografía principal de la nueva portada de la página completa “Sobre mí”.',
     recommendation: 'JPG, PNG o WEBP vertical. Recomendado: 1000 × 1300 px o superior.',
     preview: 'portrait',
+  },
+  {
+    key: 'aboutEditorialHero',
+    label: 'Portada editorial — Sobre mí',
+    shortLabel: 'Portada editorial',
+    description: 'Imagen panorámica del hero editorial de “Sobre mí”. Debe comunicar de forma visual hogar, protección patrimonial y planificación financiera/inversión.',
+    recommendation: 'JPG o WEBP horizontal. Recomendado: 1800 × 900 px o superior, con composición limpia y espacio para recorte responsive.',
+    preview: 'background',
   },
   {
     key: 'aboutPhilosophy',

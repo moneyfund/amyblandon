@@ -38,24 +38,9 @@
   }
 }
 
-@media (max-width: 430px) {
-  .public-site--home .home-hero__media,
-  .public-site--home .home-hero__media.home-hero__media--layered {
-    height: clamp(510px, 138vw, 575px) !important;
-  }
-
-  .public-site--home .home-hero__background img {
-    object-position: 56% center !important;
-  }
-
-  .public-site--home .home-hero__media--layered .home-hero__person {
-    left: 42% !important;
-    width: 84vw !important;
-    height: 90% !important;
-    bottom: -1% !important;
-  }
-
-  /* SOBRE MÍ — imagen normal, rectangular y a sangre. */
+@media (max-width: 640px) {
+  /* SOBRE MÍ — la foto deja de usar la antigua forma de media luna.
+     Conservamos la altura de portada móvil, pero la imagen es un rectángulo normal a sangre. */
   .public-site--about .about-home-hero__media,
   .public-site--about .about-home-hero__image-wrap,
   .public-site--about .about-home-hero__image,
@@ -85,15 +70,16 @@
     width: 100vw !important;
     max-width: none !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 0 0 52px !important;
     overflow: hidden !important;
-    background: var(--about-navy) !important;
+    background: var(--about-navy,#001929) !important;
   }
 
   .public-site--about .about-home-hero__image-wrap,
   .public-site--about .about-home-hero__image {
     width: 100% !important;
     height: 100% !important;
+    min-height: 0 !important;
     margin: 0 !important;
     overflow: hidden !important;
   }
@@ -104,5 +90,25 @@
     height: 100% !important;
     object-fit: cover !important;
     object-position: center top !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .public-site--home .home-hero__media,
+  .public-site--home .home-hero__media.home-hero__media--layered {
+    height: clamp(510px, 138vw, 575px) !important;
+  }
+
+  /* El fondo se mueve un poco hacia la izquierda y Amy se reduce respecto a la versión anterior:
+     así aparecen más claramente los iconos de inversión/seguro/vivienda a la derecha. */
+  .public-site--home .home-hero__background img {
+    object-position: 55% center !important;
+  }
+
+  .public-site--home .home-hero__media--layered .home-hero__person {
+    left: 41% !important;
+    width: 81vw !important;
+    height: 89% !important;
+    bottom: -1% !important;
   }
 }

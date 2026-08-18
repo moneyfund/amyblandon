@@ -1,0 +1,24 @@
+/* Corrección final del slide 04 del hero de Bienes Raíces.
+   Este slide vive en ::before y podía heredar efectos laterales de estilos antiguos.
+   Se neutralizan máscaras, filtros, mezclas y fondos residuales, conservando únicamente
+   la imagen administrable del slot Hero BR 4 con el mismo overlay vertical uniforme. */
+.real-estate-page .re-search-hero::before {
+  background: transparent !important;
+  background-image:
+    linear-gradient(180deg, rgba(0,25,41,.29) 0%, rgba(0,25,41,.41) 55%, rgba(0,25,41,.53) 100%),
+    var(--re-br-slide-4, none) !important;
+  background-color: transparent !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  mix-blend-mode: normal !important;
+  box-shadow: none !important;
+  clip-path: none !important;
+  border: 0 !important;
+}

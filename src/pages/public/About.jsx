@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ChevronDown, Home, ShieldCheck, TrendingUp } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import RevealOnScroll from '../../components/common/RevealOnScroll';
 import SafeImage from '../../components/common/SafeImage';
 import SEO from '../../components/common/SEO';
@@ -19,166 +19,152 @@ export default function About() {
       .catch(() => setContent(initialAboutContent));
   }, []);
 
-  const workSteps = useMemo(() => [
-    { number: '01', title: content.work1Title, lead: content.work1Lead, text: content.work1Text },
-    { number: '02', title: content.work2Title, lead: content.work2Lead, text: content.work2Text },
-    { number: '03', title: content.work3Title, lead: content.work3Lead, text: content.work3Text },
+  const methodSteps = useMemo(() => [
+    { number: '01', title: content.method1Title, text: content.method1Text },
+    { number: '02', title: content.method2Title, text: content.method2Text },
+    { number: '03', title: content.method3Title, text: content.method3Text },
   ], [content]);
 
-  const areas = useMemo(() => [
-    { verb: content.area1Verb, title: content.area1Title, text: content.area1Text, icon: Home },
-    { verb: content.area2Verb, title: content.area2Title, text: content.area2Text, icon: ShieldCheck },
-    { verb: content.area3Verb, title: content.area3Title, text: content.area3Text, icon: TrendingUp },
-  ], [content]);
-
-  const heroImage = images.aboutPage || images.aboutHome;
-  const philosophyImage = images.aboutPhilosophy || images.aboutHome || images.aboutPage;
-  const purposeWords = [content.purposeWord1, content.purposeWord2, content.purposeWord3].filter(Boolean);
+  const heroVisual = images.heroBackground || images.strategicBanner;
+  const closingImage = images.aboutPage || images.aboutHome || images.realEstateHero;
 
   return (
-    <div className="about-home-style">
+    <div className="about-editorial-page">
       <SEO
         title="Sobre Mi | Amy Blandon"
-        description="Conoce la visión, el propósito y la forma de trabajar de Amy Blandón en bienes raíces, seguros e inversiones."
+        description="Conoce la experiencia, la filosofía y la forma de trabajar de Amy Blandón en bienes raíces, seguros e inversiones."
       />
 
-      <section className="about-home-hero" aria-labelledby="about-home-title">
-        <div className="about-home-shell about-home-hero__grid">
-          <RevealOnScroll className="about-home-hero__media" direction="left" delay={60}>
-            <div className="about-home-hero__image-wrap">
-              <SafeImage
-                className="about-home-hero__image"
-                src={heroImage}
-                alt="Amy Blandón"
-                width="760"
-                height="920"
-                loading="eager"
-                fetchPriority="high"
-                objectPosition="center top"
-              />
-            </div>
+      <section className="about-editorial-hero" aria-labelledby="about-editorial-title">
+        <div className="about-editorial-hero__headline">
+          <RevealOnScroll>
+            <h1 id="about-editorial-title" className="content-preserve-format">{content.heroName}</h1>
+            <p className="about-editorial-hero__role content-preserve-format">{content.heroRole}</p>
+          </RevealOnScroll>
+        </div>
 
-            <a className="about-home-hero__mobile-discover" href="#about-mobile-copy" aria-label="Desliza para conocer más sobre Amy">
-              <span>DESLIZA</span>
-              <span className="about-home-hero__discover-arrows" aria-hidden="true">
-                <ChevronDown className="about-home-hero__discover-arrow about-home-hero__discover-arrow--one" size={18} strokeWidth={1.7} />
-                <ChevronDown className="about-home-hero__discover-arrow about-home-hero__discover-arrow--two" size={18} strokeWidth={1.7} />
-              </span>
-            </a>
+        <span className="about-editorial-hero__gold-line" aria-hidden="true" />
+
+        <RevealOnScroll className="about-editorial-hero__media" delay={90}>
+          <SafeImage
+            className="about-editorial-hero__image"
+            src={heroVisual}
+            alt="Bienes raíces, protección patrimonial e inversiones"
+            width="1800"
+            height="900"
+            loading="eager"
+            fetchPriority="high"
+            objectPosition="center center"
+          />
+          <div className="about-editorial-hero__media-overlay" aria-hidden="true" />
+          <div className="about-editorial-hero__media-labels" aria-label="Áreas de asesoría">
+            <span>Bienes Raíces</span>
+            <span>Seguros</span>
+            <span>Inversiones</span>
+          </div>
+        </RevealOnScroll>
+      </section>
+
+      <section className="about-editorial-intro" aria-labelledby="about-editorial-intro-title">
+        <div className="about-editorial-shell about-editorial-intro__grid">
+          <RevealOnScroll className="about-editorial-index" direction="left">
+            <span>01</span>
           </RevealOnScroll>
 
-          <RevealOnScroll className="about-home-hero__copy" id="about-mobile-copy" direction="right" delay={100}>
-            <p className="about-home-kicker about-home-kicker--light content-preserve-format">{content.heroKicker}</p>
-            <h1 id="about-home-title" className="content-preserve-format">{content.heroTitle}</h1>
-            <p className="about-home-hero__text content-preserve-format">{content.heroText}</p>
-
-            <a className="about-home-hero__discover about-home-hero__discover--desktop" href="#mi-proposito" aria-label="Conoce más sobre mí">
-              <span>CONOCE MÁS SOBRE MÍ</span>
-              <span className="about-home-hero__discover-arrows" aria-hidden="true">
-                <ChevronDown className="about-home-hero__discover-arrow about-home-hero__discover-arrow--one" size={18} strokeWidth={1.7} />
-                <ChevronDown className="about-home-hero__discover-arrow about-home-hero__discover-arrow--two" size={18} strokeWidth={1.7} />
-              </span>
-            </a>
+          <RevealOnScroll className="about-editorial-intro__copy" direction="right" delay={80}>
+            <p className="about-editorial-kicker content-preserve-format">{content.introKicker}</p>
+            <h2 id="about-editorial-intro-title" className="content-preserve-format">{content.introTitle}</h2>
+            <p className="about-editorial-body about-editorial-body--lead content-preserve-format">{content.introText}</p>
           </RevealOnScroll>
         </div>
       </section>
 
-      <section className="about-home-purpose" id="mi-proposito" aria-labelledby="about-purpose-title">
-        <div className="about-home-shell about-home-purpose__grid">
-          <RevealOnScroll className="about-home-purpose__heading">
-            <p className="about-home-kicker content-preserve-format">{content.purposeKicker}</p>
-            <h2 id="about-purpose-title" className="content-preserve-format">{content.purposeTitle}</h2>
+      <section className="about-editorial-experience" aria-labelledby="about-editorial-experience-title">
+        <div className="about-editorial-shell about-editorial-experience__grid">
+          <RevealOnScroll className="about-editorial-experience__heading" direction="left">
+            <p className="about-editorial-kicker content-preserve-format">{content.experienceKicker}</p>
+            <h2 id="about-editorial-experience-title" className="content-preserve-format">{content.experienceTitle}</h2>
           </RevealOnScroll>
 
-          <RevealOnScroll className="about-home-purpose__body" delay={90}>
-            <p className="about-home-purpose__text content-preserve-format">{content.purposeText}</p>
-            <div className="about-home-purpose__words" aria-label="Principios de asesoría">
-              {purposeWords.map((word, index) => (
-                <div className="about-home-purpose__word" key={word}>
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                  <strong className="content-preserve-format">{word}</strong>
-                </div>
-              ))}
-            </div>
+          <RevealOnScroll className="about-editorial-experience__story" direction="right" delay={90}>
+            <span className="about-editorial-experience__rule" aria-hidden="true" />
+            <p className="about-editorial-body content-preserve-format">{content.experienceText}</p>
           </RevealOnScroll>
         </div>
       </section>
 
-      <section className="about-home-philosophy" aria-labelledby="about-philosophy-title">
-        <div className="about-home-shell about-home-philosophy__grid">
-          <RevealOnScroll className="about-home-philosophy__media" direction="left">
-            <div className="about-home-philosophy__image-wrap">
-              <SafeImage
-                className="about-home-philosophy__image"
-                src={philosophyImage}
-                alt="Amy Blandón en una sesión de asesoría"
-                width="720"
-                height="880"
-                objectPosition="center top"
-              />
-            </div>
+      <section className="about-editorial-method" aria-labelledby="about-editorial-method-title">
+        <div className="about-editorial-shell">
+          <RevealOnScroll className="about-editorial-method__heading">
+            <p className="about-editorial-kicker about-editorial-kicker--light content-preserve-format">{content.methodKicker}</p>
+            <h2 id="about-editorial-method-title" className="content-preserve-format">{content.methodTitle}</h2>
           </RevealOnScroll>
 
-          <RevealOnScroll className="about-home-philosophy__copy" direction="right" delay={100}>
-            <p className="about-home-kicker content-preserve-format">{content.philosophyKicker}</p>
-            <span className="about-home-philosophy__quote-mark" aria-hidden="true">“</span>
-            <h2 id="about-philosophy-title" className="content-preserve-format">{content.philosophyTitle}</h2>
-            <p className="about-home-philosophy__text content-preserve-format">{content.philosophyText}</p>
-            {images.signature ? (
-              <div className="about-home-philosophy__signature" aria-label="Firma de Amy Blandón">
-                <img src={images.signature} alt="Firma de Amy Blandón" loading="lazy" decoding="async" />
-              </div>
-            ) : null}
-          </RevealOnScroll>
-        </div>
-      </section>
-
-      <section className="about-home-areas" aria-labelledby="about-areas-title">
-        <div className="about-home-shell">
-          <RevealOnScroll className="about-home-section-heading about-home-section-heading--light">
-            <p className="about-home-kicker about-home-kicker--light content-preserve-format">{content.areasKicker}</p>
-            <h2 id="about-areas-title" className="content-preserve-format">{content.areasTitle}</h2>
-          </RevealOnScroll>
-
-          <div className="about-home-areas__grid">
-            {areas.map(({ verb, title, text, icon: Icon }, index) => (
-              <RevealOnScroll as="article" className="about-home-area" delay={index * 90} key={title}>
-                <div className="about-home-area__top">
-                  <span className="about-home-area__icon" aria-hidden="true">
-                    <Icon size={34} strokeWidth={1.45} />
-                  </span>
-                  <span className="about-home-area__index">0{index + 1}</span>
-                </div>
-                <span className="about-home-area__verb content-preserve-format">{verb}</span>
-                <h3 className="content-preserve-format">{title}</h3>
-                <p className="content-preserve-format">{text}</p>
+          <div className="about-editorial-method__steps">
+            {methodSteps.map((step, index) => (
+              <RevealOnScroll as="article" className="about-editorial-method__step" delay={index * 85} key={step.number}>
+                <span className="about-editorial-method__number">{step.number}</span>
+                <h3 className="content-preserve-format">{step.title}</h3>
+                <p className="content-preserve-format">{step.text}</p>
+                {index < methodSteps.length - 1 ? (
+                  <ArrowRight className="about-editorial-method__arrow" size={27} strokeWidth={1.35} aria-hidden="true" />
+                ) : null}
               </RevealOnScroll>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="about-home-work" id="mi-forma-de-trabajar" aria-labelledby="about-work-title">
-        <div className="about-home-shell">
-          <RevealOnScroll className="about-home-section-heading">
-            <p className="about-home-kicker content-preserve-format">{content.workKicker}</p>
-            <h2 id="about-work-title" className="content-preserve-format">{content.workTitle}</h2>
+      <section className="about-editorial-philosophy" aria-labelledby="about-editorial-philosophy-title">
+        <div className="about-editorial-shell about-editorial-philosophy__grid">
+          <RevealOnScroll className="about-editorial-index about-editorial-index--philosophy" direction="left">
+            <span>04</span>
           </RevealOnScroll>
 
-          <div className="about-home-work__grid">
-            {workSteps.map((step, index) => (
-              <RevealOnScroll as="article" className="about-home-work__step" delay={index * 85} key={step.number}>
-                <div className="about-home-work__step-top">
-                  <span className="about-home-work__step-number">{step.number}</span>
-                  <span className="about-home-work__step-line" aria-hidden="true" />
-                </div>
-                <p className="about-home-work__step-title content-preserve-format">{step.title}</p>
-                <h3 className="content-preserve-format">{step.lead}</h3>
-                <p className="about-home-work__step-text content-preserve-format">{step.text}</p>
-              </RevealOnScroll>
-            ))}
-          </div>
+          <RevealOnScroll className="about-editorial-philosophy__copy" direction="right" delay={80}>
+            <p className="about-editorial-kicker content-preserve-format">{content.editorialPhilosophyKicker}</p>
+            <h2 id="about-editorial-philosophy-title" className="content-preserve-format">{content.editorialPhilosophyTitle}</h2>
+            <span className="about-editorial-philosophy__rule" aria-hidden="true" />
+            <p className="about-editorial-body content-preserve-format">{content.editorialPhilosophyText}</p>
+          </RevealOnScroll>
         </div>
+      </section>
+
+      <section className="about-editorial-closing" aria-labelledby="about-editorial-closing-title">
+        <RevealOnScroll className="about-editorial-closing__media" direction="left">
+          <SafeImage
+            className="about-editorial-closing__image"
+            src={closingImage}
+            alt="Amy Blandón"
+            width="1100"
+            height="1300"
+            objectPosition="center top"
+          />
+        </RevealOnScroll>
+
+        <RevealOnScroll className="about-editorial-closing__copy" direction="right" delay={90}>
+          <p className="about-editorial-kicker about-editorial-kicker--light content-preserve-format">{content.closingKicker}</p>
+          <h2 id="about-editorial-closing-title" className="content-preserve-format">{content.closingTitle}</h2>
+          <p className="content-preserve-format">{content.closingText}</p>
+
+          {images.signature ? (
+            <div className="about-editorial-closing__signature" aria-label="Firma de Amy Blandón">
+              <img src={images.signature} alt="Firma de Amy Blandón" loading="lazy" decoding="async" />
+            </div>
+          ) : (
+            <span className="about-editorial-closing__signature-fallback">Amy Blandón</span>
+          )}
+
+          <a
+            className="about-editorial-closing__cta"
+            href="https://wa.me/50588324439"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span>{content.closingCta}</span>
+            <ArrowRight size={18} strokeWidth={1.7} aria-hidden="true" />
+          </a>
+        </RevealOnScroll>
       </section>
     </div>
   );

@@ -140,9 +140,13 @@ export default function About() {
         </RevealOnScroll>
 
         <RevealOnScroll className="about-editorial-closing__copy" direction="right" delay={90}>
-          <p className="about-editorial-kicker about-editorial-kicker--light content-preserve-format">{content.closingKicker}</p>
+          <p className="about-editorial-kicker content-preserve-format">{content.closingKicker}</p>
           <h2 id="about-editorial-closing-title" className="content-preserve-format">{content.closingTitle}</h2>
           <p className="content-preserve-format">{content.closingText}</p>
+
+          <blockquote className="about-editorial-closing__quote content-preserve-format">
+            “{content.closingQuote}”
+          </blockquote>
 
           {images.signature ? (
             <div className="about-editorial-closing__signature" aria-label="Firma de Amy Blandón">

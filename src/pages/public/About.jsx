@@ -26,7 +26,7 @@ export default function About() {
     { title: content.method3Title, text: content.method3Text, icon: Handshake },
   ], [content]);
 
-  const heroVisual = images.heroBackground || images.strategicBanner;
+  const heroVisual = images.aboutEditorialHero || images.strategicBanner || images.heroBackground;
   const closingImage = images.aboutPage || images.aboutHome || images.realEstateHero;
   const heroDisplayName = String(content.heroName || 'AMY BLANDON')
     .normalize('NFD')

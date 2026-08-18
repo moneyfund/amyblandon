@@ -50,6 +50,7 @@ import './styles/footer-refinements.css';
 import './styles/content-admin-v3.css';
 import './styles/property-card-hierarchy.css';
 import './styles/about-home-reference.css';
+import './styles/about-hero-refinement.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

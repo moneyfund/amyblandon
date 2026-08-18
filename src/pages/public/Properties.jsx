@@ -50,7 +50,7 @@ export default function Properties() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [q, setQ] = useState('');
-  const [operationType, setOperationType] = useState('');
+  const [operationType, setOperationType] = useState('sale');
   const [propertyType, setPropertyType] = useState('');
   const [view, setView] = useState('grid');
 
@@ -102,10 +102,10 @@ export default function Properties() {
 
   const featured = filtered.filter((property) => property.featured);
   const standardProperties = featured.length ? filtered.filter((property) => !property.featured) : filtered;
-  const hasSearch = Boolean(q || operationType || propertyType);
+  const hasSearch = Boolean(q || propertyType || operationType === 'rent');
   const clear = () => {
     setQ('');
-    setOperationType('');
+    setOperationType('sale');
     setPropertyType('');
   };
   const showResults = () => {
@@ -154,14 +154,16 @@ export default function Properties() {
               </span>
             </label>
 
-            <div className="re-search-panel__operation" role="group" aria-label="Tipo de operación">
-              <span>¿Qué quieres hacer?</span>
-              <div className="re-search-panel__segments">
-                <button type="button" className={!operationType ? 'active' : ''} aria-pressed={!operationType} onClick={() => setOperationType('')}>Todas</button>
-                <button type="button" className={operationType === 'sale' ? 'active' : ''} aria-pressed={operationType === 'sale'} onClick={() => setOperationType('sale')}>Comprar</button>
-                <button type="button" className={operationType === 'rent' ? 'active' : ''} aria-pressed={operationType === 'rent'} onClick={() => setOperationType('rent')}>Alquilar</button>
-              </div>
-            </div>
+            <label className="re-search-panel__operation re-search-panel__operation--select">
+              <select
+                aria-label="Tipo de operación"
+                value={operationType}
+                onChange={(event) => setOperationType(event.target.value)}
+              >
+                <option value="sale">Venta</option>
+                <option value="rent">Alquilar</option>
+              </select>
+            </label>
           </div>
 
           <div className="re-search-panel__bottom">

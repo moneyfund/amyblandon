@@ -57,14 +57,22 @@ export default function About() {
                 objectPosition="center top"
               />
             </div>
+
+            <a className="about-home-hero__mobile-discover" href="#about-mobile-copy" aria-label="Desliza para conocer más sobre Amy">
+              <span>DESLIZA</span>
+              <span className="about-home-hero__discover-arrows" aria-hidden="true">
+                <ChevronDown className="about-home-hero__discover-arrow about-home-hero__discover-arrow--one" size={18} strokeWidth={1.7} />
+                <ChevronDown className="about-home-hero__discover-arrow about-home-hero__discover-arrow--two" size={18} strokeWidth={1.7} />
+              </span>
+            </a>
           </RevealOnScroll>
 
-          <RevealOnScroll className="about-home-hero__copy" direction="right" delay={100}>
+          <RevealOnScroll className="about-home-hero__copy" id="about-mobile-copy" direction="right" delay={100}>
             <p className="about-home-kicker about-home-kicker--light content-preserve-format">{content.heroKicker}</p>
             <h1 id="about-home-title" className="content-preserve-format">{content.heroTitle}</h1>
             <p className="about-home-hero__text content-preserve-format">{content.heroText}</p>
 
-            <a className="about-home-hero__discover" href="#about-home-title" aria-label="Conoce más sobre mí">
+            <a className="about-home-hero__discover about-home-hero__discover--desktop" href="#mi-proposito" aria-label="Conoce más sobre mí">
               <span>CONOCE MÁS SOBRE MÍ</span>
               <span className="about-home-hero__discover-arrows" aria-hidden="true">
                 <ChevronDown className="about-home-hero__discover-arrow about-home-hero__discover-arrow--one" size={18} strokeWidth={1.7} />

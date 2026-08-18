@@ -27,6 +27,10 @@ export default function About() {
 
   const heroVisual = images.heroBackground || images.strategicBanner;
   const closingImage = images.aboutPage || images.aboutHome || images.realEstateHero;
+  const heroDisplayName = String(content.heroName || 'AMY BLANDON')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase();
 
   return (
     <div className="about-editorial-page">
@@ -38,7 +42,7 @@ export default function About() {
       <section className="about-editorial-hero" aria-labelledby="about-editorial-title">
         <div className="about-editorial-hero__headline">
           <RevealOnScroll>
-            <h1 id="about-editorial-title" className="content-preserve-format">{content.heroName}</h1>
+            <h1 id="about-editorial-title" className="content-preserve-format">{heroDisplayName}</h1>
             <p className="about-editorial-hero__role content-preserve-format">{content.heroRole}</p>
           </RevealOnScroll>
         </div>

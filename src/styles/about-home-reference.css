@@ -1,0 +1,384 @@
+/* Sobre mí — lenguaje visual inspirado exclusivamente en el Inicio de Amy Blandon */
+.about-home-style{
+  background:#fff;
+  color:var(--amy-text);
+  font-family:var(--font-reference);
+  overflow:hidden;
+}
+
+.about-home-shell{
+  width:min(var(--amy-container),calc(100% - 48px));
+  margin:0 auto;
+}
+
+.about-home-kicker{
+  margin:0 0 18px;
+  color:var(--amy-gold);
+  font-size:14px;
+  font-weight:500;
+  line-height:1.25;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.about-home-intro{
+  padding:76px 0 88px;
+  background:#fff;
+}
+
+.about-home-intro__grid{
+  display:grid;
+  grid-template-columns:.88fr 1.12fr;
+  gap:clamp(54px,7vw,96px);
+  align-items:center;
+}
+
+.about-home-intro__media{
+  display:flex;
+  justify-content:center;
+}
+
+.about-home-intro__image{
+  width:min(430px,100%);
+  aspect-ratio:.77;
+  overflow:hidden;
+  border-radius:230px 230px 0 0;
+  background:var(--amy-surface);
+  box-shadow:0 18px 48px rgba(4,43,58,.10);
+}
+
+.about-home-intro__image img,
+.about-home-philosophy__image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center top;
+}
+
+.about-home-intro__copy{
+  max-width:680px;
+}
+
+.about-home-intro__copy h1{
+  margin:0;
+  max-width:720px;
+  color:var(--amy-navy);
+  font-size:clamp(42px,4.4vw,62px);
+  font-weight:300;
+  line-height:1.08;
+  letter-spacing:-.035em;
+}
+
+.about-home-intro__identity{
+  margin:30px 0 0;
+  padding-top:22px;
+  border-top:1px solid rgba(4,43,58,.16);
+}
+
+.about-home-intro__name{
+  margin:0 0 5px;
+  color:var(--amy-navy);
+  font-size:18px;
+  font-weight:700;
+  line-height:1.35;
+}
+
+.about-home-intro__role{
+  margin:0;
+  color:var(--amy-gold);
+  font-size:13px;
+  font-weight:600;
+  line-height:1.5;
+  letter-spacing:.035em;
+  text-transform:uppercase;
+}
+
+.about-home-intro__text{
+  margin:24px 0 28px;
+  max-width:620px;
+  color:#344b55;
+  font-size:17px;
+  font-weight:400;
+  line-height:1.72;
+}
+
+.about-home-intro__cta{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  min-height:48px;
+  padding:12px 20px;
+  border:1px solid var(--amy-navy);
+  background:var(--amy-navy);
+  color:#fff;
+  font-size:14px;
+  font-weight:600;
+  line-height:1.2;
+  transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease;
+}
+
+.about-home-intro__cta:hover{
+  border-color:var(--amy-gold);
+  background:var(--amy-gold);
+  color:var(--amy-navy);
+  transform:translateY(-2px);
+}
+
+.about-home-purpose{
+  padding:84px 0;
+  background:#f6f7f5;
+  border-top:1px solid rgba(4,43,58,.07);
+  border-bottom:1px solid rgba(4,43,58,.07);
+}
+
+.about-home-purpose__grid{
+  display:grid;
+  grid-template-columns:.86fr 1.14fr;
+  gap:clamp(52px,7vw,98px);
+  align-items:start;
+}
+
+.about-home-purpose h2,
+.about-home-section-heading h2,
+.about-home-philosophy__copy h2{
+  margin:0;
+  color:var(--amy-navy);
+  font-size:clamp(34px,3.2vw,46px);
+  font-weight:400;
+  line-height:1.16;
+  letter-spacing:-.025em;
+}
+
+.about-home-purpose__text{
+  margin:0;
+  color:#344b55;
+  font-size:17px;
+  line-height:1.75;
+}
+
+.about-home-purpose__words{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+  margin-top:34px;
+  border-top:1px solid rgba(4,43,58,.18);
+}
+
+.about-home-purpose__word{
+  padding:18px 18px 0 0;
+  color:var(--amy-navy);
+  font-size:15px;
+  font-weight:700;
+}
+
+.about-home-purpose__word:not(:first-child){
+  padding-left:20px;
+  border-left:1px solid rgba(4,43,58,.14);
+}
+
+.about-home-work{
+  padding:92px 0 96px;
+  background:#fff;
+}
+
+.about-home-section-heading{
+  max-width:720px;
+  margin-bottom:54px;
+}
+
+.about-home-section-heading--center{
+  margin-left:auto;
+  margin-right:auto;
+  text-align:center;
+}
+
+.about-home-work__grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:34px;
+}
+
+.about-home-work__step{
+  padding:24px 0 0;
+  border-top:1px solid rgba(4,43,58,.20);
+}
+
+.about-home-work__step-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:22px;
+}
+
+.about-home-work__step-number{
+  color:var(--amy-gold);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.08em;
+}
+
+.about-home-work__step-title{
+  color:var(--amy-navy);
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+}
+
+.about-home-work__step h3{
+  margin:0 0 12px;
+  color:var(--amy-navy);
+  font-size:22px;
+  font-weight:600;
+  line-height:1.35;
+}
+
+.about-home-work__step p{
+  margin:0;
+  color:#52636a;
+  font-size:15px;
+  line-height:1.68;
+}
+
+.about-home-areas{
+  padding:88px 0 94px;
+  background:#fbfbfa;
+}
+
+.about-home-areas__grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:clamp(34px,5vw,66px);
+  margin-top:56px;
+}
+
+.about-home-area{
+  text-align:center;
+}
+
+.about-home-area__icon{
+  width:76px;
+  height:76px;
+  display:grid;
+  place-items:center;
+  margin:0 auto 22px;
+  color:var(--amy-navy);
+}
+
+.about-home-area__verb{
+  display:block;
+  margin-bottom:8px;
+  color:var(--amy-gold);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.about-home-area h3{
+  margin:0 0 14px;
+  color:var(--amy-navy);
+  font-size:21px;
+  font-weight:700;
+}
+
+.about-home-area p{
+  max-width:330px;
+  margin:0 auto;
+  color:#52636a;
+  font-size:15px;
+  line-height:1.68;
+}
+
+.about-home-philosophy{
+  background:var(--amy-navy);
+  color:#fff;
+}
+
+.about-home-philosophy__grid{
+  min-height:520px;
+  display:grid;
+  grid-template-columns:1.08fr .92fr;
+  gap:clamp(56px,7vw,96px);
+  align-items:center;
+  padding-top:72px;
+  padding-bottom:72px;
+}
+
+.about-home-philosophy__copy{
+  max-width:660px;
+}
+
+.about-home-philosophy__copy .about-home-kicker{
+  color:var(--amy-gold-light);
+}
+
+.about-home-philosophy__copy h2{
+  color:#fff;
+}
+
+.about-home-philosophy__copy p:last-child{
+  margin:26px 0 0;
+  color:rgba(255,255,255,.82);
+  font-size:16px;
+  line-height:1.75;
+}
+
+.about-home-philosophy__media{
+  display:flex;
+  justify-content:center;
+}
+
+.about-home-philosophy__image{
+  width:min(380px,100%);
+  aspect-ratio:.78;
+  overflow:hidden;
+  border-radius:210px 210px 0 0;
+  background:#123d4b;
+  box-shadow:0 24px 60px rgba(0,0,0,.20);
+}
+
+@media(max-width:900px){
+  .about-home-shell{width:min(100% - 36px,var(--amy-container))}
+  .about-home-intro{padding:58px 0 68px}
+  .about-home-intro__grid,
+  .about-home-purpose__grid,
+  .about-home-philosophy__grid{grid-template-columns:1fr;gap:44px}
+  .about-home-intro__media{order:1}
+  .about-home-intro__copy{order:2;max-width:none}
+  .about-home-intro__image{width:min(390px,88vw)}
+  .about-home-purpose{padding:68px 0}
+  .about-home-work{padding:72px 0}
+  .about-home-work__grid{grid-template-columns:1fr;gap:30px}
+  .about-home-areas{padding:70px 0}
+  .about-home-areas__grid{grid-template-columns:1fr;gap:46px;margin-top:44px}
+  .about-home-philosophy__grid{padding-top:66px;padding-bottom:66px}
+  .about-home-philosophy__media{order:1}
+  .about-home-philosophy__copy{order:2}
+}
+
+@media(max-width:600px){
+  .about-home-shell{width:calc(100% - 30px)}
+  .about-home-intro{padding:42px 0 54px}
+  .about-home-intro__grid{gap:34px}
+  .about-home-intro__image{width:min(335px,92vw);box-shadow:0 14px 34px rgba(4,43,58,.10)}
+  .about-home-intro__copy h1{font-size:clamp(34px,10.5vw,44px);line-height:1.1}
+  .about-home-intro__identity{margin-top:24px;padding-top:18px}
+  .about-home-intro__text{margin:20px 0 24px;font-size:16px;line-height:1.7}
+  .about-home-purpose{padding:54px 0}
+  .about-home-purpose h2,
+  .about-home-section-heading h2,
+  .about-home-philosophy__copy h2{font-size:clamp(30px,8.7vw,38px)}
+  .about-home-purpose__words{grid-template-columns:1fr;margin-top:26px}
+  .about-home-purpose__word,
+  .about-home-purpose__word:not(:first-child){padding:14px 0;border-left:0;border-bottom:1px solid rgba(4,43,58,.10)}
+  .about-home-work{padding:58px 0 64px}
+  .about-home-section-heading{margin-bottom:38px}
+  .about-home-work__step{padding-top:20px}
+  .about-home-work__step h3{font-size:20px}
+  .about-home-areas{padding:58px 0 62px}
+  .about-home-areas__grid{gap:40px;margin-top:38px}
+  .about-home-area__icon{width:64px;height:64px;margin-bottom:18px}
+  .about-home-philosophy__grid{min-height:0;padding-top:54px;padding-bottom:58px;gap:36px}
+  .about-home-philosophy__image{width:min(315px,88vw)}
+}

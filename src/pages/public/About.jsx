@@ -64,7 +64,7 @@ export default function About() {
             <h1 id="about-home-title" className="content-preserve-format">{content.heroTitle}</h1>
             <p className="about-home-hero__text content-preserve-format">{content.heroText}</p>
 
-            <a className="about-home-hero__discover" href="#mi-proposito" aria-label="Conoce más sobre mí">
+            <a className="about-home-hero__discover" href="#about-home-title" aria-label="Conoce más sobre mí">
               <span>CONOCE MÁS SOBRE MÍ</span>
               <span className="about-home-hero__discover-arrows" aria-hidden="true">
                 <ChevronDown className="about-home-hero__discover-arrow about-home-hero__discover-arrow--one" size={18} strokeWidth={1.7} />

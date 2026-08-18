@@ -60,6 +60,7 @@ import './styles/real-estate-luxury-slider.css';
 import './styles/real-estate-luxury-refinement.css';
 import './styles/real-estate-luxury-motion-v2.css';
 import './styles/real-estate-luxury-layout-v3.css';
+import './styles/real-estate-slide4-clean.css';
 import './styles/about-editorial-sothebys.css';
 import './styles/about-br-final-refinements.css';
 import './styles/about-editorial-method-minimal.css';

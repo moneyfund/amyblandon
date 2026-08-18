@@ -1,0 +1,188 @@
+/* Ajustes finales solicitados para Sobre mí y el buscador de Bienes Raíces. */
+
+/* =========================
+   SOBRE MÍ — PORTADA EDITORIAL
+   ========================= */
+.about-editorial-hero{
+  min-height:auto !important;
+  padding:172px 0 88px !important;
+  background:#fff !important;
+  color:#fff;
+}
+
+/* El azul termina aproximadamente al primer 25% de la fotografía; el resto cae sobre blanco. */
+.about-editorial-hero::before{
+  inset:0 0 auto 0 !important;
+  width:100% !important;
+  height:clamp(550px,62svh,600px) !important;
+  background:var(--about-editorial-navy,#001929) !important;
+}
+
+.about-editorial-hero__headline h1{
+  color:var(--about-editorial-gold,var(--site-accent,#c99a44)) !important;
+  font-family:"Palatino Linotype","Book Antiqua",Palatino,Georgia,"Times New Roman",serif !important;
+  font-size:clamp(68px,7.25vw,116px) !important;
+  font-style:italic !important;
+  font-weight:400 !important;
+  line-height:.94 !important;
+  letter-spacing:-.025em !important;
+  text-transform:uppercase !important;
+}
+
+.about-editorial-hero__role{
+  margin-top:18px !important;
+}
+
+/* Acerca la portada al título manteniendo la línea dorada de la referencia. */
+.about-editorial-hero__gold-line{
+  height:72px !important;
+  margin:34px auto -30px !important;
+}
+
+.about-editorial-hero__media{
+  width:min(1540px,calc(100% - 112px)) !important;
+  height:clamp(440px,47vw,690px) !important;
+  margin:0 auto !important;
+  border-radius:0 !important;
+  clip-path:none !important;
+  -webkit-clip-path:none !important;
+  mask:none !important;
+  -webkit-mask:none !important;
+  overflow:hidden !important;
+}
+
+.about-editorial-hero__image,
+.about-editorial-hero__image img{
+  border-radius:0 !important;
+  clip-path:none !important;
+  -webkit-clip-path:none !important;
+  mask:none !important;
+  -webkit-mask:none !important;
+}
+
+.about-editorial-hero__image{
+  aspect-ratio:auto !important;
+}
+
+.about-editorial-hero__image img{
+  object-fit:cover !important;
+  object-position:center center !important;
+  transform:none !important;
+}
+
+.about-editorial-hero__media::before,
+.about-editorial-hero__media::after,
+.about-editorial-hero__image::before,
+.about-editorial-hero__image::after{
+  border-radius:0 !important;
+  clip-path:none !important;
+  mask:none !important;
+}
+
+/* =========================
+   BIENES RAÍCES — OPERACIÓN EN DROPDOWN
+   ========================= */
+.real-estate-page .re-search-panel__operation--select{
+  position:relative !important;
+  cursor:pointer !important;
+}
+
+.real-estate-page .re-search-panel__operation--select select{
+  width:100% !important;
+  height:48px !important;
+  min-height:48px !important;
+  margin:0 !important;
+  padding:0 8px 0 0 !important;
+  border:0 !important;
+  outline:0 !important;
+  background:transparent !important;
+  color:#182a30 !important;
+  font:600 16px/1.2 var(--font-reference) !important;
+  appearance:auto !important;
+  -webkit-appearance:auto !important;
+  cursor:pointer !important;
+  box-shadow:none !important;
+}
+
+.real-estate-page .re-search-panel__operation--select select:focus-visible{
+  outline:2px solid color-mix(in srgb,var(--site-accent,#c99a44) 55%,transparent) !important;
+  outline-offset:4px !important;
+}
+
+@media(max-width:1000px){
+  .about-editorial-hero{
+    padding:145px 0 66px !important;
+  }
+
+  .about-editorial-hero::before{
+    height:470px !important;
+  }
+
+  .about-editorial-hero__headline{
+    width:min(100% - 40px,760px) !important;
+  }
+
+  .about-editorial-hero__headline h1{
+    font-size:clamp(52px,10vw,78px) !important;
+  }
+
+  .about-editorial-hero__gold-line{
+    height:58px !important;
+    margin:28px auto -24px !important;
+  }
+
+  .about-editorial-hero__media{
+    width:calc(100% - 40px) !important;
+    height:min(62vw,540px) !important;
+    border-radius:0 !important;
+  }
+}
+
+@media(max-width:640px){
+  .about-editorial-hero{
+    padding:126px 0 54px !important;
+  }
+
+  .about-editorial-hero::before{
+    height:410px !important;
+  }
+
+  .about-editorial-hero__headline{
+    width:calc(100% - 30px) !important;
+  }
+
+  .about-editorial-hero__headline h1{
+    font-size:clamp(44px,13.5vw,62px) !important;
+    letter-spacing:-.035em !important;
+  }
+
+  .about-editorial-hero__role{
+    margin-top:14px !important;
+    font-size:11px !important;
+    letter-spacing:.055em !important;
+  }
+
+  .about-editorial-hero__gold-line{
+    height:48px !important;
+    margin:22px auto -20px !important;
+  }
+
+  .about-editorial-hero__media{
+    width:calc(100% - 24px) !important;
+    height:min(76vw,430px) !important;
+    border-radius:0 !important;
+  }
+
+  .about-editorial-hero__media-labels{
+    left:14px !important;
+    right:14px !important;
+    bottom:16px !important;
+    gap:8px !important;
+    font-size:8.5px !important;
+    letter-spacing:.08em !important;
+  }
+
+  .about-editorial-hero__media-labels span{
+    padding-inline:7px !important;
+  }
+}

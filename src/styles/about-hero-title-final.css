@@ -1,0 +1,18 @@
+/* Ajuste solicitado: AMY BLANDON aproximadamente 30% más pequeño en la portada editorial. */
+.about-editorial-hero__headline h1{
+  font-size:clamp(48px,5.1vw,81px) !important;
+  line-height:.96 !important;
+}
+
+@media(max-width:1000px){
+  .about-editorial-hero__headline h1{
+    font-size:clamp(36px,7vw,55px) !important;
+  }
+}
+
+@media(max-width:640px){
+  .about-editorial-hero__headline h1{
+    font-size:clamp(31px,9.5vw,43px) !important;
+    letter-spacing:-.025em !important;
+  }
+}

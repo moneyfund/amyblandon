@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { ImagePlus, RefreshCcw, UploadCloud } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { ImagePlus, Images, RefreshCcw, UploadCloud } from 'lucide-react';
 import { siteImages, siteImageSlots } from '../../config/siteImages';
 import { useAuth } from '../../contexts/AuthContext';
 import {
@@ -23,6 +23,14 @@ export default function ImagesAdmin() {
   const [progress, setProgress] = useState({});
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState('general');
+
+  const visibleSlots = useMemo(
+    () => siteImageSlots.filter((slot) => (
+      activeTab === 'heroBr' ? slot.group === 'heroBr' : slot.group !== 'heroBr'
+    )),
+    [activeTab],
+  );
 
   const load = () => {
     setLoading(true);
@@ -114,6 +122,43 @@ export default function ImagesAdmin() {
         </div>
       </section>
 
+      <div className="admin-image-tabs" role="tablist" aria-label="Categorías de imágenes">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'general'}
+          className={activeTab === 'general' ? 'active' : ''}
+          onClick={() => setActiveTab('general')}
+        >
+          <ImagePlus size={18} />
+          Imágenes generales
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'heroBr'}
+          className={activeTab === 'heroBr' ? 'active' : ''}
+          onClick={() => setActiveTab('heroBr')}
+        >
+          <Images size={18} />
+          Imágenes Hero BR
+          <span className="admin-image-tabs__count">5</span>
+        </button>
+      </div>
+
+      {activeTab === 'heroBr' && (
+        <section className="admin-card admin-hero-br-note">
+          <Images aria-hidden="true" />
+          <div>
+            <h2>Imágenes del buscador de Bienes Raíces</h2>
+            <p>
+              Estas cinco imágenes aparecen, en este mismo orden, en el hero animado de la página de Bienes Raíces.
+              Al reemplazarlas conservarán automáticamente el efecto de transición y zoom actual.
+            </p>
+          </div>
+        </section>
+      )}
+
       {message && <p className="success" role="status">{message}</p>}
       {error && <p className="error" role="alert">{error}</p>}
 
@@ -121,7 +166,7 @@ export default function ImagesAdmin() {
         <p>Cargando imágenes...</p>
       ) : (
         <div className="admin-image-grid">
-          {siteImageSlots.map((slot) => {
+          {visibleSlots.map((slot) => {
             const record = records[slot.key] || {
               url: siteImages[slot.key],
               isDefault: true,

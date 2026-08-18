@@ -43,6 +43,8 @@ const processFor = (content) => [
   ['04', content.process4Title, content.process4Text],
 ];
 
+const cssImage = (url) => `url("${String(url || '').replace(/"/g, '%22')}")`;
+
 export default function Properties() {
   const { images } = useSiteImages();
   const [properties, setProperties] = useState([]);
@@ -125,11 +127,15 @@ export default function Properties() {
     : `Ver ${filtered.length} ${filtered.length === 1 ? 'propiedad' : 'propiedades'}`;
   const services = servicesFor(content);
   const process = processFor(content);
+  const heroSliderStyle = {};
+  [images.heroBr1, images.heroBr2, images.heroBr3, images.heroBr4, images.heroBr5].forEach((url, index) => {
+    if (url) heroSliderStyle[`--re-br-slide-${index + 1}`] = cssImage(url);
+  });
 
   return <div className="real-estate-page">
     <SEO title="Bienes raíces | Amy Blandón" />
 
-    <section className="re-search-hero">
+    <section className="re-search-hero" style={heroSliderStyle}>
       <div className="re-search-hero__decor re-search-hero__decor--one" aria-hidden="true" />
       <div className="re-search-hero__decor re-search-hero__decor--two" aria-hidden="true" />
       <div className="re-shell re-search-hero__inner">

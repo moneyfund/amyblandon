@@ -52,6 +52,7 @@ import './styles/property-card-hierarchy.css';
 import './styles/about-home-reference.css';
 import './styles/about-hero-refinement.css';
 import './styles/about-navbar-family-polish.css';
+import './styles/about-mobile-carousel.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

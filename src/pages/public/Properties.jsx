@@ -19,6 +19,7 @@ const quickCategories = [
   { value: 'house', label: 'Casas', hint: 'Residencial', icon: Home },
   { value: 'land', label: 'Terrenos', hint: 'Inversión', icon: Map },
   { value: 'farm', label: 'Fincas', hint: 'Productivo', icon: Compass },
+  { value: 'quinta', label: 'Quintas', hint: 'Descanso', icon: Home },
   { value: 'commercial', label: 'Local comercial', hint: 'Negocios', icon: Building2 },
 ];
 

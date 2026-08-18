@@ -170,7 +170,7 @@ export default function Properties() {
             <label className="re-search-panel__type">
               <span><Building2 aria-hidden="true" /> Tipo de propiedad</span>
               <select value={propertyType} onChange={(event) => setPropertyType(event.target.value)}>
-                <option value="">Todos los tipos de propiedad</option>
+                <option value="">Propiedades</option>
                 {propertyTypeOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}
               </select>
             </label>

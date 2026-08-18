@@ -1,0 +1,130 @@
+/* Experiencia móvil final de /sobre-mi.
+   - El indicador queda inmediatamente debajo de la foto.
+   - Al tocarlo, la vista baja al contenido azul completo.
+   - Áreas de asesoría se convierte en carrusel horizontal táctil. */
+
+@media (max-width:640px){
+  /* HERO MÓVIL */
+  .public-site--about .about-home-hero__copy{
+    position:relative;
+    min-height:0 !important;
+    height:auto !important;
+    padding:82px 28px 42px !important;
+    justify-content:flex-start !important;
+  }
+
+  /* El CTA vive al inicio del bloque azul, justo debajo de la fotografía. */
+  .public-site--about .about-home-hero__copy .about-home-hero__discover{
+    top:17px !important;
+    bottom:auto !important;
+    left:50% !important;
+    transform:translateX(-50%) !important;
+    gap:2px !important;
+    font-size:10px !important;
+    letter-spacing:.12em !important;
+    white-space:nowrap;
+  }
+
+  .public-site--about .about-home-hero__discover-arrows{
+    height:23px !important;
+  }
+
+  /* El destino del toque queda limpio debajo del navbar fijo. */
+  .public-site--about #about-home-title{
+    scroll-margin-top:92px;
+  }
+
+  /* Compactamos ligeramente la presentación para que se lea completa y
+     la siguiente sección llegue antes al viewport. */
+  .public-site--about .about-home-hero__copy h1{
+    font-size:clamp(34px,10.2vw,43px) !important;
+    line-height:1.055 !important;
+    letter-spacing:-.04em !important;
+  }
+
+  .public-site--about .about-home-hero__text{
+    margin:20px 0 0 !important;
+    font-size:15px !important;
+    line-height:1.68 !important;
+  }
+
+  /* ÁREAS DE ASESORÍA — carrusel horizontal táctil. */
+  .public-site--about .about-home-areas{
+    padding:62px 0 68px !important;
+    background-image:
+      linear-gradient(180deg,
+        rgba(0,25,41,.84) 0%,
+        rgba(0,25,41,.78) 54%,
+        rgba(0,25,41,.82) 100%),
+      url("https://images.pexels.com/photos/7642028/pexels-photo-7642028.jpeg?auto=compress&dpr=1&h=900&w=1400") !important;
+    background-position:center center !important;
+    background-size:cover !important;
+  }
+
+  .public-site--about .about-home-areas .about-home-shell{
+    width:100% !important;
+    max-width:none !important;
+  }
+
+  .public-site--about .about-home-areas .about-home-section-heading{
+    padding:0 28px;
+    margin-bottom:32px !important;
+  }
+
+  .public-site--about .about-home-areas .about-home-section-heading h2{
+    font-size:clamp(32px,9vw,40px) !important;
+    line-height:1.08 !important;
+  }
+
+  .public-site--about .about-home-areas__grid{
+    display:flex !important;
+    grid-template-columns:none !important;
+    gap:14px !important;
+    width:100%;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:0 28px 12px;
+    scroll-padding-inline:28px;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-inline:contain;
+    scrollbar-width:none;
+    touch-action:pan-x pan-y;
+  }
+
+  .public-site--about .about-home-areas__grid::-webkit-scrollbar{
+    display:none;
+  }
+
+  .public-site--about .about-home-area{
+    flex:0 0 min(82vw,350px) !important;
+    width:min(82vw,350px) !important;
+    min-height:350px !important;
+    padding:28px 24px 30px !important;
+    scroll-snap-align:center;
+    scroll-snap-stop:always;
+    background:rgba(0,25,41,.48) !important;
+    border-color:rgba(255,255,255,.23) !important;
+    backdrop-filter:blur(2px);
+    -webkit-backdrop-filter:blur(2px);
+  }
+
+  .public-site--about .about-home-area__top{
+    margin-bottom:30px !important;
+  }
+
+  .public-site--about .about-home-area h3{
+    font-size:24px !important;
+  }
+
+  .public-site--about .about-home-area p{
+    font-size:15px !important;
+    line-height:1.68 !important;
+  }
+
+  /* Deja una pequeña vista de la siguiente tarjeta para comunicar el swipe. */
+  .public-site--about .about-home-areas__grid::after{
+    content:"";
+    flex:0 0 14px;
+  }
+}

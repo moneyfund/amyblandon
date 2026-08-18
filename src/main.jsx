@@ -26,6 +26,7 @@ import './styles/property-workspace.css';
 import './styles/property-workspace-simplified.css';
 import './styles/property-workspace-wizard.css';
 import './styles/admin-sidebar-collapse.css';
+import './styles/admin-images-tabs.css';
 import './styles/real-estate-hero-premium.css';
 import './styles/navbar-phone-final.css';
 import './styles/home-about-signature.css';

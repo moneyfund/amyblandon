@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Handshake, MessageCircle, Search } from 'lucide-react';
 import RevealOnScroll from '../../components/common/RevealOnScroll';
 import SafeImage from '../../components/common/SafeImage';
 import SEO from '../../components/common/SEO';
@@ -8,6 +8,7 @@ import { aboutContentDefaults } from '../../config/aboutRedesignContent';
 import { defaultSiteContent, getSiteContent } from '../../services/siteContentService';
 
 const initialAboutContent = { ...defaultSiteContent.about, ...aboutContentDefaults };
+const stripSectionNumber = (value = '') => String(value).replace(/^\s*\d{1,2}\s*[—–-]\s*/u, '').trim();
 
 export default function About() {
   const { images } = useSiteImages();
@@ -20,9 +21,9 @@ export default function About() {
   }, []);
 
   const methodSteps = useMemo(() => [
-    { number: '01', title: content.method1Title, text: content.method1Text },
-    { number: '02', title: content.method2Title, text: content.method2Text },
-    { number: '03', title: content.method3Title, text: content.method3Text },
+    { title: content.method1Title, text: content.method1Text, icon: MessageCircle },
+    { title: content.method2Title, text: content.method2Text, icon: Search },
+    { title: content.method3Title, text: content.method3Text, icon: Handshake },
   ], [content]);
 
   const heroVisual = images.heroBackground || images.strategicBanner;
@@ -71,12 +72,8 @@ export default function About() {
 
       <section className="about-editorial-intro" aria-labelledby="about-editorial-intro-title">
         <div className="about-editorial-shell about-editorial-intro__grid">
-          <RevealOnScroll className="about-editorial-index" direction="left">
-            <span>01</span>
-          </RevealOnScroll>
-
-          <RevealOnScroll className="about-editorial-intro__copy" direction="right" delay={80}>
-            <p className="about-editorial-kicker content-preserve-format">{content.introKicker}</p>
+          <RevealOnScroll className="about-editorial-intro__copy" delay={80}>
+            <p className="about-editorial-kicker content-preserve-format">{stripSectionNumber(content.introKicker)}</p>
             <h2 id="about-editorial-intro-title" className="content-preserve-format">{content.introTitle}</h2>
             <p className="about-editorial-body about-editorial-body--lead content-preserve-format">{content.introText}</p>
           </RevealOnScroll>
@@ -86,7 +83,7 @@ export default function About() {
       <section className="about-editorial-experience" aria-labelledby="about-editorial-experience-title">
         <div className="about-editorial-shell about-editorial-experience__grid">
           <RevealOnScroll className="about-editorial-experience__heading" direction="left">
-            <p className="about-editorial-kicker content-preserve-format">{content.experienceKicker}</p>
+            <p className="about-editorial-kicker content-preserve-format">{stripSectionNumber(content.experienceKicker)}</p>
             <h2 id="about-editorial-experience-title" className="content-preserve-format">{content.experienceTitle}</h2>
           </RevealOnScroll>
 
@@ -100,33 +97,29 @@ export default function About() {
       <section className="about-editorial-method" aria-labelledby="about-editorial-method-title">
         <div className="about-editorial-shell">
           <RevealOnScroll className="about-editorial-method__heading">
-            <p className="about-editorial-kicker about-editorial-kicker--light content-preserve-format">{content.methodKicker}</p>
+            <p className="about-editorial-kicker about-editorial-kicker--light content-preserve-format">{stripSectionNumber(content.methodKicker)}</p>
             <h2 id="about-editorial-method-title" className="content-preserve-format">{content.methodTitle}</h2>
           </RevealOnScroll>
 
           <div className="about-editorial-method__steps">
-            {methodSteps.map((step, index) => (
-              <RevealOnScroll as="article" className="about-editorial-method__step" delay={index * 85} key={step.number}>
-                <span className="about-editorial-method__number">{step.number}</span>
-                <h3 className="content-preserve-format">{step.title}</h3>
-                <p className="content-preserve-format">{step.text}</p>
-                {index < methodSteps.length - 1 ? (
-                  <ArrowRight className="about-editorial-method__arrow" size={27} strokeWidth={1.35} aria-hidden="true" />
-                ) : null}
-              </RevealOnScroll>
-            ))}
+            {methodSteps.map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <RevealOnScroll as="article" className="about-editorial-method__step" delay={index * 85} key={step.title}>
+                  <span className="about-editorial-method__icon" aria-hidden="true"><Icon size={18} strokeWidth={1.45} /></span>
+                  <h3 className="content-preserve-format">{step.title}</h3>
+                  <p className="content-preserve-format">{step.text}</p>
+                </RevealOnScroll>
+              );
+            })}
           </div>
         </div>
       </section>
 
       <section className="about-editorial-philosophy" aria-labelledby="about-editorial-philosophy-title">
         <div className="about-editorial-shell about-editorial-philosophy__grid">
-          <RevealOnScroll className="about-editorial-index about-editorial-index--philosophy" direction="left">
-            <span>04</span>
-          </RevealOnScroll>
-
-          <RevealOnScroll className="about-editorial-philosophy__copy" direction="right" delay={80}>
-            <p className="about-editorial-kicker content-preserve-format">{content.editorialPhilosophyKicker}</p>
+          <RevealOnScroll className="about-editorial-philosophy__copy" delay={80}>
+            <p className="about-editorial-kicker content-preserve-format">{stripSectionNumber(content.editorialPhilosophyKicker)}</p>
             <h2 id="about-editorial-philosophy-title" className="content-preserve-format">{content.editorialPhilosophyTitle}</h2>
             <span className="about-editorial-philosophy__rule" aria-hidden="true" />
             <p className="about-editorial-body content-preserve-format">{content.editorialPhilosophyText}</p>

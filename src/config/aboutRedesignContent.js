@@ -26,6 +26,7 @@ export const aboutContentDefaults = {
   closingKicker: 'UNA CONVERSACIÓN PUEDE SER EL PRIMER PASO',
   closingTitle: '¿Hablamos?',
   closingText: 'Cuéntame qué quieres construir, proteger o hacer crecer. Será un gusto escucharte y ayudarte a encontrar el siguiente paso.',
+  closingQuote: 'Las mejores decisiones comienzan con una conversación clara y una visión de futuro.',
   closingCta: 'Conversemos por WhatsApp',
 };
 
@@ -85,6 +86,7 @@ export const aboutEditorSection = {
         ['closingKicker', 'Etiqueta', 'text'],
         ['closingTitle', 'Título', 'text'],
         ['closingText', 'Texto', 'textarea', 4],
+        ['closingQuote', 'Frase motivadora', 'textarea', 3],
         ['closingCta', 'Texto del botón', 'text'],
       ],
     },

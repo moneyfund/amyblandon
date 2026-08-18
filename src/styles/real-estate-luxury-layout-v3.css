@@ -46,6 +46,50 @@
   .real-estate-page .re-search-hero .re-quick-categories {
     margin-top: 15px !important;
   }
+
+  /* Buscador 20% más compacto, sin alterar el resto del hero. */
+  .real-estate-page .re-search-panel {
+    width: min(832px, calc(100vw - 180px)) !important;
+    height: 54px !important;
+    min-height: 54px !important;
+    grid-template-columns: 152px 204px minmax(228px, 1fr) 106px !important;
+    padding-right: 6px !important;
+  }
+
+  .real-estate-page .re-search-panel__operation,
+  .real-estate-page .re-search-panel__type,
+  .real-estate-page .re-search-panel__keyword {
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0 14px !important;
+  }
+
+  .real-estate-page .re-search-panel input,
+  .real-estate-page .re-search-panel select {
+    height: 36px !important;
+    min-height: 36px !important;
+    font-size: 14px !important;
+  }
+
+  .real-estate-page .re-search-panel__segments {
+    height: 36px !important;
+    gap: 12px !important;
+  }
+
+  .real-estate-page .re-search-panel__segments button {
+    font-size: 14px !important;
+  }
+
+  .real-estate-page .re-search-panel__submit {
+    width: 100px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 0 14px !important;
+  }
+
+  .real-estate-page .re-search-panel__submit::after {
+    font-size: 14px !important;
+  }
 }
 
 /* Cada fotografía usa su propio punto focal para que el primer frame se sienta amplio y natural. */

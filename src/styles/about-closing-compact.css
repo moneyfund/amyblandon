@@ -1,0 +1,135 @@
+/* Cierre de Sobre mí — versión compacta y alineada con la tipografía principal de la web. */
+.about-editorial-closing{
+  grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr) !important;
+  min-height:520px !important;
+  background:#001929 !important;
+}
+
+.about-editorial-closing__media{
+  min-height:520px !important;
+  height:520px !important;
+}
+
+.about-editorial-closing__image,
+.about-editorial-closing__image img{
+  width:100% !important;
+  height:100% !important;
+}
+
+.about-editorial-closing__image img{
+  object-fit:cover !important;
+  object-position:center 22% !important;
+}
+
+.about-editorial-closing__copy{
+  min-height:520px !important;
+  padding:54px clamp(48px,5.2vw,88px) !important;
+}
+
+.about-editorial-closing__copy .about-editorial-kicker{
+  margin:0 0 14px !important;
+  font-size:10.5px !important;
+  line-height:1.35 !important;
+  letter-spacing:.16em !important;
+}
+
+.about-editorial-closing__copy h2{
+  margin:0 0 20px !important;
+  color:#e0b760 !important;
+  font-family:var(--font-reference) !important;
+  font-size:clamp(38px,3.25vw,52px) !important;
+  font-style:normal !important;
+  font-weight:700 !important;
+  line-height:1.02 !important;
+  letter-spacing:-.035em !important;
+}
+
+.about-editorial-closing__copy > p:not(.about-editorial-kicker){
+  max-width:540px !important;
+  font-size:16px !important;
+  line-height:1.65 !important;
+}
+
+.about-editorial-closing__signature{
+  width:min(190px,52%) !important;
+  margin:22px 0 16px !important;
+}
+
+.about-editorial-closing__signature img{
+  max-height:68px !important;
+}
+
+.about-editorial-closing__signature-fallback{
+  margin:22px 0 18px !important;
+  font-family:var(--font-reference) !important;
+  font-size:20px !important;
+  font-style:normal !important;
+}
+
+.about-editorial-closing__cta{
+  min-height:48px !important;
+  padding:0 22px !important;
+  font-size:12.5px !important;
+}
+
+@media(max-width:1000px){
+  .about-editorial-closing,
+  .about-editorial-closing__media,
+  .about-editorial-closing__copy{
+    min-height:470px !important;
+  }
+
+  .about-editorial-closing__media{
+    height:470px !important;
+  }
+
+  .about-editorial-closing__copy{
+    padding:46px 40px !important;
+  }
+
+  .about-editorial-closing__copy h2{
+    font-size:clamp(36px,5vw,46px) !important;
+  }
+}
+
+@media(max-width:760px){
+  .about-editorial-closing{
+    grid-template-columns:1fr !important;
+    min-height:0 !important;
+  }
+
+  .about-editorial-closing__media{
+    min-height:0 !important;
+    height:min(86vw,470px) !important;
+  }
+
+  .about-editorial-closing__copy{
+    min-height:0 !important;
+    padding:44px 26px 48px !important;
+  }
+
+  .about-editorial-closing__copy .about-editorial-kicker{
+    margin-bottom:12px !important;
+    font-size:9.5px !important;
+  }
+
+  .about-editorial-closing__copy h2{
+    margin-bottom:16px !important;
+    font-size:clamp(34px,9.5vw,42px) !important;
+    line-height:1.05 !important;
+  }
+
+  .about-editorial-closing__copy > p:not(.about-editorial-kicker){
+    font-size:15px !important;
+    line-height:1.6 !important;
+  }
+
+  .about-editorial-closing__signature{
+    width:min(165px,48%) !important;
+    margin:18px 0 14px !important;
+  }
+
+  .about-editorial-closing__cta{
+    min-height:46px !important;
+  }
+}

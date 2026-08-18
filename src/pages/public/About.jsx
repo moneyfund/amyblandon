@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowDownRight, Home, ShieldCheck, TrendingUp } from 'lucide-react';
+import { ChevronUp, Home, ShieldCheck, TrendingUp } from 'lucide-react';
 import RevealOnScroll from '../../components/common/RevealOnScroll';
 import SafeImage from '../../components/common/SafeImage';
 import SEO from '../../components/common/SEO';
@@ -44,24 +44,7 @@ export default function About() {
 
       <section className="about-home-hero" aria-labelledby="about-home-title">
         <div className="about-home-shell about-home-hero__grid">
-          <RevealOnScroll className="about-home-hero__copy">
-            <p className="about-home-kicker about-home-kicker--light content-preserve-format">{content.heroKicker}</p>
-            <h1 id="about-home-title" className="content-preserve-format">{content.heroTitle}</h1>
-            <p className="about-home-hero__text content-preserve-format">{content.heroText}</p>
-
-            <div className="about-home-hero__identity">
-              <div>
-                <p className="about-home-hero__name content-preserve-format">{content.heroName}</p>
-                <p className="about-home-hero__role content-preserve-format">{content.heroRole}</p>
-              </div>
-              <a className="about-home-hero__cta" href="#mi-forma-de-trabajar">
-                <span className="content-preserve-format">{content.heroCta}</span>
-                <ArrowDownRight size={18} aria-hidden="true" />
-              </a>
-            </div>
-          </RevealOnScroll>
-
-          <RevealOnScroll className="about-home-hero__media" direction="right" delay={120}>
+          <RevealOnScroll className="about-home-hero__media" direction="left" delay={60}>
             <div className="about-home-hero__image-wrap">
               <SafeImage
                 className="about-home-hero__image"
@@ -73,13 +56,26 @@ export default function About() {
                 fetchPriority="high"
                 objectPosition="center top"
               />
-              <div className="about-home-hero__monogram" aria-hidden="true">AB</div>
             </div>
           </RevealOnScroll>
+
+          <RevealOnScroll className="about-home-hero__copy" direction="right" delay={100}>
+            <p className="about-home-kicker about-home-kicker--light content-preserve-format">{content.heroKicker}</p>
+            <h1 id="about-home-title" className="content-preserve-format">{content.heroTitle}</h1>
+            <p className="about-home-hero__text content-preserve-format">{content.heroText}</p>
+          </RevealOnScroll>
         </div>
+
+        <a className="about-home-hero__discover" href="#mi-proposito" aria-label="Conoce más sobre mí">
+          <span className="about-home-hero__discover-arrows" aria-hidden="true">
+            <ChevronUp className="about-home-hero__discover-arrow about-home-hero__discover-arrow--one" size={18} strokeWidth={1.7} />
+            <ChevronUp className="about-home-hero__discover-arrow about-home-hero__discover-arrow--two" size={18} strokeWidth={1.7} />
+          </span>
+          <span>CONOCE MÁS SOBRE MÍ</span>
+        </a>
       </section>
 
-      <section className="about-home-purpose" aria-labelledby="about-purpose-title">
+      <section className="about-home-purpose" id="mi-proposito" aria-labelledby="about-purpose-title">
         <div className="about-home-shell about-home-purpose__grid">
           <RevealOnScroll className="about-home-purpose__heading">
             <p className="about-home-kicker content-preserve-format">{content.purposeKicker}</p>

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ChevronUp, Home, ShieldCheck, TrendingUp } from 'lucide-react';
+import { ChevronDown, Home, ShieldCheck, TrendingUp } from 'lucide-react';
 import RevealOnScroll from '../../components/common/RevealOnScroll';
 import SafeImage from '../../components/common/SafeImage';
 import SEO from '../../components/common/SEO';
@@ -63,16 +63,16 @@ export default function About() {
             <p className="about-home-kicker about-home-kicker--light content-preserve-format">{content.heroKicker}</p>
             <h1 id="about-home-title" className="content-preserve-format">{content.heroTitle}</h1>
             <p className="about-home-hero__text content-preserve-format">{content.heroText}</p>
+
+            <a className="about-home-hero__discover" href="#mi-proposito" aria-label="Conoce más sobre mí">
+              <span>CONOCE MÁS SOBRE MÍ</span>
+              <span className="about-home-hero__discover-arrows" aria-hidden="true">
+                <ChevronDown className="about-home-hero__discover-arrow about-home-hero__discover-arrow--one" size={18} strokeWidth={1.7} />
+                <ChevronDown className="about-home-hero__discover-arrow about-home-hero__discover-arrow--two" size={18} strokeWidth={1.7} />
+              </span>
+            </a>
           </RevealOnScroll>
         </div>
-
-        <a className="about-home-hero__discover" href="#mi-proposito" aria-label="Conoce más sobre mí">
-          <span className="about-home-hero__discover-arrows" aria-hidden="true">
-            <ChevronUp className="about-home-hero__discover-arrow about-home-hero__discover-arrow--one" size={18} strokeWidth={1.7} />
-            <ChevronUp className="about-home-hero__discover-arrow about-home-hero__discover-arrow--two" size={18} strokeWidth={1.7} />
-          </span>
-          <span>CONOCE MÁS SOBRE MÍ</span>
-        </a>
       </section>
 
       <section className="about-home-purpose" id="mi-proposito" aria-labelledby="about-purpose-title">
@@ -93,54 +93,6 @@ export default function About() {
               ))}
             </div>
           </RevealOnScroll>
-        </div>
-      </section>
-
-      <section className="about-home-work" id="mi-forma-de-trabajar" aria-labelledby="about-work-title">
-        <div className="about-home-shell">
-          <RevealOnScroll className="about-home-section-heading">
-            <p className="about-home-kicker content-preserve-format">{content.workKicker}</p>
-            <h2 id="about-work-title" className="content-preserve-format">{content.workTitle}</h2>
-          </RevealOnScroll>
-
-          <div className="about-home-work__grid">
-            {workSteps.map((step, index) => (
-              <RevealOnScroll as="article" className="about-home-work__step" delay={index * 85} key={step.number}>
-                <div className="about-home-work__step-top">
-                  <span className="about-home-work__step-number">{step.number}</span>
-                  <span className="about-home-work__step-line" aria-hidden="true" />
-                </div>
-                <p className="about-home-work__step-title content-preserve-format">{step.title}</p>
-                <h3 className="content-preserve-format">{step.lead}</h3>
-                <p className="about-home-work__step-text content-preserve-format">{step.text}</p>
-              </RevealOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="about-home-areas" aria-labelledby="about-areas-title">
-        <div className="about-home-shell">
-          <RevealOnScroll className="about-home-section-heading about-home-section-heading--light">
-            <p className="about-home-kicker about-home-kicker--light content-preserve-format">{content.areasKicker}</p>
-            <h2 id="about-areas-title" className="content-preserve-format">{content.areasTitle}</h2>
-          </RevealOnScroll>
-
-          <div className="about-home-areas__grid">
-            {areas.map(({ verb, title, text, icon: Icon }, index) => (
-              <RevealOnScroll as="article" className="about-home-area" delay={index * 90} key={title}>
-                <div className="about-home-area__top">
-                  <span className="about-home-area__icon" aria-hidden="true">
-                    <Icon size={34} strokeWidth={1.45} />
-                  </span>
-                  <span className="about-home-area__index">0{index + 1}</span>
-                </div>
-                <span className="about-home-area__verb content-preserve-format">{verb}</span>
-                <h3 className="content-preserve-format">{title}</h3>
-                <p className="content-preserve-format">{text}</p>
-              </RevealOnScroll>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -170,6 +122,54 @@ export default function About() {
               </div>
             ) : null}
           </RevealOnScroll>
+        </div>
+      </section>
+
+      <section className="about-home-areas" aria-labelledby="about-areas-title">
+        <div className="about-home-shell">
+          <RevealOnScroll className="about-home-section-heading about-home-section-heading--light">
+            <p className="about-home-kicker about-home-kicker--light content-preserve-format">{content.areasKicker}</p>
+            <h2 id="about-areas-title" className="content-preserve-format">{content.areasTitle}</h2>
+          </RevealOnScroll>
+
+          <div className="about-home-areas__grid">
+            {areas.map(({ verb, title, text, icon: Icon }, index) => (
+              <RevealOnScroll as="article" className="about-home-area" delay={index * 90} key={title}>
+                <div className="about-home-area__top">
+                  <span className="about-home-area__icon" aria-hidden="true">
+                    <Icon size={34} strokeWidth={1.45} />
+                  </span>
+                  <span className="about-home-area__index">0{index + 1}</span>
+                </div>
+                <span className="about-home-area__verb content-preserve-format">{verb}</span>
+                <h3 className="content-preserve-format">{title}</h3>
+                <p className="content-preserve-format">{text}</p>
+              </RevealOnScroll>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="about-home-work" id="mi-forma-de-trabajar" aria-labelledby="about-work-title">
+        <div className="about-home-shell">
+          <RevealOnScroll className="about-home-section-heading">
+            <p className="about-home-kicker content-preserve-format">{content.workKicker}</p>
+            <h2 id="about-work-title" className="content-preserve-format">{content.workTitle}</h2>
+          </RevealOnScroll>
+
+          <div className="about-home-work__grid">
+            {workSteps.map((step, index) => (
+              <RevealOnScroll as="article" className="about-home-work__step" delay={index * 85} key={step.number}>
+                <div className="about-home-work__step-top">
+                  <span className="about-home-work__step-number">{step.number}</span>
+                  <span className="about-home-work__step-line" aria-hidden="true" />
+                </div>
+                <p className="about-home-work__step-title content-preserve-format">{step.title}</p>
+                <h3 className="content-preserve-format">{step.lead}</h3>
+                <p className="about-home-work__step-text content-preserve-format">{step.text}</p>
+              </RevealOnScroll>
+            ))}
+          </div>
         </div>
       </section>
     </div>

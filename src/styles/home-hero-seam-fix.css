@@ -1,6 +1,5 @@
 /* Corrige la unión del hero de Inicio.
-   La personalización anterior dividía el fondo al 51%, mientras la columna visual inicia al 51.5%,
-   generando una banda vertical intermedia. El fondo base vuelve a ser sólido y la imagen ocupa su columna. */
+   El fondo base vuelve a ser sólido y la galería ocupa por completo la columna visual. */
 .home-page .home-hero {
   background: var(--amy-hero-navy) !important;
 }
@@ -9,43 +8,85 @@
   background: var(--amy-hero-navy) !important;
 }
 
-/* Carrusel de cuatro fondos: Amy permanece siempre por encima como una capa independiente. */
-.home-page .home-hero__background-slide {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .9s cubic-bezier(.22,.61,.36,1);
-  will-change: opacity;
+/*
+ * Carrusel horizontal del Hero de Inicio.
+ * Amy permanece fija como capa independiente mientras los fondos avanzan
+ * siempre de derecha a izquierda. El primer slide se clona al final en React
+ * para que el reinicio del ciclo no haga un movimiento inverso.
+ */
+.home-page .home-hero__background-viewport {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  background: var(--amy-hero-blue);
+  box-shadow: 0 25px 64px rgba(0, 0, 0, .34);
 }
 
-.home-page .home-hero__background-slide.is-active {
-  opacity: 1;
-}
-
-.home-page .home-hero__background-slide img {
-  transform: scale(1.015) translate3d(0,0,0);
-  transition: transform 3.6s cubic-bezier(.22,.61,.36,1);
+.home-page .home-hero__background-track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transform: translate3d(0, 0, 0);
+  transition: transform .92s cubic-bezier(.22, .61, .36, 1);
   will-change: transform;
 }
 
-.home-page .home-hero__background-slide.is-active img {
-  transform: scale(1.05) translate3d(-.6%,0,0);
+.home-page .home-hero__background-track.is-jumping {
+  transition: none !important;
+}
+
+.home-page .home-hero__background-track > .safe-image.home-hero__background-slide {
+  position: relative !important;
+  inset: auto !important;
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  opacity: 1 !important;
+  overflow: hidden;
+  border-radius: 0;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.home-page .home-hero__background-track > .home-hero__background-slide::after {
+  background:
+    linear-gradient(180deg, rgba(0, 25, 41, .03), rgba(0, 25, 41, .24)),
+    linear-gradient(90deg, rgba(0, 25, 41, .16), transparent 48%);
+}
+
+.home-page .home-hero__background-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover !important;
+  object-position: center !important;
+  transform: scale(1.015) translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 
 @media (min-width: 1081px) {
-  .home-page .home-hero__background {
+  .home-page .home-hero__background-viewport {
     left: -1px;
     width: calc(100% + 1px);
   }
 }
 
+@media (max-width: 820px) {
+  .home-page .home-hero__background-track {
+    transition-duration: .78s;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .home-page .home-hero__background-slide,
-  .home-page .home-hero__background-slide img {
+  .home-page .home-hero__background-track {
     transition: none !important;
   }
 
-  .home-page .home-hero__background-slide img,
-  .home-page .home-hero__background-slide.is-active img {
+  .home-page .home-hero__background-slide img {
     transform: none !important;
   }
 }

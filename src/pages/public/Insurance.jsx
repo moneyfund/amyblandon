@@ -51,6 +51,11 @@ export default function Insurance() {
   }, []);
 
   const guidancePoints = [content.guidancePoint1, content.guidancePoint2, content.guidancePoint3, content.guidancePoint4];
+  const assuranceItems = [
+    { icon: ShieldCheck, title: content.assurance1Title, text: content.assurance1Text },
+    { icon: Sparkles, title: content.assurance2Title, text: content.assurance2Text },
+    { icon: Handshake, title: content.assurance3Title, text: content.assurance3Text },
+  ];
 
   return (
     <div className="insurance-page">
@@ -90,11 +95,26 @@ export default function Insurance() {
         </div>
       </section>
 
-      <section className="insurance-assurance">
-        <div className="insurance-shell insurance-assurance__grid">
-          <RevealOnScroll><ShieldCheck /><div><b>{content.assurance1Title}</b><span className="content-preserve-format">{content.assurance1Text}</span></div></RevealOnScroll>
-          <RevealOnScroll delay={70}><Sparkles /><div><b>{content.assurance2Title}</b><span className="content-preserve-format">{content.assurance2Text}</span></div></RevealOnScroll>
-          <RevealOnScroll delay={140}><Handshake /><div><b>{content.assurance3Title}</b><span className="content-preserve-format">{content.assurance3Text}</span></div></RevealOnScroll>
+      <section className="insurance-assurance" aria-label="Beneficios de la asesoría">
+        <div className="insurance-assurance__viewport">
+          <div className="insurance-shell insurance-assurance__track">
+            {[...assuranceItems, ...assuranceItems].map(({ icon: Icon, title, text }, index) => {
+              const isClone = index >= assuranceItems.length;
+              return (
+                <div
+                  className={`insurance-assurance__item${isClone ? ' insurance-assurance__item--clone' : ''}`}
+                  key={`${index}-${title}`}
+                  aria-hidden={isClone ? 'true' : undefined}
+                >
+                  <Icon />
+                  <div>
+                    <b>{title}</b>
+                    <span className="content-preserve-format">{text}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 

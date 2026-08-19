@@ -10,6 +10,8 @@ import graph from '../../assets/icons/graph.svg';
 import secure from '../../assets/icons/secure.svg';
 import { defaultSiteContent, getSiteContent } from '../../services/siteContentService';
 
+const PROFESSIONAL_EMAIL = 'asesoria@amyblandon.com';
+
 export function RealEstate() {
   return <section className="page-hero"><h1>Bienes Raíces</h1><p>Encuentra oportunidades inmobiliarias estratégicas que generen valor, estabilidad y crecimiento en el tiempo.</p><div className="grid three"><article className="panel"><img src={building} alt="" width="58"/><h3>Compra con estrategia</h3><p>Analizamos ubicación, propósito y potencial para que inviertas con seguridad.</p></article><article className="panel"><img src={graph} alt="" width="58"/><h3>Venta con presentación</h3><p>Preparamos tu propiedad para conectar con compradores calificados.</p></article><article className="panel"><img src={secure} alt="" width="58"/><h3>Acompañamiento integral</h3><p>Te asesoro en cada paso para tomar decisiones claras y rentables.</p></article></div></section>;
 }
@@ -36,7 +38,7 @@ export function Contact() {
   }, []);
 
   const phone = content.phone || defaultSiteContent.contact.phone;
-  const email = content.email || defaultSiteContent.contact.email;
+  const email = PROFESSIONAL_EMAIL;
   const address = content.address || defaultSiteContent.contact.address;
 
   return (

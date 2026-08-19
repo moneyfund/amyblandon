@@ -66,6 +66,7 @@ import './styles/about-br-final-refinements.css';
 import './styles/about-editorial-method-minimal.css';
 import './styles/about-closing-compact.css';
 import './styles/about-hero-title-final.css';
+import './styles/about-philosophy-final.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

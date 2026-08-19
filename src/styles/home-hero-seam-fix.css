@@ -9,9 +9,43 @@
   background: var(--amy-hero-navy) !important;
 }
 
+/* Carrusel de cuatro fondos: Amy permanece siempre por encima como una capa independiente. */
+.home-page .home-hero__background-slide {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .9s cubic-bezier(.22,.61,.36,1);
+  will-change: opacity;
+}
+
+.home-page .home-hero__background-slide.is-active {
+  opacity: 1;
+}
+
+.home-page .home-hero__background-slide img {
+  transform: scale(1.015) translate3d(0,0,0);
+  transition: transform 3.6s cubic-bezier(.22,.61,.36,1);
+  will-change: transform;
+}
+
+.home-page .home-hero__background-slide.is-active img {
+  transform: scale(1.05) translate3d(-.6%,0,0);
+}
+
 @media (min-width: 1081px) {
   .home-page .home-hero__background {
     left: -1px;
     width: calc(100% + 1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page .home-hero__background-slide,
+  .home-page .home-hero__background-slide img {
+    transition: none !important;
+  }
+
+  .home-page .home-hero__background-slide img,
+  .home-page .home-hero__background-slide.is-active img {
+    transform: none !important;
   }
 }

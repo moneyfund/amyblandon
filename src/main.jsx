@@ -7,6 +7,7 @@ import { SiteImagesProvider } from './contexts/SiteImagesContext';
 import { SiteThemeProvider } from './contexts/SiteThemeContext';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import AppRoutes from './routes/AppRoutes';
+import './utils/propertyDetailEnhancer.js';
 import './styles/global.css';
 import './styles/reference-typography.css';
 import './styles/reference-cards-footer.css';
@@ -68,6 +69,7 @@ import './styles/about-closing-compact.css';
 import './styles/about-hero-title-final.css';
 import './styles/about-philosophy-final.css';
 import './styles/property-detail-reference-v2.css';
+import './styles/property-detail-refinements-v3.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

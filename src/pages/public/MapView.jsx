@@ -35,16 +35,43 @@ const mapPoint = (property) => {
   return { ...property, latitude, longitude };
 };
 
-function Fit({ items }) {
+function Fit({ items, embedded }) {
   const map = useMap();
 
   useEffect(() => {
-    if (!items.length) return;
-    map.fitBounds(items.map((property) => [property.latitude, property.longitude]), {
-      padding: [40, 40],
-      maxZoom: 15,
-    });
-  }, [items, map]);
+    if (!items.length) return undefined;
+
+    const applyViewport = () => {
+      map.invalidateSize({ pan: false });
+
+      if (items.length === 1) {
+        const [property] = items;
+        map.setView([property.latitude, property.longitude], embedded ? 15 : 13, { animate: false });
+        return;
+      }
+
+      map.fitBounds(items.map((property) => [property.latitude, property.longitude]), {
+        padding: embedded ? [22, 22] : [40, 40],
+        maxZoom: embedded ? 15 : 14,
+        animate: false,
+      });
+    };
+
+    const frame = requestAnimationFrame(applyViewport);
+    const timeout = window.setTimeout(applyViewport, 180);
+    const container = map.getContainer();
+    const resizeObserver = typeof ResizeObserver !== 'undefined'
+      ? new ResizeObserver(() => requestAnimationFrame(applyViewport))
+      : null;
+
+    resizeObserver?.observe(container);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
+      resizeObserver?.disconnect();
+    };
+  }, [embedded, items, map]);
 
   return null;
 }
@@ -88,18 +115,25 @@ export default function MapView({ embedded = false, properties }) {
   );
 
   return (
-    <section className={embedded ? 'mapWrap embedded' : 'mapWrap'}>
-      <div className="filters">
-        <input placeholder="Buscar ubicación" aria-label="Buscar ubicación" />
-      </div>
+    <section className={embedded ? 'mapWrap embedded mapWrap--embedded' : 'mapWrap'}>
+      {!embedded && (
+        <div className="filters">
+          <input placeholder="Buscar ubicación" aria-label="Buscar ubicación" />
+        </div>
+      )}
 
       {mappedItems.length ? (
-        <MapContainer center={[12.8654, -85.2072]} zoom={7} scrollWheelZoom={false}>
+        <MapContainer
+          center={[12.8654, -85.2072]}
+          zoom={7}
+          scrollWheelZoom={false}
+          style={embedded ? { width: '100%', height: '100%' } : undefined}
+        >
           <TileLayer
             attribution="&copy; OpenStreetMap contributors"
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <Fit items={mappedItems} />
+          <Fit items={mappedItems} embedded={embedded} />
           {mappedItems.map((property) => (
             <Marker
               key={property.id || property.slug}

@@ -1,0 +1,29 @@
+/* CTA final de las cards de coberturas: dorado Amy + flecha blanca. */
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card__cta{
+  background:var(--amy-gold,#c99a44) !important;
+  color:#fff !important;
+  border-color:var(--amy-gold,#c99a44) !important;
+  box-shadow:0 9px 20px rgba(201,154,68,.24) !important;
+}
+
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card__cta svg,
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card__cta svg *{
+  color:#fff !important;
+  stroke:#fff !important;
+}
+
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card--visual:hover .insurance-coverage-card__cta,
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card--visual:focus-visible .insurance-coverage-card__cta{
+  background:#b9852f !important;
+  border-color:#b9852f !important;
+  color:#fff !important;
+  box-shadow:0 12px 26px rgba(201,154,68,.32) !important;
+}
+
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card--visual:hover .insurance-coverage-card__cta svg,
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card--visual:hover .insurance-coverage-card__cta svg *,
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card--visual:focus-visible .insurance-coverage-card__cta svg,
+.public-site--insurance .insurance-page .insurance-coverages .insurance-coverage-card--visual:focus-visible .insurance-coverage-card__cta svg *{
+  color:#fff !important;
+  stroke:#fff !important;
+}

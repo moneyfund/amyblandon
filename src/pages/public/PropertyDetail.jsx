@@ -82,26 +82,14 @@ const getVideoMeta = (value) => {
     const host = parsed.hostname.replace(/^www\./, '').toLowerCase();
 
     if (host === 'tiktok.com' || host.endsWith('.tiktok.com')) {
-      return {
-        url: raw,
-        platform: 'TikTok',
-        action: 'Ver video en TikTok',
-      };
+      return { url: raw, platform: 'TikTok', action: 'Ver video en TikTok' };
     }
 
     if (host === 'youtu.be' || host === 'youtube.com' || host.endsWith('.youtube.com')) {
-      return {
-        url: raw,
-        platform: 'YouTube',
-        action: 'Ver video en YouTube',
-      };
+      return { url: raw, platform: 'YouTube', action: 'Ver video en YouTube' };
     }
 
-    return {
-      url: raw,
-      platform: 'Video de la propiedad',
-      action: 'Ver video',
-    };
+    return { url: raw, platform: 'Video de la propiedad', action: 'Ver video' };
   } catch {
     return null;
   }
@@ -113,12 +101,14 @@ export default function PropertyDetail() {
   const [all, setAll] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [galleryIndex, setGalleryIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useEffect(() => {
     let active = true;
     setLoading(true);
     setError('');
+    setGalleryIndex(0);
     setLightboxIndex(null);
 
     getProperties()
@@ -153,6 +143,10 @@ export default function PropertyDetail() {
   }, [property]);
 
   useEffect(() => {
+    if (galleryIndex >= images.length) setGalleryIndex(0);
+  }, [galleryIndex, images.length]);
+
+  useEffect(() => {
     if (lightboxIndex === null || images.length === 0) return undefined;
 
     const previousOverflow = document.body.style.overflow;
@@ -163,18 +157,15 @@ export default function PropertyDetail() {
         setLightboxIndex(null);
         return;
       }
-
       if (event.key === 'ArrowRight') {
         setLightboxIndex((current) => (current === null ? null : (current + 1) % images.length));
       }
-
       if (event.key === 'ArrowLeft') {
         setLightboxIndex((current) => (current === null ? null : (current - 1 + images.length) % images.length));
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', handleKeyDown);
@@ -196,7 +187,7 @@ export default function PropertyDetail() {
         <Building2 />
         <h1>{error ? 'No pudimos cargar la propiedad' : 'Propiedad no encontrada'}</h1>
         <p>{error || 'Esta propiedad no existe o ya no se encuentra publicada.'}</p>
-        <Link className="btn" to="/propiedades">Volver a propiedades</Link>
+        <Link className="btn" to="/bienes-raices">Volver a propiedades</Link>
       </section>
     );
   }
@@ -224,7 +215,7 @@ export default function PropertyDetail() {
   const facts = [
     hasValue(property.bedrooms) && { icon: BedDouble, label: 'Habitaciones', value: property.bedrooms },
     hasValue(property.bathrooms) && { icon: Bath, label: 'Baños', value: property.bathrooms },
-    hasValue(property.parkingSpaces) && { icon: Car, label: 'Parqueos', value: property.parkingSpaces },
+    hasValue(property.parkingSpaces) && { icon: Car, label: 'Estacionamientos', value: property.parkingSpaces },
     hasValue(property.constructionArea || property.builtArea) && {
       icon: Ruler,
       label: 'Construcción',
@@ -242,12 +233,27 @@ export default function PropertyDetail() {
     .map((definition) => {
       const value = property.propertyDetails?.[definition.key];
       if (!hasValue(value)) return null;
-      return {
-        label: definition.label,
-        value: optionLabel(definition, value),
-      };
+      return { label: definition.label, value: optionLabel(definition, value) };
     })
     .filter(Boolean);
+
+  const technicalDetails = [
+    { label: 'Tipo de propiedad', value: propertyTypeLabel },
+    { label: 'Estado', value: operationLabel },
+    hasValue(property.constructionArea || property.builtArea) && {
+      label: 'Área de construcción',
+      value: `${property.constructionArea || property.builtArea} ${property.areaUnit || 'm²'}`,
+    },
+    hasValue(property.landArea) && {
+      label: 'Tamaño del terreno',
+      value: `${property.landArea} ${property.areaUnit || 'm²'}`,
+    },
+    hasValue(property.bedrooms) && { label: 'Dormitorios', value: property.bedrooms },
+    hasValue(property.bathrooms) && { label: 'Baños', value: property.bathrooms },
+    hasValue(property.parkingSpaces) && { label: 'Estacionamientos', value: property.parkingSpaces },
+    hasValue(property.yearBuilt) && { label: 'Año de construcción', value: property.yearBuilt },
+    ...dynamicDetails,
+  ].filter(Boolean).filter((item, index, values) => values.findIndex((candidate) => candidate.label === item.label) === index);
 
   const similar = all
     .filter((item) => item.id !== property.id)
@@ -262,68 +268,110 @@ export default function PropertyDetail() {
     setLightboxIndex((current) => (current === null ? null : (current + 1) % images.length));
   };
 
+  const moveGallery = (direction) => {
+    if (images.length < 2) return;
+    setGalleryIndex((current) => (current + direction + images.length) % images.length);
+  };
+
   return (
-    <div className="property-detail-page">
+    <div className="property-detail-page property-detail-reference">
       <SEO title={`${property.title} | Amy Blandón`} description={property.shortDescription || property.description} />
 
-      <div className="property-detail-shell property-detail-breadcrumb">
-        <Link to="/bienes-raices"><ArrowLeft size={17} /> Bienes raíces</Link>
+      <div className="pd-ref-shell pd-ref-breadcrumb">
+        <Link to="/"><span>Inicio</span></Link>
+        <span>/</span>
+        <Link to="/bienes-raices">Bienes raíces</Link>
         <span>/</span>
         <span>{propertyTypeLabel}</span>
+        <span>/</span>
+        <strong>{property.title}</strong>
       </div>
 
-      <section className="property-detail-shell property-detail-head">
-        <div className="property-detail-head__copy">
-          <div className="property-detail-head__badges">
-            <span>{operationLabel}</span>
-            {property.featured && <span className="is-featured"><Sparkles size={14} /> Destacada</span>}
-          </div>
-          <p className="property-detail-head__type">{propertyTypeLabel}</p>
-          <h1>{property.title}</h1>
-          <p className="property-detail-head__location"><MapPin size={18} /> {locationText}</p>
-        </div>
-        <div className="property-detail-head__price">
-          <small>{operation === 'rent' ? 'Precio de alquiler' : 'Precio de venta'}</small>
-          <strong>{priceLabel}</strong>
-          {property.priceNegotiable && <span>Precio negociable</span>}
-        </div>
-      </section>
-
-      <section className={`property-detail-shell property-detail-gallery property-detail-gallery--${Math.min(images.length, 4)}`}>
-        {images.length ? (
-          <>
-            <button
-              className="property-detail-gallery__main"
-              type="button"
-              onClick={() => setLightboxIndex(0)}
-              aria-label={`Abrir fotografía 1 de ${images.length}`}
-            >
-              <img src={images[0]} alt={property.title} />
-              <span className="property-detail-gallery__count">{images.length} {images.length === 1 ? 'foto' : 'fotos'}</span>
-            </button>
-            {images.length > 1 && (
-              <div className="property-detail-gallery__side">
-                {images.slice(1, 4).map((image, index) => (
-                  <button
-                    className="property-detail-gallery__thumb"
-                    type="button"
-                    key={image}
-                    onClick={() => setLightboxIndex(index + 1)}
-                    aria-label={`Abrir fotografía ${index + 2} de ${images.length}`}
-                  >
-                    <img src={image} alt={`${property.title} ${index + 2}`} />
-                    {index === 2 && images.length > 4 && <span>+{images.length - 4}</span>}
-                  </button>
-                ))}
-              </div>
+      <section className="pd-ref-shell pd-ref-showcase">
+        <div className="pd-ref-gallery">
+          <div className="pd-ref-gallery__stage">
+            {images.length ? (
+              <>
+                <button
+                  type="button"
+                  className="pd-ref-gallery__main"
+                  onClick={() => setLightboxIndex(galleryIndex)}
+                  aria-label={`Abrir fotografía ${galleryIndex + 1} de ${images.length}`}
+                >
+                  <img src={images[galleryIndex]} alt={property.title} />
+                </button>
+                {images.length > 1 && (
+                  <>
+                    <button type="button" className="pd-ref-gallery__arrow pd-ref-gallery__arrow--prev" onClick={() => moveGallery(-1)} aria-label="Fotografía anterior">
+                      <ChevronLeft />
+                    </button>
+                    <button type="button" className="pd-ref-gallery__arrow pd-ref-gallery__arrow--next" onClick={() => moveGallery(1)} aria-label="Fotografía siguiente">
+                      <ChevronRight />
+                    </button>
+                  </>
+                )}
+                <span className="pd-ref-gallery__counter">{galleryIndex + 1} / {images.length}</span>
+              </>
+            ) : (
+              <div className="pd-ref-gallery__empty"><Building2 /><span>Fotografías próximamente</span></div>
             )}
-          </>
-        ) : (
-          <div className="property-detail-gallery__empty">
-            <Building2 />
-            <span>Fotografías próximamente</span>
           </div>
-        )}
+
+          {images.length > 1 && (
+            <div className="pd-ref-gallery__thumbs" aria-label="Miniaturas de la propiedad">
+              {images.map((image, index) => (
+                <button
+                  type="button"
+                  key={image}
+                  className={index === galleryIndex ? 'is-active' : ''}
+                  onClick={() => setGalleryIndex(index)}
+                  aria-label={`Ver fotografía ${index + 1}`}
+                >
+                  <img src={image} alt="" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <aside className="pd-ref-summary">
+          <div className="pd-ref-summary__badges">
+            <span>{operationLabel}</span>
+            {property.featured && <span className="is-featured"><Sparkles size={13} /> Destacada</span>}
+          </div>
+          <h1>{property.title}</h1>
+          <p className="pd-ref-summary__location"><MapPin /> {locationText}</p>
+
+          <div className="pd-ref-summary__price">
+            <small>{operation === 'rent' ? 'Precio de alquiler' : 'Precio'}</small>
+            <strong>{priceLabel}</strong>
+            {property.priceNegotiable && <span>Precio negociable</span>}
+          </div>
+
+          {facts.length > 0 && (
+            <div className="pd-ref-summary__facts">
+              {facts.slice(0, 4).map(({ icon: Icon, label, value }) => (
+                <div key={label}>
+                  <Icon />
+                  <strong>{value}</strong>
+                  <span>{label}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="pd-ref-summary__actions">
+            <a className="pd-ref-action pd-ref-action--primary" href={propertyWhatsApp(property)}>
+              <MessageCircle /> Consultar por WhatsApp
+            </a>
+            <a className="pd-ref-action pd-ref-action--secondary" href="#solicitar-informacion">
+              <CalendarDays /> Agendar visita
+            </a>
+            <button type="button" className="pd-ref-action pd-ref-action--text" onClick={() => downloadPropertyPDF(property)}>
+              <Download /> Descargar ficha PDF
+            </button>
+          </div>
+        </aside>
       </section>
 
       {lightboxIndex !== null && images[lightboxIndex] && (
@@ -337,52 +385,18 @@ export default function PropertyDetail() {
           }}
         >
           <div className="property-lightbox__topbar">
-            <div>
-              <strong>{property.title}</strong>
-              <span>{lightboxIndex + 1} / {images.length}</span>
-            </div>
-            <button type="button" onClick={() => setLightboxIndex(null)} aria-label="Cerrar galería">
-              <X />
-            </button>
+            <div><strong>{property.title}</strong><span>{lightboxIndex + 1} / {images.length}</span></div>
+            <button type="button" onClick={() => setLightboxIndex(null)} aria-label="Cerrar galería"><X /></button>
           </div>
-
           <div className="property-lightbox__stage">
-            {images.length > 1 && (
-              <button
-                className="property-lightbox__arrow property-lightbox__arrow--prev"
-                type="button"
-                onClick={showPreviousPhoto}
-                aria-label="Fotografía anterior"
-              >
-                <ChevronLeft />
-              </button>
-            )}
-
+            {images.length > 1 && <button className="property-lightbox__arrow property-lightbox__arrow--prev" type="button" onClick={showPreviousPhoto} aria-label="Fotografía anterior"><ChevronLeft /></button>}
             <img src={images[lightboxIndex]} alt={`${property.title} ${lightboxIndex + 1}`} />
-
-            {images.length > 1 && (
-              <button
-                className="property-lightbox__arrow property-lightbox__arrow--next"
-                type="button"
-                onClick={showNextPhoto}
-                aria-label="Fotografía siguiente"
-              >
-                <ChevronRight />
-              </button>
-            )}
+            {images.length > 1 && <button className="property-lightbox__arrow property-lightbox__arrow--next" type="button" onClick={showNextPhoto} aria-label="Fotografía siguiente"><ChevronRight /></button>}
           </div>
-
           {images.length > 1 && (
             <div className="property-lightbox__thumbs" aria-label="Miniaturas de la galería">
               {images.map((image, index) => (
-                <button
-                  type="button"
-                  key={image}
-                  className={index === lightboxIndex ? 'is-active' : ''}
-                  onClick={() => setLightboxIndex(index)}
-                  aria-label={`Ver fotografía ${index + 1}`}
-                  aria-current={index === lightboxIndex ? 'true' : undefined}
-                >
+                <button type="button" key={image} className={index === lightboxIndex ? 'is-active' : ''} onClick={() => setLightboxIndex(index)} aria-label={`Ver fotografía ${index + 1}`} aria-current={index === lightboxIndex ? 'true' : undefined}>
                   <img src={image} alt="" />
                 </button>
               ))}
@@ -391,112 +405,89 @@ export default function PropertyDetail() {
         </div>
       )}
 
-      {facts.length > 0 && (
-        <section className="property-detail-shell property-detail-facts" aria-label="Datos principales">
-          {facts.map(({ icon: Icon, label, value }) => (
-            <div className="property-detail-fact" key={label}>
-              <Icon />
-              <span><small>{label}</small><strong>{value}</strong></span>
+      <section className="pd-ref-shell pd-ref-info-grid">
+        <article className="pd-ref-panel pd-ref-description">
+          <p className="pd-ref-eyebrow">DESCRIPCIÓN</p>
+          <span className="pd-ref-accent" />
+          <div className="preline">{property.description || 'Descripción pendiente.'}</div>
+        </article>
+
+        <article className="pd-ref-panel pd-ref-details">
+          <p className="pd-ref-eyebrow">DETALLES DE LA PROPIEDAD</p>
+          <span className="pd-ref-accent" />
+          <dl>
+            {technicalDetails.map(({ label, value }) => (
+              <div key={label}><dt>{label}</dt><dd>{value}</dd></div>
+            ))}
+          </dl>
+        </article>
+      </section>
+
+      <section className="pd-ref-shell pd-ref-secondary-grid">
+        <article className="pd-ref-panel pd-ref-amenities">
+          <p className="pd-ref-eyebrow">ÁREAS Y CARACTERÍSTICAS</p>
+          <span className="pd-ref-accent" />
+          {amenities.length > 0 ? (
+            <div className="pd-ref-amenities__grid">
+              {amenities.map((amenity) => <span key={amenity}><Check /> {amenity}</span>)}
             </div>
-          ))}
+          ) : (
+            <p className="pd-ref-empty-copy">Las características adicionales de esta propiedad se actualizarán próximamente.</p>
+          )}
+        </article>
+
+        <article className="pd-ref-panel pd-ref-location">
+          <p className="pd-ref-eyebrow">UBICACIÓN</p>
+          <span className="pd-ref-accent" />
+          {hasCoordinates(property) ? (
+            <div className="pd-ref-map"><MapView embedded properties={[property]} /></div>
+          ) : (
+            <div className="pd-ref-map-empty"><MapPin /><span>{locationText}</span></div>
+          )}
+          <p className="pd-ref-location__text"><MapPin size={16} /> {locationText}</p>
+        </article>
+      </section>
+
+      {videoMeta && (
+        <section className="pd-ref-shell pd-ref-video">
+          <div className="pd-ref-video__icon"><PlayCircle /></div>
+          <div>
+            <p className="pd-ref-eyebrow">RECORRIDO EN VIDEO</p>
+            <h2>Conoce la propiedad con más detalle</h2>
+            <p>Abre el recorrido publicado por Amy y explora los espacios antes de coordinar tu visita.</p>
+          </div>
+          <a href={videoMeta.url} target="_blank" rel="noopener noreferrer">{videoMeta.action} <ExternalLink /></a>
         </section>
       )}
 
-      <div className="property-detail-shell property-detail-layout">
-        <main className="property-detail-content">
-          <section className="property-detail-section">
-            <p className="property-detail-eyebrow">SOBRE LA PROPIEDAD</p>
-            <h2>Descripción</h2>
-            <div className="property-detail-description preline">{property.description || 'Descripción pendiente.'}</div>
-          </section>
+      <section className="pd-ref-shell pd-ref-cta">
+        <div className="pd-ref-cta__mark">AB</div>
+        <div>
+          <p>¿Te imaginas viviendo o invirtiendo aquí?</p>
+          <span>Contáctame para más información o agenda una visita personalizada.</span>
+        </div>
+        <a href={propertyWhatsApp(property)}><MessageCircle /> Consultar por WhatsApp <ChevronRight /></a>
+      </section>
 
-          {videoMeta && (
-            <section className="property-detail-section property-detail-video-section">
-              <p className="property-detail-eyebrow">RECORRIDO EN VIDEO</p>
-              <div className="property-detail-video-card">
-                <div className="property-detail-video-card__icon" aria-hidden="true">
-                  <PlayCircle />
-                </div>
-                <div className="property-detail-video-card__copy">
-                  <span>{videoMeta.platform}</span>
-                  <h2>Conoce la propiedad en video</h2>
-                  <p>Abre el recorrido publicado por Amy y mira más detalles de la propiedad directamente en la plataforma del video.</p>
-                </div>
-                <a
-                  className="property-detail-video-card__link"
-                  href={videoMeta.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {videoMeta.action} <ExternalLink />
-                </a>
-              </div>
-            </section>
-          )}
-
-          {amenities.length > 0 && (
-            <section className="property-detail-section">
-              <p className="property-detail-eyebrow">LO QUE OFRECE</p>
-              <h2>Características y servicios</h2>
-              <div className="property-detail-amenities">
-                {amenities.map((amenity) => <span key={amenity}><Check /> {amenity}</span>)}
-              </div>
-            </section>
-          )}
-
-          {dynamicDetails.length > 0 && (
-            <section className="property-detail-section">
-              <p className="property-detail-eyebrow">DETALLES</p>
-              <h2>Información adicional</h2>
-              <dl className="property-detail-specs">
-                {dynamicDetails.map(({ label, value }) => (
-                  <div key={label}><dt>{label}</dt><dd>{value}</dd></div>
-                ))}
-              </dl>
-            </section>
-          )}
-        </main>
-
-        <aside className="property-detail-sidebar">
-          <div className="property-detail-contact">
-            <span className="property-detail-contact__mark">AB</span>
-            <p className="property-detail-eyebrow">ASESORÍA PERSONALIZADA</p>
-            <h2>Amy Blandón</h2>
-            <p>Conversemos sobre esta propiedad y revisemos juntos si encaja con lo que estás buscando.</p>
-            <a className="property-detail-contact__whatsapp" href={propertyWhatsApp(property)}>
-              <MessageCircle /> Consultar por WhatsApp
-            </a>
-            <button type="button" onClick={() => downloadPropertyPDF(property)}>
-              <Download /> Descargar ficha PDF
-            </button>
+      <section className="pd-ref-contact-section" id="solicitar-informacion">
+        <div className="pd-ref-shell pd-ref-contact-grid">
+          <div className="pd-ref-contact-copy">
+            <p className="pd-ref-eyebrow">ASESORÍA PERSONALIZADA</p>
+            <h2>Agenda una visita con Amy Blandón</h2>
+            <p>Cuéntame qué necesitas y coordinamos una visita o una conversación para revisar esta propiedad con calma.</p>
+            <a href={propertyWhatsApp(property)}><MessageCircle /> Escribir por WhatsApp</a>
           </div>
-
-          <div className="property-detail-inquiry">
+          <div className="pd-ref-form-card">
             <h3>Solicitar información</h3>
-            <p>Déjame tus datos y me pondré en contacto contigo.</p>
             <SimpleForm collection="contacts" extra={{ propertyId: property.id, propertyTitle: property.title }} />
           </div>
-        </aside>
-      </div>
-
-      <section className="property-detail-location-section">
-        <div className="property-detail-shell">
-          <div className="property-detail-section-heading">
-            <div><p className="property-detail-eyebrow">UBICACIÓN</p><h2>Conoce el entorno</h2></div>
-            <p>{locationText}</p>
-          </div>
-          {hasCoordinates(property) ? (
-            <div className="property-detail-map"><MapView embedded properties={[property]} /></div>
-          ) : (
-            <div className="property-detail-map-empty"><MapPin /><p>La ubicación exacta todavía no tiene coordenadas válidas para mostrarse en el mapa.</p></div>
-          )}
         </div>
       </section>
 
       {similar.length > 0 && (
-        <section className="property-detail-shell property-detail-similar">
-          <div className="property-detail-section-heading">
-            <div><p className="property-detail-eyebrow">SIGUE EXPLORANDO</p><h2>Propiedades que podrían interesarte</h2></div>
+        <section className="pd-ref-shell pd-ref-similar">
+          <div className="pd-ref-section-heading">
+            <div><p className="pd-ref-eyebrow">SIGUE EXPLORANDO</p><h2>Propiedades que podrían interesarte</h2></div>
             <Link to="/bienes-raices">Ver más propiedades</Link>
           </div>
           <div className="properties-grid">

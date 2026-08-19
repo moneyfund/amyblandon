@@ -1,0 +1,170 @@
+/* Ajuste final — Sobre mí / Mi filosofía */
+.about-editorial-philosophy{
+  padding:112px 0 118px;
+  background:#fff;
+}
+
+.about-editorial-philosophy .about-editorial-philosophy__grid{
+  display:block;
+  width:min(1180px,calc(100% - 96px));
+  margin:0 auto;
+}
+
+.about-editorial-philosophy__copy{
+  width:100%;
+  max-width:1080px !important;
+  margin:0 auto;
+  text-align:center;
+}
+
+.about-editorial-philosophy__copy .about-editorial-kicker{
+  margin:0 auto 18px;
+  text-align:center;
+}
+
+.about-editorial-philosophy__copy h2{
+  width:100%;
+  max-width:none !important;
+  margin:0 auto !important;
+  color:var(--about-editorial-ink,#082432);
+  font-size:clamp(36px,3.35vw,54px) !important;
+  line-height:1.05 !important;
+  letter-spacing:-.035em !important;
+  text-align:center;
+  white-space:nowrap;
+  text-wrap:nowrap;
+}
+
+/* Ornamento dorado con volumen muy sutil: líneas + tres ondas metálicas. */
+.about-editorial-philosophy__ornament{
+  width:min(440px,72%);
+  height:30px;
+  margin:30px auto 38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+}
+
+.about-editorial-philosophy__line{
+  display:block;
+  flex:1 1 120px;
+  height:2px;
+  border-radius:999px;
+  background:linear-gradient(
+    90deg,
+    rgba(164,108,22,0),
+    rgba(193,137,39,.56) 22%,
+    #f5d68a 48%,
+    #c99434 72%,
+    rgba(164,108,22,0)
+  );
+  box-shadow:
+    0 1px 0 rgba(255,246,212,.9),
+    0 3px 7px rgba(126,82,14,.16),
+    0 0 9px rgba(223,177,79,.12);
+}
+
+.about-editorial-philosophy__wave{
+  position:relative;
+  width:102px;
+  height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.about-editorial-philosophy__wave i{
+  position:absolute;
+  display:block;
+  width:70px;
+  height:14px;
+  border-radius:50%;
+  border-top:2px solid #e5b65a;
+  transform:rotate(-3deg);
+  filter:drop-shadow(0 2px 1px rgba(111,71,11,.16));
+}
+
+.about-editorial-philosophy__wave i:nth-child(1){
+  top:2px;
+  left:2px;
+  border-color:#f1cd7b;
+  transform:rotate(-6deg) scaleX(.94);
+}
+
+.about-editorial-philosophy__wave i:nth-child(2){
+  top:8px;
+  left:16px;
+  border-color:#c98f2d;
+  transform:rotate(4deg) scaleX(1.03);
+  box-shadow:inset 0 1px 0 rgba(255,243,197,.6);
+}
+
+.about-editorial-philosophy__wave i:nth-child(3){
+  top:14px;
+  left:28px;
+  border-color:#f4d587;
+  transform:rotate(-4deg) scaleX(.9);
+}
+
+.about-editorial-philosophy__copy .about-editorial-body{
+  width:min(900px,100%);
+  max-width:900px !important;
+  margin:0 auto;
+  color:#5b6e78;
+  font-size:clamp(17px,1.17vw,19px);
+  line-height:1.9;
+  text-align:justify;
+  text-align-last:left;
+  hyphens:auto;
+  white-space:pre-line;
+}
+
+@media(max-width:1000px){
+  .about-editorial-philosophy{
+    padding:94px 0 100px;
+  }
+
+  .about-editorial-philosophy .about-editorial-philosophy__grid{
+    width:min(100% - 48px,900px);
+  }
+
+  .about-editorial-philosophy__copy h2{
+    font-size:clamp(34px,5.1vw,47px) !important;
+    white-space:normal;
+    text-wrap:balance;
+  }
+}
+
+@media(max-width:640px){
+  .about-editorial-philosophy{
+    padding:72px 0 78px;
+  }
+
+  .about-editorial-philosophy .about-editorial-philosophy__grid{
+    width:calc(100% - 34px);
+  }
+
+  .about-editorial-philosophy__copy h2{
+    font-size:clamp(31px,9.4vw,39px) !important;
+    line-height:1.08 !important;
+  }
+
+  .about-editorial-philosophy__ornament{
+    width:min(280px,86%);
+    margin:24px auto 30px;
+    gap:10px;
+  }
+
+  .about-editorial-philosophy__wave{
+    width:82px;
+    transform:scale(.88);
+  }
+
+  .about-editorial-philosophy__copy .about-editorial-body{
+    font-size:16px;
+    line-height:1.78;
+    text-align:justify;
+    text-align-last:left;
+  }
+}

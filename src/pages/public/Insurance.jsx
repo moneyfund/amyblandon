@@ -30,6 +30,33 @@ const principlesFor = (content) => [
   [content.principle3Title, content.principle3Text],
 ];
 
+const coverageVisuals = {
+  'vida-salud': {
+    image: 'https://images.unsplash.com/photo-1758691461935-202e2ef6b69f?auto=format&fit=crop&w=1400&q=82',
+    position: '48% center',
+  },
+  'hogar-patrimonio': {
+    image: 'https://images.unsplash.com/photo-1721222204126-e7042f2893b1?auto=format&fit=crop&w=1400&q=82',
+    position: '48% center',
+  },
+  vehiculos: {
+    image: 'https://images.unsplash.com/photo-1612378025826-472db1982308?auto=format&fit=crop&w=1400&q=82',
+    position: '54% center',
+  },
+  negocios: {
+    image: 'https://images.unsplash.com/photo-1758518730151-cf64fddb4f0a?auto=format&fit=crop&w=1400&q=82',
+    position: '46% center',
+  },
+  familia: {
+    image: 'https://images.unsplash.com/photo-1772510748770-8cf9eba8d229?auto=format&fit=crop&w=1400&q=82',
+    position: '47% center',
+  },
+  'proteccion-integral': {
+    image: 'https://images.unsplash.com/photo-1501987808855-ac803c7bb45e?auto=format&fit=crop&w=1400&q=82',
+    position: '52% center',
+  },
+};
+
 export default function Insurance() {
   const { images } = useSiteImages();
   const [content, setContent] = useState(defaultSiteContent.insurance);
@@ -100,23 +127,33 @@ export default function Insurance() {
           </RevealOnScroll>
 
           <div className="insurance-coverages__grid">
-            {insuranceCoverages.map(({ icon: Icon, slug, index, title, shortText, note }, cardIndex) => (
-              <RevealOnScroll
-                as={Link}
-                to={`/seguros/${slug}`}
-                className="insurance-coverage-card insurance-coverage-card--link"
-                key={slug}
-                delay={cardIndex * 55}
-                aria-label={`Conocer cobertura de ${title}`}
-              >
-                <span className="insurance-coverage-card__icon"><Icon /></span>
-                <span className="insurance-coverage-card__index">{index}</span>
-                <h3>{title}</h3>
-                <p>{shortText}</p>
-                <small>{note}</small>
-                <span className="insurance-coverage-card__cta">Conocer cobertura <ArrowRight size={15} /></span>
-              </RevealOnScroll>
-            ))}
+            {insuranceCoverages.map(({ icon: Icon, slug, title, shortText }, cardIndex) => {
+              const visual = coverageVisuals[slug];
+              return (
+                <RevealOnScroll
+                  as={Link}
+                  to={`/seguros/${slug}`}
+                  className="insurance-coverage-card insurance-coverage-card--link insurance-coverage-card--visual"
+                  key={slug}
+                  delay={cardIndex * 55}
+                  aria-label={`Conocer cobertura de ${title}`}
+                  style={{
+                    '--coverage-image': visual ? `url("${visual.image}")` : 'none',
+                    '--coverage-position': visual?.position || 'center',
+                  }}
+                >
+                  <span className="insurance-coverage-card__photo" aria-hidden="true" />
+                  <span className="insurance-coverage-card__photo-shade" aria-hidden="true" />
+                  <span className="insurance-coverage-card__content">
+                    <span className="insurance-coverage-card__icon"><Icon /></span>
+                    <h3>{title}</h3>
+                    <span className="insurance-coverage-card__ornament" aria-hidden="true"><i /></span>
+                    <p>{shortText}</p>
+                    <span className="insurance-coverage-card__cta">CONOCE MÁS <ArrowRight size={16} /></span>
+                  </span>
+                </RevealOnScroll>
+              );
+            })}
           </div>
         </div>
       </section>

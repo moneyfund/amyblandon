@@ -73,6 +73,7 @@ import './styles/property-detail-refinements-v3.css';
 import './styles/property-detail-compact-v4.css';
 import './styles/insurance-coverage-reference-cards.css';
 import './styles/insurance-coverage-cta-gold.css';
+import './styles/insurance-assurance-marquee.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

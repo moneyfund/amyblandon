@@ -3,11 +3,8 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   Check,
-  FileSearch,
   Handshake,
-  PhoneCall,
   ShieldCheck,
-  SlidersHorizontal,
   Sparkles,
 } from 'lucide-react';
 import RevealOnScroll from '../../components/common/RevealOnScroll';
@@ -16,19 +13,6 @@ import SEO from '../../components/common/SEO';
 import { insuranceCoverages } from '../../config/insuranceCoverages';
 import { useSiteImages } from '../../contexts/SiteImagesContext';
 import { defaultSiteContent, getSiteContent } from '../../services/siteContentService';
-
-const processFor = (content) => [
-  { icon: PhoneCall, number: '01', title: content.process1Title, text: content.process1Text },
-  { icon: FileSearch, number: '02', title: content.process2Title, text: content.process2Text },
-  { icon: SlidersHorizontal, number: '03', title: content.process3Title, text: content.process3Text },
-  { icon: Handshake, number: '04', title: content.process4Title, text: content.process4Text },
-];
-
-const principlesFor = (content) => [
-  [content.principle1Title, content.principle1Text],
-  [content.principle2Title, content.principle2Text],
-  [content.principle3Title, content.principle3Text],
-];
 
 const coverageVisuals = {
   'vida-salud': {
@@ -66,8 +50,6 @@ export default function Insurance() {
     getSiteContent('insurance').then(setContent).catch(() => setContent(defaultSiteContent.insurance));
   }, []);
 
-  const process = processFor(content);
-  const principles = principlesFor(content);
   const guidancePoints = [content.guidancePoint1, content.guidancePoint2, content.guidancePoint3, content.guidancePoint4];
 
   return (
@@ -138,7 +120,7 @@ export default function Insurance() {
                   delay={cardIndex * 55}
                   aria-label={`Conocer cobertura de ${title}`}
                   style={{
-                    '--coverage-image': visual ? `url("${visual.image}")` : 'none',
+                    '--coverage-image': visual ? `url(\"${visual.image}\")` : 'none',
                     '--coverage-position': visual?.position || 'center',
                   }}
                 >
@@ -179,44 +161,6 @@ export default function Insurance() {
             <div className="insurance-guidance__metric"><strong>02</strong><span className="content-preserve-format">{content.guidanceMetric2}</span></div>
             <div className="insurance-guidance__metric"><strong>03</strong><span className="content-preserve-format">{content.guidanceMetric3}</span></div>
           </RevealOnScroll>
-        </div>
-      </section>
-
-      <section className="insurance-section insurance-process">
-        <div className="insurance-shell">
-          <RevealOnScroll className="insurance-heading insurance-heading--center">
-            <p className="insurance-eyebrow content-preserve-format">{content.processEyebrow}</p>
-            <h2 className="content-preserve-format">{content.processTitle}</h2>
-            <p className="content-preserve-format">{content.processText}</p>
-          </RevealOnScroll>
-
-          <div className="insurance-process__grid">
-            {process.map(({ icon: Icon, number, title, text }, index) => (
-              <RevealOnScroll as="article" className="insurance-process__step" key={number} delay={index * 80}>
-                <div className="insurance-process__top"><span>{number}</span><Icon /></div>
-                <h3 className="content-preserve-format">{title}</h3>
-                <p className="content-preserve-format">{text}</p>
-              </RevealOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="insurance-section insurance-principles">
-        <div className="insurance-shell insurance-principles__grid">
-          <RevealOnScroll className="insurance-principles__intro">
-            <p className="insurance-eyebrow content-preserve-format">{content.principlesEyebrow}</p>
-            <h2 className="content-preserve-format">{content.principlesTitle}</h2>
-            <p className="content-preserve-format">{content.principlesText}</p>
-          </RevealOnScroll>
-          <div className="insurance-principles__list">
-            {principles.map(([title, text], index) => (
-              <RevealOnScroll as="article" key={`${index}-${title}`} delay={index * 70}>
-                <span>0{index + 1}</span>
-                <div><h3 className="content-preserve-format">{title}</h3><p className="content-preserve-format">{text}</p></div>
-              </RevealOnScroll>
-            ))}
-          </div>
         </div>
       </section>
     </div>

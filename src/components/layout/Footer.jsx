@@ -7,6 +7,8 @@ import { amyContact } from '../../content/homePage.es';
 import { defaultSiteContent, getSiteContent } from '../../services/siteContentService';
 import { whatsappLink } from '../../utils/whatsapp';
 
+const PROFESSIONAL_EMAIL = 'asesoria@amyblandon.com';
+
 function mapLink(address) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address || amyContact.location)}`;
 }
@@ -46,7 +48,7 @@ export default function Footer() {
   const phone = contact.phone || amyContact.phone;
   const whatsapp = contact.whatsapp || phone;
   const address = contact.address || amyContact.location;
-  const contactEmail = contact.email || amyContact.email;
+  const contactEmail = PROFESSIONAL_EMAIL;
 
   return (
     <footer className="public-footer">

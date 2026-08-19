@@ -41,6 +41,11 @@
   color:var(--pdr-navy) !important;
 }
 
+/* La descarga de ficha PDF no se muestra en la web pública. */
+.property-detail-reference .pd-ref-action--text{
+  display:none !important;
+}
+
 /* Iconos contextuales de áreas y detalles. */
 .property-detail-reference .pd-ref-feature-symbol{
   width:28px;

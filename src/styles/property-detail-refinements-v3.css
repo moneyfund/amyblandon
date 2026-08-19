@@ -1,0 +1,154 @@
+/* Refinamientos finales del detalle de propiedad: identidad Amy, iconografía contextual y mapa embebido. */
+.property-detail-reference{
+  --pdr-red:var(--pdr-gold) !important;
+}
+
+/* Todo acento comercial rojo pasa a dorado. */
+.property-detail-reference .pd-ref-summary__badges span{
+  border-color:rgba(201,154,68,.28) !important;
+  background:rgba(201,154,68,.085) !important;
+  color:var(--pdr-gold) !important;
+}
+
+.property-detail-reference .pd-ref-summary__badges .is-featured{
+  border-color:rgba(201,154,68,.36) !important;
+  background:rgba(201,154,68,.12) !important;
+  color:var(--pdr-gold) !important;
+}
+
+.property-detail-reference .pd-ref-summary__location svg,
+.property-detail-reference .pd-ref-summary__price strong,
+.property-detail-reference .pd-ref-eyebrow,
+.property-detail-reference .pd-ref-map-empty svg{
+  color:var(--pdr-gold) !important;
+}
+
+.property-detail-reference .pd-ref-accent{
+  background:var(--pdr-gold) !important;
+}
+
+/* WhatsApp principal en dorado, coherente con la marca. */
+.property-detail-reference .pd-ref-action--primary{
+  background:var(--pdr-gold) !important;
+  border-color:var(--pdr-gold) !important;
+  color:var(--pdr-navy) !important;
+  box-shadow:0 9px 24px rgba(201,154,68,.18);
+}
+
+.property-detail-reference .pd-ref-action--primary:hover{
+  background:var(--pdr-gold-light) !important;
+  border-color:var(--pdr-gold-light) !important;
+  color:var(--pdr-navy) !important;
+}
+
+/* Iconos contextuales de áreas y detalles. */
+.property-detail-reference .pd-ref-feature-symbol{
+  width:28px;
+  height:28px;
+  flex:0 0 28px;
+  display:inline-grid;
+  place-items:center;
+  border:1px solid rgba(201,154,68,.28);
+  border-radius:50%;
+  background:rgba(201,154,68,.065);
+  color:var(--pdr-gold);
+}
+
+.property-detail-reference .pd-ref-feature-symbol svg{
+  width:16px !important;
+  height:16px !important;
+  display:block;
+  color:inherit !important;
+}
+
+.property-detail-reference .pd-ref-amenities__grid > span{
+  min-height:42px;
+  gap:11px !important;
+}
+
+.property-detail-reference .pd-ref-details dt{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.property-detail-reference .pd-ref-details dt .pd-ref-feature-symbol{
+  width:25px;
+  height:25px;
+  flex-basis:25px;
+}
+
+.property-detail-reference .pd-ref-details dt .pd-ref-feature-symbol svg{
+  width:14px !important;
+  height:14px !important;
+}
+
+/* El mapa embebido ocupa exactamente su cuadrante, sin la rejilla/buscador del mapa general. */
+.property-detail-reference .pd-ref-map{
+  position:relative;
+  width:100%;
+  height:320px;
+  min-width:0;
+  min-height:320px;
+  overflow:hidden !important;
+  border:1px solid var(--pdr-border);
+  background:#eef2ef;
+  isolation:isolate;
+}
+
+.property-detail-reference .pd-ref-map > .mapWrap,
+.property-detail-reference .pd-ref-map .mapWrap.embedded,
+.property-detail-reference .pd-ref-map .mapWrap--embedded{
+  display:block !important;
+  width:100% !important;
+  max-width:none !important;
+  height:100% !important;
+  min-height:100% !important;
+  margin:0 !important;
+  padding:0 !important;
+  grid-template-columns:none !important;
+  gap:0 !important;
+  overflow:hidden !important;
+}
+
+.property-detail-reference .pd-ref-map .mapWrap--embedded > .filters,
+.property-detail-reference .pd-ref-map .mapWrap--embedded > .mapCards{
+  display:none !important;
+}
+
+.property-detail-reference .pd-ref-map .leaflet-container{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  min-width:0 !important;
+  min-height:100% !important;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  z-index:1;
+}
+
+.property-detail-reference .pd-ref-map .leaflet-control-container{
+  position:relative;
+  z-index:3;
+}
+
+.property-detail-reference .pd-ref-map .leaflet-pane,
+.property-detail-reference .pd-ref-map .leaflet-map-pane{
+  max-width:none !important;
+}
+
+@media(max-width:640px){
+  .property-detail-reference .pd-ref-feature-symbol{
+    width:26px;
+    height:26px;
+    flex-basis:26px;
+  }
+
+  .property-detail-reference .pd-ref-map{
+    height:260px !important;
+    min-height:260px !important;
+  }
+}

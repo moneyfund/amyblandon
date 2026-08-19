@@ -26,9 +26,11 @@ export default function ImagesAdmin() {
   const [activeTab, setActiveTab] = useState('general');
 
   const visibleSlots = useMemo(
-    () => siteImageSlots.filter((slot) => (
-      activeTab === 'heroBr' ? slot.group === 'heroBr' : slot.group !== 'heroBr'
-    )),
+    () => siteImageSlots.filter((slot) => {
+      if (activeTab === 'heroHome') return slot.group === 'heroHome';
+      if (activeTab === 'heroBr') return slot.group === 'heroBr';
+      return !slot.group;
+    }),
     [activeTab],
   );
 
@@ -136,6 +138,17 @@ export default function ImagesAdmin() {
         <button
           type="button"
           role="tab"
+          aria-selected={activeTab === 'heroHome'}
+          className={activeTab === 'heroHome' ? 'active' : ''}
+          onClick={() => setActiveTab('heroHome')}
+        >
+          <Images size={18} />
+          Hero de Inicio
+          <span className="admin-image-tabs__count">4</span>
+        </button>
+        <button
+          type="button"
+          role="tab"
           aria-selected={activeTab === 'heroBr'}
           className={activeTab === 'heroBr' ? 'active' : ''}
           onClick={() => setActiveTab('heroBr')}
@@ -145,6 +158,20 @@ export default function ImagesAdmin() {
           <span className="admin-image-tabs__count">5</span>
         </button>
       </div>
+
+      {activeTab === 'heroHome' && (
+        <section className="admin-card admin-hero-br-note">
+          <Images aria-hidden="true" />
+          <div>
+            <h2>Fondos rotativos del Hero de Inicio</h2>
+            <p>
+              Estas cuatro imágenes aparecen detrás de Amy en la portada principal y cambian automáticamente cada
+              3 segundos. Puedes reemplazarlas individualmente sin modificar la fotografía recortada de Amy ni el
+              contenido del hero.
+            </p>
+          </div>
+        </section>
+      )}
 
       {activeTab === 'heroBr' && (
         <section className="admin-card admin-hero-br-note">

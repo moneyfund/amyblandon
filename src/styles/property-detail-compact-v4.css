@@ -1,0 +1,111 @@
+/* Detalle de propiedad — compactación de la zona superior en escritorio. */
+@media (min-width:901px){
+  .property-detail-reference{
+    padding-top:108px !important;
+  }
+
+  .property-detail-reference .pd-ref-breadcrumb{
+    margin-bottom:20px !important;
+  }
+
+  .property-detail-reference .pd-ref-showcase{
+    grid-template-columns:minmax(0,1.68fr) minmax(320px,.82fr) !important;
+    gap:40px !important;
+    padding-bottom:38px !important;
+  }
+
+  .property-detail-reference .pd-ref-gallery__stage{
+    height:clamp(390px,34vw,500px) !important;
+  }
+
+  .property-detail-reference .pd-ref-gallery__thumbs{
+    gap:10px !important;
+    margin-top:10px !important;
+  }
+
+  .property-detail-reference .pd-ref-gallery__thumbs button{
+    flex-basis:108px !important;
+    height:72px !important;
+  }
+
+  .property-detail-reference .pd-ref-summary{
+    padding-top:4px !important;
+  }
+
+  .property-detail-reference .pd-ref-summary__badges{
+    margin-bottom:14px !important;
+  }
+
+  .property-detail-reference .pd-ref-summary h1{
+    font-size:clamp(34px,3.15vw,48px) !important;
+    line-height:1.02 !important;
+  }
+
+  .property-detail-reference .pd-ref-summary__location{
+    margin:13px 0 18px !important;
+    font-size:13px !important;
+  }
+
+  .property-detail-reference .pd-ref-summary__price{
+    padding:17px 0 18px !important;
+  }
+
+  .property-detail-reference .pd-ref-summary__price strong{
+    font-size:clamp(28px,2.55vw,38px) !important;
+  }
+
+  .property-detail-reference .pd-ref-summary__price span{
+    margin-top:4px !important;
+  }
+
+  .property-detail-reference .pd-ref-summary__facts{
+    margin-bottom:18px !important;
+  }
+
+  .property-detail-reference .pd-ref-summary__facts > div,
+  .property-detail-reference .pd-ref-summary__facts > div:nth-child(even){
+    padding-top:12px !important;
+    padding-bottom:12px !important;
+  }
+
+  .property-detail-reference .pd-ref-summary__facts svg{
+    width:18px !important;
+    height:18px !important;
+  }
+
+  .property-detail-reference .pd-ref-summary__facts strong{
+    font-size:14px !important;
+  }
+
+  .property-detail-reference .pd-ref-summary__facts span{
+    font-size:10px !important;
+  }
+
+  .property-detail-reference .pd-ref-summary__actions{
+    gap:8px !important;
+  }
+
+  .property-detail-reference .pd-ref-action{
+    min-height:46px !important;
+    padding:10px 15px !important;
+    font-size:11px !important;
+  }
+
+  .property-detail-reference .pd-ref-action--text{
+    min-height:32px !important;
+  }
+
+  .property-detail-reference .pd-ref-info-grid{
+    padding-top:38px !important;
+  }
+}
+
+@media (min-width:901px) and (max-width:1180px){
+  .property-detail-reference .pd-ref-gallery__stage{
+    height:460px !important;
+  }
+
+  .property-detail-reference .pd-ref-showcase{
+    gap:30px !important;
+  }
+}

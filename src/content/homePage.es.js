@@ -2,7 +2,7 @@ import { siteImages } from '../config/siteImages';
 
 export const amyContact = {
   phone: '+505 8832 4439',
-  email: 'info@amyblandon.com',
+  email: 'asesoria@amyblandon.com',
   location: 'Matagalpa, Nicaragua',
   whatsappMessage: 'Hola Amy, me gustaría recibir asesoría sobre bienes raíces, inversiones o seguros.'
 };

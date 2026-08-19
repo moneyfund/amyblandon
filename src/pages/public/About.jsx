@@ -121,7 +121,15 @@ export default function About() {
           <RevealOnScroll className="about-editorial-philosophy__copy" delay={80}>
             <p className="about-editorial-kicker content-preserve-format">{stripSectionNumber(content.editorialPhilosophyKicker)}</p>
             <h2 id="about-editorial-philosophy-title" className="content-preserve-format">{content.editorialPhilosophyTitle}</h2>
-            <span className="about-editorial-philosophy__rule" aria-hidden="true" />
+            <div className="about-editorial-philosophy__ornament" aria-hidden="true">
+              <span className="about-editorial-philosophy__line" />
+              <span className="about-editorial-philosophy__wave">
+                <i />
+                <i />
+                <i />
+              </span>
+              <span className="about-editorial-philosophy__line" />
+            </div>
             <p className="about-editorial-body content-preserve-format">{content.editorialPhilosophyText}</p>
           </RevealOnScroll>
         </div>

@@ -76,6 +76,7 @@ import './styles/insurance-coverage-cta-gold.css';
 import './styles/insurance-assurance-marquee.css';
 import './styles/about-amy-clean-2026.css';
 import './styles/about-amy-layout-refinement.css';
+import './styles/about-hero-image-position-final.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

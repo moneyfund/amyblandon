@@ -36,20 +36,16 @@ export const aboutContentDefaults = {
   value5Title: 'Resultados',
   value5Text: 'Me enfoco en generar valor real y en ayudarte a alcanzar tus metas.',
 
-  recognitionKicker: 'RECONOCIMIENTOS',
-  recognitionYear: '2026',
-  recognitionTitle: 'Reconocida de manera consecutiva como Agente Diamante.',
-  recognitionText: 'Este reconocimiento refleja la confianza de mis clientes y mi compromiso constante con la excelencia, el acompañamiento y los resultados.',
-
   missionKicker: 'MI PROPÓSITO',
   missionBelief: 'Creo que las mejores decisiones financieras no se toman por impulso, sino con estrategia, información y la asesoría correcta.',
   missionText: 'Mi misión es ayudarte a proteger tu patrimonio, identificar oportunidades y construir estabilidad, crecimiento y tranquilidad para el presente, el futuro y lo que sigue.',
+  closingQuote: 'Mi mayor satisfacción es ver a mis clientes alcanzar tranquilidad, seguridad y crecimiento, sabiendo que están construyendo un futuro sólido para los suyos.',
 };
 
 export const aboutEditorSection = {
   label: 'Sobre mí',
   route: '/sobre-mi',
-  description: 'Historia profesional de Amy: portada, experiencia, compromisos, valores, reconocimiento y propósito.',
+  description: 'Historia profesional de Amy: portada, experiencia, compromisos, valores, propósito y cierre.',
   groups: [
     {
       title: 'Portada',
@@ -101,20 +97,12 @@ export const aboutEditorSection = {
       ],
     },
     {
-      title: 'Reconocimiento',
-      fields: [
-        ['recognitionKicker', 'Etiqueta', 'text'],
-        ['recognitionYear', 'Año', 'text'],
-        ['recognitionTitle', 'Título', 'textarea', 2],
-        ['recognitionText', 'Descripción', 'textarea', 4],
-      ],
-    },
-    {
       title: 'Propósito y cierre',
       fields: [
         ['missionKicker', 'Etiqueta', 'text'],
         ['missionBelief', 'Creencia profesional', 'textarea', 5],
         ['missionText', 'Misión', 'textarea', 5],
+        ['closingQuote', 'Frase final', 'textarea', 4],
       ],
     },
   ],

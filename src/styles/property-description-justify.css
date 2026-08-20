@@ -1,0 +1,17 @@
+/* Descripciones públicas de propiedades: justificación automática y conservación de saltos de línea. */
+.property-detail-reference .pd-ref-description > div,
+.property-detail-reference .pd-ref-description .preline{
+  text-align:justify;
+  text-justify:inter-word;
+  white-space:pre-line;
+  hyphens:auto;
+  -webkit-hyphens:auto;
+}
+
+@media(max-width:640px){
+  .property-detail-reference .pd-ref-description > div,
+  .property-detail-reference .pd-ref-description .preline{
+    text-align:justify;
+    text-justify:inter-word;
+  }
+}

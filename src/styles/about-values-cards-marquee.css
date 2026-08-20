@@ -1,0 +1,154 @@
+/* Sobre mí — valores como cards independientes + marquee móvil continuo. */
+
+.amy-about-values__viewport{
+  overflow:visible;
+}
+
+.amy-about-values__track{
+  display:block;
+}
+
+.amy-about-values .amy-about-values__list{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:14px;
+  border:0;
+}
+
+.amy-about-values .amy-about-values__list--duplicate{
+  display:none;
+}
+
+.amy-about-values .amy-about-value{
+  position:relative;
+  min-width:0;
+  min-height:250px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:34px 24px 36px;
+  margin:0;
+  border:1px solid rgba(201,154,68,.52)!important;
+  background:#fff;
+  text-align:center;
+  box-shadow:0 8px 24px rgba(0,25,41,.025);
+  transform:translateY(0);
+  transition:
+    transform .28s cubic-bezier(.2,.75,.25,1),
+    box-shadow .28s ease,
+    border-color .28s ease,
+    background .28s ease;
+}
+
+.amy-about-values .amy-about-value:hover{
+  z-index:2;
+  transform:translateY(-8px);
+  border-color:rgba(201,154,68,.9)!important;
+  background:#fff;
+  box-shadow:0 18px 38px rgba(0,25,41,.11);
+}
+
+.amy-about-values .amy-about-value svg{
+  width:30px;
+  height:30px;
+  margin:0 auto 21px;
+  color:var(--about-gold);
+  stroke-width:1.45;
+  transition:transform .28s ease;
+}
+
+.amy-about-values .amy-about-value:hover svg{
+  transform:translateY(-2px) scale(1.04);
+}
+
+.amy-about-values .amy-about-value h3{
+  margin:0 0 10px;
+}
+
+.amy-about-values .amy-about-value p{
+  margin:0;
+}
+
+@keyframes amy-about-values-marquee{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(-50%,0,0)}
+}
+
+@media(max-width:1000px) and (min-width:821px){
+  .amy-about-values .amy-about-values__list{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+
+@media(max-width:820px){
+  .amy-about-values{
+    overflow:hidden;
+  }
+
+  .amy-about-values .amy-about-section-heading{
+    text-align:center;
+  }
+
+  .amy-about-values__viewport{
+    width:100vw;
+    margin-left:calc(50% - 50vw);
+    overflow:hidden;
+    padding:12px 0 22px;
+  }
+
+  .amy-about-values__track{
+    display:flex;
+    width:max-content;
+    will-change:transform;
+    animation:amy-about-values-marquee 30s linear infinite;
+  }
+
+  .amy-about-values .amy-about-values__list,
+  .amy-about-values .amy-about-values__list--duplicate{
+    display:flex!important;
+    flex:none;
+    width:max-content;
+    gap:16px;
+    padding:0 8px;
+    overflow:visible;
+    border:0!important;
+  }
+
+  .amy-about-values .amy-about-value{
+    flex:0 0 min(78vw,320px);
+    width:min(78vw,320px);
+    min-height:235px;
+    margin:0!important;
+    padding:30px 24px;
+    border:1px solid rgba(201,154,68,.58)!important;
+    text-align:center;
+    scroll-snap-align:none;
+  }
+
+  .amy-about-values .amy-about-value svg{
+    margin:0 auto 20px;
+  }
+
+  .amy-about-values .amy-about-value:hover{
+    transform:none;
+    box-shadow:0 10px 26px rgba(0,25,41,.07);
+  }
+}
+
+@media(max-width:520px){
+  .amy-about-values .amy-about-value{
+    flex-basis:min(82vw,310px);
+    width:min(82vw,310px);
+  }
+
+  .amy-about-values__track{
+    animation-duration:28s;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .amy-about-values__track{
+    animation:none!important;
+  }
+}

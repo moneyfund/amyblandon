@@ -316,3 +316,118 @@
     transition:none!important;
   }
 }
+
+/* Refinamiento visual del 20/08/2026: hero más compacto, credenciales transparentes,
+   historia justificada y reconocimiento fotográfico con filtro azul. */
+@media(min-width:921px){
+  .amy-about-hero{
+    padding-top:118px;
+    padding-bottom:44px;
+  }
+
+  .amy-about-hero__grid{
+    align-items:start;
+  }
+
+  .amy-about-hero__copy{
+    justify-content:flex-start;
+    align-self:start;
+    padding-top:22px;
+  }
+
+  .amy-about-hero__media,
+  .amy-about-hero__image{
+    height:520px;
+    min-height:520px;
+    max-height:520px;
+    overflow:hidden;
+  }
+
+  .amy-about-hero__image img{
+    height:520px;
+    object-fit:cover;
+    object-position:center 20%;
+  }
+
+  .amy-about-photo-credentials{
+    top:28px;
+    right:28px;
+    width:min(235px,44%);
+    gap:14px;
+  }
+
+  .amy-about-photo-credential{
+    min-height:0;
+    padding:4px 0;
+    background:transparent;
+    border:0;
+    box-shadow:none;
+    backdrop-filter:none;
+  }
+
+  .amy-about-photo-credential strong,
+  .amy-about-photo-credential small{
+    color:#fff;
+    text-shadow:0 2px 12px rgba(0,15,24,.72);
+  }
+
+  .amy-about-photo-credential svg{
+    filter:drop-shadow(0 2px 8px rgba(0,15,24,.55));
+  }
+
+  .amy-about-history__text{
+    text-align:justify;
+    text-justify:inter-word;
+    hyphens:auto;
+  }
+
+  .amy-about-commitments{
+    align-self:center;
+    padding-top:58px;
+  }
+}
+
+/* Reconocimiento: fotografía profesional de reunión/asesoría con filtro azul marino. */
+.amy-about-recognition{
+  position:relative;
+  isolation:isolate;
+  background:
+    linear-gradient(90deg,rgba(0,25,41,.93),rgba(0,25,41,.86)),
+    url('https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=2200&q=88') center 45%/cover no-repeat;
+}
+
+.amy-about-recognition::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:linear-gradient(180deg,rgba(0,25,41,.08),rgba(0,25,41,.24));
+  pointer-events:none;
+}
+
+@media(max-width:920px){
+  .amy-about-hero__copy{
+    justify-content:flex-start;
+  }
+
+  .amy-about-photo-credential{
+    background:transparent;
+    border:0;
+    box-shadow:none;
+  }
+
+  .amy-about-photo-credential strong,
+  .amy-about-photo-credential small{
+    color:#fff;
+    text-shadow:0 2px 10px rgba(0,15,24,.72);
+  }
+
+  .amy-about-history__text{
+    text-align:justify;
+    text-justify:inter-word;
+  }
+
+  .amy-about-commitments{
+    padding-top:18px;
+  }
+}

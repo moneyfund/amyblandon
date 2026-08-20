@@ -1,0 +1,85 @@
+/* Ajuste final del hero de Sobre mí: fotografía integrada bajo navbar, encuadre más bajo y credenciales sobre el hombro. */
+@media (min-width:921px){
+  .amy-about-hero{
+    padding-top:0!important;
+    padding-bottom:0!important;
+  }
+
+  .amy-about-hero__grid{
+    align-items:stretch!important;
+    min-height:640px;
+  }
+
+  .amy-about-hero__copy{
+    justify-content:flex-start!important;
+    align-self:stretch!important;
+    padding-top:174px!important;
+    padding-bottom:76px!important;
+  }
+
+  .amy-about-hero__media{
+    height:640px!important;
+    min-height:640px!important;
+    max-height:640px!important;
+    align-self:start!important;
+    overflow:hidden!important;
+  }
+
+  .amy-about-hero__image{
+    height:640px!important;
+    min-height:640px!important;
+    max-height:640px!important;
+    overflow:hidden!important;
+  }
+
+  .amy-about-hero__image img{
+    width:100%!important;
+    height:640px!important;
+    object-fit:cover!important;
+    object-position:center 56%!important;
+  }
+
+  /* Las credenciales se apoyan visualmente en la zona libre detrás del hombro de Amy. */
+  .amy-about-photo-credentials{
+    top:206px!important;
+    right:24px!important;
+    width:min(232px,43%)!important;
+    gap:13px!important;
+  }
+
+  .amy-about-photo-credential{
+    padding:3px 0!important;
+  }
+
+  .amy-about-photo-credential svg{
+    width:25px!important;
+    height:25px!important;
+  }
+
+  .amy-about-photo-credential strong{
+    font-size:13px!important;
+    line-height:1.28!important;
+  }
+
+  .amy-about-photo-credential small{
+    font-size:10.5px!important;
+    line-height:1.42!important;
+  }
+
+  .amy-about-hero__media-line{
+    bottom:22px!important;
+  }
+}
+
+@media (min-width:921px) and (max-width:1180px){
+  .amy-about-hero__grid{min-height:610px}
+  .amy-about-hero__media,
+  .amy-about-hero__image,
+  .amy-about-hero__image img{
+    height:610px!important;
+    min-height:610px!important;
+    max-height:610px!important;
+  }
+  .amy-about-hero__copy{padding-top:160px!important}
+  .amy-about-photo-credentials{top:190px!important;right:18px!important;width:min(220px,46%)!important}
+}

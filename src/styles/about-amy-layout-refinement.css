@@ -1,0 +1,318 @@
+/* Ajuste solicitado por Amy — hero limpio y compromisos integrados a Mi historia. */
+
+/* HERO: solo título + divisor dorado. */
+.amy-about-hero__copy{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.amy-about-hero__divider{
+  width:min(320px,72%);
+  margin-top:34px;
+  display:grid;
+  grid-template-columns:1fr 10px 1fr;
+  align-items:center;
+  gap:11px;
+}
+
+.amy-about-hero__divider>span{
+  height:1px;
+  background:linear-gradient(90deg,rgba(201,154,68,.18),var(--about-gold));
+}
+
+.amy-about-hero__divider>span:last-child{
+  background:linear-gradient(90deg,var(--about-gold),rgba(201,154,68,.18));
+}
+
+.amy-about-hero__divider>i{
+  width:9px;
+  height:9px;
+  display:block;
+  background:var(--about-gold);
+  transform:rotate(45deg);
+  box-shadow:0 1px 4px rgba(132,88,20,.18);
+}
+
+/* Credenciales colocadas directamente sobre la fotografía, en el costado derecho. */
+.amy-about-photo-credentials{
+  position:absolute;
+  z-index:4;
+  top:30px;
+  right:20px;
+  width:min(228px,47%);
+  display:grid;
+  gap:10px;
+}
+
+.amy-about-photo-credential{
+  display:grid;
+  grid-template-columns:30px minmax(0,1fr);
+  gap:11px;
+  align-items:start;
+  padding:14px 15px;
+  background:rgba(250,248,244,.96);
+  border-left:2px solid var(--about-gold);
+  box-shadow:0 10px 25px rgba(0,25,41,.10);
+}
+
+.amy-about-photo-credential svg{
+  width:25px;
+  height:25px;
+  color:var(--about-gold);
+  stroke-width:1.5;
+}
+
+.amy-about-photo-credential span{
+  display:grid;
+  gap:3px;
+}
+
+.amy-about-photo-credential strong{
+  color:var(--about-ink);
+  font:700 13px/1.3 var(--font-reference);
+}
+
+.amy-about-photo-credential small{
+  color:#64757b;
+  font:500 10.5px/1.45 var(--font-reference);
+}
+
+/* MI HISTORIA + MIS COMPROMISOS en una sola composición. */
+.amy-about-history{
+  padding:98px 0 102px;
+}
+
+.amy-about-history__combined{
+  display:grid;
+  grid-template-columns:minmax(0,.86fr) minmax(560px,1.14fr);
+  gap:62px;
+  align-items:start;
+}
+
+.amy-about-history__story h2{
+  margin:0;
+  max-width:500px;
+  font-family:var(--font-reference);
+  font-size:clamp(31px,2.65vw,40px);
+  line-height:1.2;
+  letter-spacing:-.032em;
+  font-weight:500;
+  color:var(--about-ink);
+}
+
+.amy-about-history__story>.amy-about-history__rule{
+  display:block;
+  width:72px;
+  height:1px;
+  margin:25px 0 24px;
+  background:var(--about-gold);
+}
+
+.amy-about-history__text{
+  margin:0;
+  white-space:pre-line;
+  font-size:15.5px;
+  line-height:1.8;
+  color:#40545c;
+}
+
+.amy-about-commitments{
+  min-width:0;
+  padding-top:3px;
+}
+
+.amy-about-commitments__heading{
+  display:grid;
+  grid-template-columns:minmax(20px,1fr) auto 8px minmax(20px,1fr);
+  align-items:center;
+  gap:10px;
+  margin:0 0 34px;
+}
+
+.amy-about-commitments__heading>span{
+  height:1px;
+  background:rgba(201,154,68,.52);
+}
+
+.amy-about-commitments__heading>p{
+  margin:0;
+  color:var(--about-gold);
+  font:700 11px/1.3 var(--font-reference);
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.amy-about-commitments__heading>i{
+  display:block;
+  width:7px;
+  height:7px;
+  background:var(--about-gold);
+  transform:rotate(45deg);
+}
+
+.amy-about-commitments__grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  align-items:start;
+}
+
+.amy-about-commitment{
+  min-width:0;
+  padding:4px 15px 2px;
+  text-align:center;
+}
+
+.amy-about-commitment+ .amy-about-commitment{
+  border-left:1px solid rgba(0,25,41,.12);
+}
+
+.amy-about-commitment svg{
+  display:block;
+  width:35px;
+  height:35px;
+  margin:0 auto 17px;
+  color:var(--about-gold);
+  stroke-width:1.45;
+}
+
+.amy-about-commitment h3{
+  margin:0 0 8px;
+  color:var(--about-ink);
+  font:750 12.5px/1.3 var(--font-reference);
+  letter-spacing:.035em;
+  text-transform:uppercase;
+}
+
+.amy-about-commitment p{
+  margin:0;
+  color:#5e7077;
+  font:500 11.5px/1.55 var(--font-reference);
+}
+
+/* Al desaparecer Lo que me mueve, se reduce el espacio antes del propósito final. */
+.amy-about-mission{
+  padding-top:88px;
+}
+
+@media(max-width:1100px){
+  .amy-about-history__combined{
+    grid-template-columns:minmax(0,.82fr) minmax(500px,1.18fr);
+    gap:42px;
+  }
+  .amy-about-commitment{padding-inline:10px}
+  .amy-about-commitment p{font-size:11px}
+}
+
+@media(max-width:920px){
+  .amy-about-photo-credentials{
+    top:auto;
+    right:14px;
+    bottom:14px;
+    left:14px;
+    width:auto;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .amy-about-photo-credential{
+    min-height:74px;
+    background:rgba(250,248,244,.97);
+  }
+
+  .amy-about-history__combined{
+    grid-template-columns:1fr;
+    gap:56px;
+  }
+
+  .amy-about-history__story{
+    max-width:760px;
+  }
+
+  .amy-about-commitments__grid{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+}
+
+@media(max-width:680px){
+  .amy-about-hero__divider{
+    width:min(250px,74%);
+    margin-top:27px;
+  }
+
+  .amy-about-photo-credentials{
+    grid-template-columns:1fr;
+    left:auto;
+    right:10px;
+    bottom:10px;
+    width:min(205px,58%);
+    gap:7px;
+  }
+
+  .amy-about-photo-credential{
+    min-height:0;
+    grid-template-columns:24px minmax(0,1fr);
+    gap:8px;
+    padding:10px 11px;
+  }
+
+  .amy-about-photo-credential svg{
+    width:21px;
+    height:21px;
+  }
+
+  .amy-about-photo-credential strong{font-size:11.5px}
+  .amy-about-photo-credential small{font-size:9.5px}
+
+  .amy-about-history{
+    padding:74px 0 80px;
+  }
+
+  .amy-about-history__combined{
+    gap:46px;
+  }
+
+  .amy-about-history__text{
+    font-size:15px;
+    line-height:1.75;
+  }
+
+  .amy-about-commitments__heading{
+    margin-bottom:29px;
+  }
+
+  .amy-about-commitments__grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    border-top:1px solid rgba(0,25,41,.10);
+    border-bottom:1px solid rgba(0,25,41,.10);
+  }
+
+  .amy-about-commitment{
+    padding:26px 14px 28px;
+  }
+
+  .amy-about-commitment:nth-child(3){
+    border-left:0;
+    border-top:1px solid rgba(0,25,41,.10);
+  }
+
+  .amy-about-commitment:nth-child(4){
+    border-top:1px solid rgba(0,25,41,.10);
+  }
+
+  .amy-about-commitment p{
+    font-size:11.5px;
+  }
+
+  .amy-about-mission{
+    padding-top:68px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .amy-about-photo-credential,
+  .amy-about-hero__divider,
+  .amy-about-commitment{
+    transition:none!important;
+  }
+}

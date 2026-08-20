@@ -1,0 +1,31 @@
+/* Sobre mí — equilibrio 50/50 entre Mi historia y Mis compromisos. */
+
+@media (min-width: 921px){
+  .amy-about-page .amy-about-history__combined{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    gap:56px!important;
+  }
+
+  .amy-about-page .amy-about-history__story{
+    min-width:0;
+    max-width:none!important;
+  }
+
+  .amy-about-page .amy-about-history__story h2{
+    max-width:560px;
+  }
+
+  .amy-about-page .amy-about-history__text{
+    width:100%;
+    max-width:none;
+  }
+
+  .amy-about-page .amy-about-commitments{
+    min-width:0;
+  }
+
+  .amy-about-page .amy-about-commitment{
+    padding-left:10px;
+    padding-right:10px;
+  }
+}

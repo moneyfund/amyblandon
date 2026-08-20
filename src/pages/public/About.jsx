@@ -166,22 +166,6 @@ export default function About() {
         </div>
       </section>
 
-      <section className="amy-about-recognition" aria-labelledby="amy-about-recognition-title">
-        <div className="amy-about-shell amy-about-recognition__grid">
-          <RevealOnScroll className="amy-about-recognition__mark" direction="left">
-            <Award aria-hidden="true" />
-            <div>
-              <span className="content-preserve-format">{content.recognitionYear}</span>
-              <small className="content-preserve-format">{content.recognitionKicker}</small>
-            </div>
-          </RevealOnScroll>
-          <RevealOnScroll className="amy-about-recognition__copy" direction="right" delay={80}>
-            <h2 id="amy-about-recognition-title" className="content-preserve-format">{content.recognitionTitle}</h2>
-            <p className="content-preserve-format">{content.recognitionText}</p>
-          </RevealOnScroll>
-        </div>
-      </section>
-
       <section className="amy-about-mission" aria-labelledby="amy-about-mission-title">
         <div className="amy-about-shell amy-about-mission__inner">
           <RevealOnScroll className="amy-about-mission__belief" direction="left">
@@ -195,6 +179,15 @@ export default function About() {
             ) : (
               <span className="amy-about-mission__signature-fallback">Amy Blandón</span>
             )}
+          </RevealOnScroll>
+        </div>
+      </section>
+
+      <section className="amy-about-client-quote" aria-label="Frase de Amy Blandón">
+        <div className="amy-about-shell">
+          <RevealOnScroll className="amy-about-client-quote__panel">
+            <span className="amy-about-client-quote__mark" aria-hidden="true">“</span>
+            <blockquote className="content-preserve-format">{content.closingQuote}</blockquote>
           </RevealOnScroll>
         </div>
       </section>

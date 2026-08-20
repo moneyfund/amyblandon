@@ -28,6 +28,7 @@ export default function ImagesAdmin() {
   const visibleSlots = useMemo(
     () => siteImageSlots.filter((slot) => {
       if (activeTab === 'heroHome') return slot.group === 'heroHome';
+      if (activeTab === 'heroAbout') return slot.group === 'heroAbout';
       if (activeTab === 'heroBr') return slot.group === 'heroBr';
       return !slot.group;
     }),
@@ -120,7 +121,7 @@ export default function ImagesAdmin() {
             Cada espacio tiene una función fija. Al reemplazar una imagen, las pestañas abiertas de la web reciben la
             nueva URL mediante Firestore en tiempo real.
           </p>
-          <strong>Para la persona del hero y la firma usa PNG o WEBP con fondo transparente.</strong>
+          <strong>Para las imágenes recortadas de Amy y la firma usa PNG o WEBP con fondo transparente.</strong>
         </div>
       </section>
 
@@ -149,6 +150,17 @@ export default function ImagesAdmin() {
         <button
           type="button"
           role="tab"
+          aria-selected={activeTab === 'heroAbout'}
+          className={activeTab === 'heroAbout' ? 'active' : ''}
+          onClick={() => setActiveTab('heroAbout')}
+        >
+          <Images size={18} />
+          Hero Sobre mí
+          <span className="admin-image-tabs__count">5</span>
+        </button>
+        <button
+          type="button"
+          role="tab"
           aria-selected={activeTab === 'heroBr'}
           className={activeTab === 'heroBr' ? 'active' : ''}
           onClick={() => setActiveTab('heroBr')}
@@ -168,6 +180,21 @@ export default function ImagesAdmin() {
               Estas cuatro imágenes aparecen detrás de Amy en la portada principal y cambian automáticamente cada
               3 segundos. Puedes reemplazarlas individualmente sin modificar la fotografía recortada de Amy ni el
               contenido del hero.
+            </p>
+          </div>
+        </section>
+      )}
+
+      {activeTab === 'heroAbout' && (
+        <section className="admin-card admin-hero-br-note">
+          <Images aria-hidden="true" />
+          <div>
+            <h2>Hero administrable de Sobre mí</h2>
+            <p>
+              Aquí el fondo y Amy se administran por separado. El primer espacio controla el fondo fijo del hero y
+              los otros cuatro espacios permiten subir distintas imágenes recortadas de Amy. Las imágenes de Amy
+              cambian automáticamente cada 3 segundos con desplazamiento horizontal continuo, conservando siempre el
+              mismo fondo.
             </p>
           </div>
         </section>

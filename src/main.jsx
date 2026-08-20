@@ -71,6 +71,7 @@ import './styles/about-philosophy-final.css';
 import './styles/property-detail-reference-v2.css';
 import './styles/property-detail-refinements-v3.css';
 import './styles/property-detail-compact-v4.css';
+import './styles/property-detail-video-final.css';
 import './styles/insurance-coverage-reference-cards.css';
 import './styles/insurance-coverage-cta-gold.css';
 import './styles/insurance-assurance-marquee.css';

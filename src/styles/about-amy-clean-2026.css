@@ -1,0 +1,573 @@
+/* Sobre mí 2026 — diseño editorial limpio basado en las secciones seleccionadas por Amy. */
+
+.amy-about-page{
+  --about-navy:#001929;
+  --about-ink:#0b2a36;
+  --about-gold:var(--site-accent,var(--amy-gold,#c99a44));
+  --about-paper:#f5f2ec;
+  --about-muted:#607177;
+  background:#fff;
+  color:var(--about-ink);
+  overflow:hidden;
+}
+
+.amy-about-shell{
+  width:min(calc(100% - 48px),1188px);
+  margin-inline:auto;
+}
+
+.amy-about-kicker{
+  margin:0 0 18px;
+  color:var(--about-gold);
+  font:700 12px/1.4 var(--font-reference);
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+
+/* El hero es claro, por lo que el navbar transparente debe usar texto oscuro. */
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .brand-logo__tagline,
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .brand-logo__tagline--image,
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu,
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu > a:not(.public-navbar__phone),
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__toggle{
+  color:var(--about-ink)!important;
+}
+
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu > a:not(.public-navbar__phone):hover,
+.public-site--about .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu > a:not(.public-navbar__phone).active{
+  color:var(--about-gold)!important;
+}
+
+/* HERO */
+.amy-about-hero{
+  position:relative;
+  background:var(--about-paper);
+  padding:146px 0 70px;
+}
+
+.amy-about-hero::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:1px;
+  background:rgba(0,25,41,.1);
+}
+
+.amy-about-hero__grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.03fr) minmax(400px,.97fr);
+  gap:70px;
+  align-items:stretch;
+}
+
+.amy-about-hero__copy{
+  align-self:center;
+  padding:24px 0 18px;
+}
+
+.amy-about-hero h1{
+  margin:0;
+  max-width:660px;
+  font-family:var(--font-reference);
+  font-size:clamp(50px,5.2vw,76px);
+  font-weight:300;
+  line-height:1.055;
+  letter-spacing:-.045em;
+  color:var(--about-ink);
+}
+
+.amy-about-hero h1>span{
+  display:block;
+}
+
+.amy-about-hero__accent{
+  color:var(--about-gold);
+  font-weight:500;
+}
+
+.amy-about-hero__lead{
+  max-width:620px;
+  margin:30px 0 0;
+  font-size:21px;
+  line-height:1.55;
+  font-weight:500;
+  color:#263e47;
+}
+
+.amy-about-hero__role{
+  max-width:620px;
+  margin:12px 0 0;
+  font-size:14px;
+  line-height:1.65;
+  color:var(--about-muted);
+}
+
+.amy-about-credentials{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  margin-top:42px;
+  padding-top:25px;
+  border-top:1px solid rgba(0,25,41,.18);
+}
+
+.amy-about-credential{
+  display:flex;
+  gap:14px;
+  min-width:0;
+  padding-right:24px;
+  align-items:flex-start;
+}
+
+.amy-about-credential+ .amy-about-credential{
+  padding-left:28px;
+  padding-right:0;
+  border-left:1px solid rgba(0,25,41,.16);
+}
+
+.amy-about-credential svg{
+  width:24px;
+  height:24px;
+  flex:0 0 24px;
+  color:var(--about-gold);
+  stroke-width:1.5;
+}
+
+.amy-about-credential span{
+  display:grid;
+  gap:4px;
+}
+
+.amy-about-credential strong{
+  color:var(--about-ink);
+  font-size:15px;
+  line-height:1.35;
+}
+
+.amy-about-credential small{
+  color:var(--about-muted);
+  font-size:12px;
+  line-height:1.5;
+}
+
+.amy-about-hero__media{
+  position:relative;
+  min-height:620px;
+  align-self:stretch;
+}
+
+.amy-about-hero__image{
+  width:100%;
+  height:100%;
+  min-height:620px;
+  aspect-ratio:auto!important;
+  background:#e7e3dc;
+}
+
+.amy-about-hero__image img{
+  width:100%;
+  height:100%;
+}
+
+.amy-about-hero__media-line{
+  position:absolute;
+  left:-18px;
+  bottom:22px;
+  width:2px;
+  height:148px;
+  background:var(--about-gold);
+}
+
+/* HISTORIA */
+.amy-about-history{
+  padding:112px 0;
+  background:#fff;
+}
+
+.amy-about-history__grid{
+  display:grid;
+  grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);
+  gap:92px;
+  align-items:start;
+}
+
+.amy-about-history__heading h2{
+  margin:0;
+  max-width:480px;
+  font-family:var(--font-reference);
+  font-size:clamp(34px,3.2vw,48px);
+  line-height:1.18;
+  letter-spacing:-.035em;
+  font-weight:500;
+  color:var(--about-ink);
+}
+
+.amy-about-history__copy{
+  position:relative;
+  padding-left:34px;
+}
+
+.amy-about-history__rule{
+  position:absolute;
+  left:0;
+  top:4px;
+  bottom:5px;
+  width:2px;
+  background:var(--about-gold);
+}
+
+.amy-about-history__copy p{
+  margin:0;
+  white-space:pre-line;
+  font-size:17px;
+  line-height:1.85;
+  color:#354a52;
+}
+
+/* VALORES — sin tarjetas, solo una retícula editorial. */
+.amy-about-values{
+  padding:100px 0 108px;
+  background:#fbfbfa;
+  border-top:1px solid #e6e9e7;
+  border-bottom:1px solid #e6e9e7;
+}
+
+.amy-about-section-heading{
+  max-width:760px;
+  margin:0 auto 58px;
+  text-align:center;
+}
+
+.amy-about-section-heading h2{
+  margin:0;
+  font-family:var(--font-reference);
+  font-size:clamp(32px,3vw,44px);
+  line-height:1.2;
+  letter-spacing:-.03em;
+  font-weight:500;
+}
+
+.amy-about-values__list{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  border-top:1px solid rgba(0,25,41,.13);
+  border-bottom:1px solid rgba(0,25,41,.13);
+}
+
+.amy-about-value{
+  min-width:0;
+  padding:34px 24px 36px;
+  text-align:center;
+}
+
+.amy-about-value+ .amy-about-value{
+  border-left:1px solid rgba(0,25,41,.12);
+}
+
+.amy-about-value svg{
+  width:29px;
+  height:29px;
+  margin:0 auto 20px;
+  color:var(--about-gold);
+  stroke-width:1.45;
+}
+
+.amy-about-value h3{
+  margin:0 0 9px;
+  font-size:15px;
+  line-height:1.35;
+  letter-spacing:.025em;
+  text-transform:uppercase;
+  color:var(--about-ink);
+}
+
+.amy-about-value p{
+  margin:0;
+  font-size:13px;
+  line-height:1.65;
+  color:var(--about-muted);
+}
+
+/* RECONOCIMIENTO */
+.amy-about-recognition{
+  padding:78px 0;
+  background:var(--about-navy);
+  color:#fff;
+  border-top:1px solid rgba(201,154,68,.45);
+  border-bottom:1px solid rgba(201,154,68,.45);
+}
+
+.amy-about-recognition__grid{
+  display:grid;
+  grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);
+  gap:84px;
+  align-items:center;
+}
+
+.amy-about-recognition__mark{
+  display:flex;
+  align-items:center;
+  gap:22px;
+}
+
+.amy-about-recognition__mark>svg{
+  width:54px;
+  height:54px;
+  flex:0 0 54px;
+  color:var(--about-gold);
+  stroke-width:1.25;
+}
+
+.amy-about-recognition__mark div{
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+}
+
+.amy-about-recognition__mark span{
+  font-size:52px;
+  line-height:1;
+  font-weight:300;
+  letter-spacing:-.04em;
+  color:#fff;
+}
+
+.amy-about-recognition__mark small{
+  margin-top:8px;
+  color:var(--about-gold);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.16em;
+}
+
+.amy-about-recognition__copy{
+  padding-left:44px;
+  border-left:1px solid rgba(255,255,255,.17);
+}
+
+.amy-about-recognition__copy h2{
+  margin:0 0 15px;
+  max-width:680px;
+  font-family:var(--font-reference);
+  font-size:clamp(30px,3vw,42px);
+  line-height:1.2;
+  letter-spacing:-.03em;
+  font-weight:500;
+  color:#fff;
+}
+
+.amy-about-recognition__copy p{
+  margin:0;
+  max-width:690px;
+  color:#d8e0e3;
+  font-size:15px;
+  line-height:1.75;
+}
+
+/* FRASE CON FOTO */
+.amy-about-quote{
+  padding:96px 0;
+  background:#fff;
+}
+
+.amy-about-quote__grid{
+  display:grid;
+  grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+  min-height:560px;
+  background:var(--about-paper);
+}
+
+.amy-about-quote__media{
+  min-height:560px;
+}
+
+.amy-about-quote__image{
+  width:100%;
+  height:100%;
+  min-height:560px;
+  aspect-ratio:auto!important;
+  background:#e7e3dc;
+}
+
+.amy-about-quote__image img{
+  width:100%;
+  height:100%;
+}
+
+.amy-about-quote__copy{
+  align-self:center;
+  padding:70px 76px;
+}
+
+.amy-about-quote__copy>svg{
+  width:30px;
+  height:30px;
+  margin-bottom:26px;
+  color:var(--about-gold);
+  stroke-width:1.25;
+}
+
+.amy-about-quote__copy blockquote{
+  margin:0;
+  font-family:var(--font-reference);
+  font-size:clamp(28px,3vw,42px);
+  line-height:1.35;
+  letter-spacing:-.025em;
+  font-weight:400;
+  color:var(--about-ink);
+}
+
+/* PROPÓSITO FINAL */
+.amy-about-mission{
+  padding:18px 0 116px;
+  background:#fff;
+}
+
+.amy-about-mission__inner{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:80px;
+  padding:74px 0;
+  border-top:1px solid rgba(0,25,41,.15);
+  border-bottom:1px solid rgba(0,25,41,.15);
+}
+
+.amy-about-mission__belief blockquote{
+  margin:0;
+  max-width:520px;
+  font-family:var(--font-reference);
+  font-size:clamp(25px,2.4vw,34px);
+  line-height:1.46;
+  letter-spacing:-.025em;
+  font-weight:450;
+  color:var(--about-ink);
+}
+
+.amy-about-mission__copy{
+  padding-left:56px;
+  border-left:1px solid rgba(0,25,41,.14);
+}
+
+.amy-about-mission__copy>p{
+  margin:0;
+  max-width:520px;
+  font-size:17px;
+  line-height:1.82;
+  color:#435860;
+}
+
+.amy-about-mission__signature{
+  display:block;
+  width:min(190px,45%);
+  max-height:88px;
+  margin-top:30px;
+  object-fit:contain;
+  object-position:left center;
+}
+
+.amy-about-mission__signature-fallback{
+  display:block;
+  margin-top:28px;
+  color:var(--about-gold);
+  font-size:24px;
+  font-weight:500;
+}
+
+@media(max-width:1000px){
+  .amy-about-hero__grid{grid-template-columns:minmax(0,1fr) minmax(330px,.8fr);gap:44px}
+  .amy-about-hero__media,.amy-about-hero__image{min-height:550px}
+  .amy-about-values__list{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .amy-about-value:nth-child(4){border-left:0;border-top:1px solid rgba(0,25,41,.12)}
+  .amy-about-value:nth-child(5){border-top:1px solid rgba(0,25,41,.12)}
+  .amy-about-recognition__grid{gap:54px}
+  .amy-about-quote__copy{padding:58px 50px}
+}
+
+@media(max-width:820px){
+  .amy-about-shell{width:min(calc(100% - 36px),1188px)}
+  .amy-about-hero{padding:112px 0 54px}
+  .amy-about-hero__grid{grid-template-columns:1fr;gap:42px}
+  .amy-about-hero__copy{padding:8px 0 0}
+  .amy-about-hero h1{font-size:clamp(44px,12vw,58px);max-width:620px}
+  .amy-about-hero__lead{font-size:18px;max-width:580px}
+  .amy-about-hero__media{min-height:500px;max-height:650px}
+  .amy-about-hero__image{min-height:500px}
+  .amy-about-hero__media-line{left:12px;bottom:-20px;width:110px;height:2px}
+
+  .amy-about-history{padding:84px 0}
+  .amy-about-history__grid{grid-template-columns:1fr;gap:38px}
+  .amy-about-history__heading h2{max-width:650px}
+  .amy-about-history__copy{padding-left:24px}
+
+  .amy-about-values{padding:78px 0 84px}
+  .amy-about-section-heading{margin-bottom:42px;text-align:left}
+  .amy-about-values__list{
+    display:flex;
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+    border-bottom:0;
+  }
+  .amy-about-values__list::-webkit-scrollbar{display:none}
+  .amy-about-value{
+    flex:0 0 min(74vw,320px);
+    min-height:220px;
+    scroll-snap-align:start;
+    border-left:0!important;
+    border-top:0!important;
+    border-right:1px solid rgba(0,25,41,.12);
+    text-align:left;
+    padding:30px 28px 30px 0;
+    margin-right:28px;
+  }
+  .amy-about-value svg{margin:0 0 20px}
+
+  .amy-about-recognition{padding:68px 0}
+  .amy-about-recognition__grid{grid-template-columns:1fr;gap:36px}
+  .amy-about-recognition__copy{padding:34px 0 0;border-left:0;border-top:1px solid rgba(255,255,255,.17)}
+
+  .amy-about-quote{padding:76px 0}
+  .amy-about-quote__grid{grid-template-columns:1fr;min-height:0}
+  .amy-about-quote__media,.amy-about-quote__image{min-height:430px;max-height:560px}
+  .amy-about-quote__copy{padding:54px 38px 60px}
+
+  .amy-about-mission{padding-bottom:86px}
+  .amy-about-mission__inner{grid-template-columns:1fr;gap:38px;padding:58px 0}
+  .amy-about-mission__copy{padding:38px 0 0;border-left:0;border-top:1px solid rgba(0,25,41,.14)}
+}
+
+@media(max-width:520px){
+  .amy-about-shell{width:min(calc(100% - 30px),1188px)}
+  .amy-about-hero{padding-top:102px}
+  .amy-about-hero h1{font-size:40px;line-height:1.08;letter-spacing:-.04em}
+  .amy-about-hero__lead{font-size:17px;margin-top:24px}
+  .amy-about-credentials{grid-template-columns:1fr;gap:18px;margin-top:34px}
+  .amy-about-credential{padding-right:0}
+  .amy-about-credential+ .amy-about-credential{padding:18px 0 0;border-left:0;border-top:1px solid rgba(0,25,41,.13)}
+  .amy-about-hero__media,.amy-about-hero__image{min-height:420px}
+
+  .amy-about-history{padding:70px 0}
+  .amy-about-history__heading h2{font-size:32px}
+  .amy-about-history__copy p{font-size:15.5px;line-height:1.8}
+
+  .amy-about-section-heading h2{font-size:31px}
+  .amy-about-value{flex-basis:82vw}
+
+  .amy-about-recognition__mark>svg{width:44px;height:44px;flex-basis:44px}
+  .amy-about-recognition__mark span{font-size:44px}
+  .amy-about-recognition__copy h2{font-size:29px}
+
+  .amy-about-quote{padding:58px 0}
+  .amy-about-quote__media,.amy-about-quote__image{min-height:390px}
+  .amy-about-quote__copy{padding:44px 28px 50px}
+  .amy-about-quote__copy blockquote{font-size:27px}
+
+  .amy-about-mission__belief blockquote{font-size:25px}
+  .amy-about-mission__copy>p{font-size:16px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .amy-about-page *{scroll-behavior:auto!important}
+}

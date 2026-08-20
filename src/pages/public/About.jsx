@@ -45,6 +45,22 @@ export default function About() {
 
   const heroImage = images.aboutPage || images.aboutHome || images.heroPerson || images.realEstateHero;
 
+  const renderValueCards = (duplicate = false) => values.map((item, index) => {
+    const Icon = item.icon;
+    return (
+      <RevealOnScroll
+        as="article"
+        className="amy-about-value"
+        key={`${duplicate ? 'duplicate-' : ''}${item.title}`}
+        delay={duplicate ? 0 : index * 55}
+      >
+        <Icon aria-hidden="true" />
+        <h3 className="content-preserve-format">{item.title}</h3>
+        <p className="content-preserve-format">{item.text}</p>
+      </RevealOnScroll>
+    );
+  });
+
   return (
     <div className="amy-about-page">
       <SEO
@@ -137,17 +153,15 @@ export default function About() {
             <h2 id="amy-about-values-title" className="content-preserve-format">{content.valuesTitle}</h2>
           </RevealOnScroll>
 
-          <div className="amy-about-values__list">
-            {values.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <RevealOnScroll as="article" className="amy-about-value" key={item.title} delay={index * 55}>
-                  <Icon aria-hidden="true" />
-                  <h3 className="content-preserve-format">{item.title}</h3>
-                  <p className="content-preserve-format">{item.text}</p>
-                </RevealOnScroll>
-              );
-            })}
+          <div className="amy-about-values__viewport">
+            <div className="amy-about-values__track">
+              <div className="amy-about-values__list">
+                {renderValueCards(false)}
+              </div>
+              <div className="amy-about-values__list amy-about-values__list--duplicate" aria-hidden="true">
+                {renderValueCards(true)}
+              </div>
+            </div>
           </div>
         </div>
       </section>

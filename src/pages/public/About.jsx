@@ -17,10 +17,13 @@ import { aboutContentDefaults } from '../../config/aboutRedesignContent';
 import { defaultSiteContent, getSiteContent } from '../../services/siteContentService';
 
 const initialAboutContent = { ...defaultSiteContent.about, ...aboutContentDefaults };
+const ABOUT_HERO_SLIDE_INTERVAL = 3000;
 
 export default function About() {
   const { images } = useSiteImages();
   const [content, setContent] = useState(initialAboutContent);
+  const [heroSlideIndex, setHeroSlideIndex] = useState(0);
+  const [heroIsJumping, setHeroIsJumping] = useState(false);
 
   useEffect(() => {
     getSiteContent('about')
@@ -44,6 +47,66 @@ export default function About() {
   ], [content]);
 
   const heroImage = images.aboutPage || images.aboutHome || images.heroPerson || images.realEstateHero;
+
+  const aboutHeroPeople = useMemo(() => [
+    images.aboutHeroAmy1,
+    images.aboutHeroAmy2,
+    images.aboutHeroAmy3,
+    images.aboutHeroAmy4,
+  ]
+    .map((value) => String(value || '').trim())
+    .filter(Boolean)
+    .filter((value, index, valuesList) => valuesList.indexOf(value) === index), [
+    images.aboutHeroAmy1,
+    images.aboutHeroAmy2,
+    images.aboutHeroAmy3,
+    images.aboutHeroAmy4,
+  ]);
+
+  const renderedAboutHeroPeople = useMemo(() => {
+    if (aboutHeroPeople.length < 2) return aboutHeroPeople;
+    return [...aboutHeroPeople, aboutHeroPeople[0]];
+  }, [aboutHeroPeople]);
+
+  const useManagedAboutHero = aboutHeroPeople.length > 0;
+  const aboutHeroBackground = images.aboutHeroBackground;
+
+  useEffect(() => {
+    setHeroIsJumping(true);
+    setHeroSlideIndex(0);
+    const frame = window.requestAnimationFrame(() => setHeroIsJumping(false));
+    return () => window.cancelAnimationFrame(frame);
+  }, [aboutHeroPeople]);
+
+  useEffect(() => {
+    if (aboutHeroPeople.length < 2) return undefined;
+
+    const timer = window.setInterval(() => {
+      setHeroIsJumping(false);
+      setHeroSlideIndex((current) => current + 1);
+    }, ABOUT_HERO_SLIDE_INTERVAL);
+
+    return () => window.clearInterval(timer);
+  }, [aboutHeroPeople.length]);
+
+  useEffect(() => {
+    aboutHeroPeople.slice(1).forEach((src) => {
+      const image = new Image();
+      image.decoding = 'async';
+      image.src = src;
+    });
+  }, [aboutHeroPeople]);
+
+  const handleAboutHeroTransitionEnd = (event) => {
+    if (event.target !== event.currentTarget || event.propertyName !== 'transform') return;
+    if (aboutHeroPeople.length < 2 || heroSlideIndex !== aboutHeroPeople.length) return;
+
+    setHeroIsJumping(true);
+    setHeroSlideIndex(0);
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => setHeroIsJumping(false));
+    });
+  };
 
   const renderValueCards = (duplicate = false) => values.map((item, index) => {
     const Icon = item.icon;
@@ -84,17 +147,61 @@ export default function About() {
             </div>
           </RevealOnScroll>
 
-          <RevealOnScroll className="amy-about-hero__media" direction="right" delay={80}>
-            <SafeImage
-              className="amy-about-hero__image"
-              src={heroImage}
-              alt="Amy Blandón"
-              width="1080"
-              height="1240"
-              loading="eager"
-              fetchPriority="high"
-              objectPosition="center top"
-            />
+          <RevealOnScroll
+            className={`amy-about-hero__media ${useManagedAboutHero ? 'amy-about-hero__media--managed' : ''}`}
+            direction="right"
+            delay={80}
+          >
+            {useManagedAboutHero ? (
+              <>
+                <SafeImage
+                  className="amy-about-hero__managed-background"
+                  src={aboutHeroBackground}
+                  alt=""
+                  width="1200"
+                  height="1000"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  objectFit="cover"
+                  objectPosition="center"
+                />
+                <div className="amy-about-hero__people-viewport">
+                  <div
+                    className={`amy-about-hero__people-track ${heroIsJumping ? 'is-jumping' : ''}`}
+                    style={{ transform: `translate3d(-${heroSlideIndex * 100}%, 0, 0)` }}
+                    onTransitionEnd={handleAboutHeroTransitionEnd}
+                  >
+                    {renderedAboutHeroPeople.map((src, index) => (
+                      <SafeImage
+                        key={`${src}-${index}`}
+                        className="amy-about-hero__person-slide"
+                        src={src}
+                        alt={index < aboutHeroPeople.length ? 'Amy Blandón' : ''}
+                        width="1080"
+                        height="1400"
+                        loading={index === 0 ? 'eager' : 'lazy'}
+                        fetchPriority={index === 0 ? 'high' : 'auto'}
+                        decoding="async"
+                        objectFit="contain"
+                        objectPosition="center bottom"
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <SafeImage
+                className="amy-about-hero__image"
+                src={heroImage}
+                alt="Amy Blandón"
+                width="1080"
+                height="1240"
+                loading="eager"
+                fetchPriority="high"
+                objectPosition="center top"
+              />
+            )}
             <span className="amy-about-hero__media-line" aria-hidden="true" />
 
             <div className="amy-about-photo-credentials" aria-label="Experiencia y reconocimientos principales">

@@ -79,6 +79,7 @@ import './styles/about-amy-clean-2026.css';
 import './styles/about-amy-layout-refinement.css';
 import './styles/about-hero-image-position-final.css';
 import './styles/property-description-justify.css';
+import './styles/about-values-cards-marquee.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

@@ -75,6 +75,7 @@ import './styles/insurance-coverage-reference-cards.css';
 import './styles/insurance-coverage-cta-gold.css';
 import './styles/insurance-assurance-marquee.css';
 import './styles/about-amy-clean-2026.css';
+import './styles/about-amy-layout-refinement.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

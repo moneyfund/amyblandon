@@ -1,0 +1,149 @@
+/* Hero Sobre mí administrable: fondo fijo + carrusel horizontal de imágenes recortadas de Amy. */
+
+.amy-about-hero__media--managed{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  background:#f4efe7;
+}
+
+.amy-about-hero__managed-background{
+  position:absolute!important;
+  inset:0;
+  z-index:0;
+  width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  max-height:none!important;
+  aspect-ratio:auto!important;
+  overflow:hidden;
+}
+
+.amy-about-hero__managed-background img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  transform:scale(1.01);
+}
+
+.amy-about-hero__media--managed::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(0,25,41,.04) 0%,rgba(0,25,41,0) 42%),
+    linear-gradient(180deg,rgba(0,25,41,.02) 45%,rgba(0,25,41,.08) 100%);
+}
+
+.amy-about-hero__people-viewport{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  overflow:hidden;
+}
+
+.amy-about-hero__people-track{
+  display:flex;
+  width:100%;
+  height:100%;
+  will-change:transform;
+  transition:transform 900ms cubic-bezier(.22,.61,.36,1);
+}
+
+.amy-about-hero__people-track.is-jumping{
+  transition:none!important;
+}
+
+.amy-about-hero__person-slide{
+  position:relative;
+  flex:0 0 100%;
+  width:100%!important;
+  height:100%!important;
+  min-width:100%;
+  min-height:100%!important;
+  max-height:none!important;
+  aspect-ratio:auto!important;
+  display:flex!important;
+  align-items:flex-end;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.amy-about-hero__person-slide img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  object-position:center bottom!important;
+  transform:scale(1.015);
+  transform-origin:center bottom;
+}
+
+.amy-about-hero__media--managed .amy-about-photo-credentials,
+.amy-about-hero__media--managed .amy-about-hero__media-line{
+  z-index:4;
+}
+
+@media(min-width:921px){
+  .amy-about-hero__media--managed,
+  .amy-about-hero__media--managed .amy-about-hero__people-viewport,
+  .amy-about-hero__media--managed .amy-about-hero__people-track,
+  .amy-about-hero__media--managed .amy-about-hero__person-slide,
+  .amy-about-hero__media--managed .amy-about-hero__managed-background{
+    height:640px!important;
+    min-height:640px!important;
+    max-height:640px!important;
+  }
+
+  .amy-about-hero__media--managed .amy-about-hero__person-slide img{
+    height:640px!important;
+  }
+}
+
+@media(min-width:921px) and (max-width:1180px){
+  .amy-about-hero__media--managed,
+  .amy-about-hero__media--managed .amy-about-hero__people-viewport,
+  .amy-about-hero__media--managed .amy-about-hero__people-track,
+  .amy-about-hero__media--managed .amy-about-hero__person-slide,
+  .amy-about-hero__media--managed .amy-about-hero__managed-background{
+    height:610px!important;
+    min-height:610px!important;
+    max-height:610px!important;
+  }
+
+  .amy-about-hero__media--managed .amy-about-hero__person-slide img{
+    height:610px!important;
+  }
+}
+
+@media(max-width:920px){
+  .amy-about-hero__media--managed{
+    min-height:520px;
+  }
+
+  .amy-about-hero__person-slide img{
+    transform:scale(1.025);
+  }
+}
+
+@media(max-width:680px){
+  .amy-about-hero__media--managed{
+    min-height:460px;
+  }
+
+  .amy-about-hero__managed-background img{
+    object-position:center center!important;
+  }
+
+  .amy-about-hero__person-slide img{
+    object-position:center bottom!important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .amy-about-hero__people-track{
+    transition:none!important;
+  }
+}

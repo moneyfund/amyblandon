@@ -1,0 +1,109 @@
+/* Cierre final de Sobre mí — frase de Amy sobre fotografía con filtro dorado. */
+.amy-about-client-quote{
+  padding:0 0 108px;
+  background:#fff;
+}
+
+.amy-about-client-quote__panel{
+  position:relative;
+  isolation:isolate;
+  min-height:300px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  padding:58px clamp(34px,7vw,96px);
+  background:
+    linear-gradient(90deg,rgba(92,57,9,.80),rgba(157,111,35,.72) 48%,rgba(82,50,7,.82)),
+    linear-gradient(180deg,rgba(201,154,68,.26),rgba(104,65,10,.28)),
+    url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2200&q=88') center 56%/cover no-repeat;
+  box-shadow:0 20px 52px rgba(84,57,18,.10);
+}
+
+.amy-about-client-quote__panel::before{
+  content:"";
+  position:absolute;
+  inset:18px;
+  z-index:-1;
+  border:1px solid rgba(255,235,190,.38);
+  pointer-events:none;
+}
+
+.amy-about-client-quote__panel::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  background:linear-gradient(110deg,rgba(43,26,4,.22),transparent 46%,rgba(35,21,3,.14));
+  pointer-events:none;
+}
+
+.amy-about-client-quote__mark{
+  position:absolute;
+  top:38px;
+  left:clamp(34px,6vw,82px);
+  color:rgba(255,239,201,.82);
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:76px;
+  font-weight:400;
+  line-height:1;
+}
+
+.amy-about-client-quote blockquote{
+  position:relative;
+  z-index:1;
+  width:min(100%,980px);
+  margin:0;
+  text-align:center;
+  color:#fffaf0;
+  font-family:var(--font-reference);
+  font-size:clamp(24px,2.6vw,38px);
+  font-weight:450;
+  line-height:1.42;
+  letter-spacing:-.022em;
+  text-wrap:balance;
+  text-shadow:0 2px 18px rgba(50,30,3,.38);
+}
+
+@media(max-width:820px){
+  .amy-about-client-quote{
+    padding-bottom:82px;
+  }
+
+  .amy-about-client-quote__panel{
+    min-height:260px;
+    padding:48px 34px;
+    background-position:center 58%;
+  }
+
+  .amy-about-client-quote__panel::before{
+    inset:12px;
+  }
+
+  .amy-about-client-quote__mark{
+    top:26px;
+    left:27px;
+    font-size:60px;
+  }
+
+  .amy-about-client-quote blockquote{
+    font-size:clamp(22px,5vw,30px);
+    line-height:1.45;
+  }
+}
+
+@media(max-width:520px){
+  .amy-about-client-quote{
+    padding-bottom:68px;
+  }
+
+  .amy-about-client-quote__panel{
+    min-height:250px;
+    padding:44px 26px;
+  }
+
+  .amy-about-client-quote blockquote{
+    font-size:21px;
+    line-height:1.48;
+  }
+}

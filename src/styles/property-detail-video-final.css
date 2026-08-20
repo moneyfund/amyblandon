@@ -1,0 +1,198 @@
+/* Ficha pública de propiedad — cierre simplificado y recorrido en video 2026. */
+
+/* Amy no desea mostrar la etiqueta visual de propiedad destacada junto al tipo de operación. */
+.property-detail-reference .pd-ref-summary__badges .is-featured{
+  display:none!important;
+}
+
+/* Se elimina visualmente la antigua franja CTA previa al formulario de contacto. */
+.property-detail-reference .pd-ref-cta{
+  display:none!important;
+}
+
+/* RECORRIDO EN VIDEO — bloque editorial más atractivo y protagonista. */
+.property-detail-reference .pd-ref-video{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:76px minmax(0,1fr) auto;
+  gap:28px;
+  align-items:center;
+  margin-top:52px;
+  padding:34px 38px;
+  border:0;
+  background:
+    radial-gradient(circle at 82% 18%,rgba(201,154,68,.13),transparent 27%),
+    linear-gradient(112deg,#001929 0%,#052c3d 62%,#07384b 100%);
+  box-shadow:0 22px 55px rgba(0,25,41,.13);
+}
+
+.property-detail-reference .pd-ref-video::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  top:0;
+  left:0;
+  width:100%;
+  height:2px;
+  background:linear-gradient(90deg,transparent 0%,var(--pdr-gold) 22%,var(--pdr-gold-light) 50%,var(--pdr-gold) 78%,transparent 100%);
+  opacity:.95;
+}
+
+.property-detail-reference .pd-ref-video::after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  width:210px;
+  height:210px;
+  right:-78px;
+  bottom:-128px;
+  border:1px solid rgba(226,190,115,.17);
+  border-radius:50%;
+  box-shadow:
+    0 0 0 28px rgba(226,190,115,.035),
+    0 0 0 62px rgba(226,190,115,.018);
+  pointer-events:none;
+}
+
+.property-detail-reference .pd-ref-video__icon{
+  width:72px;
+  height:72px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(226,190,115,.72);
+  border-radius:50%;
+  background:rgba(255,255,255,.035);
+  color:var(--pdr-gold-light);
+  box-shadow:inset 0 0 0 7px rgba(201,154,68,.045);
+}
+
+.property-detail-reference .pd-ref-video__icon svg{
+  width:34px;
+  height:34px;
+  stroke-width:1.45;
+}
+
+.property-detail-reference .pd-ref-video .pd-ref-eyebrow{
+  margin:0 0 7px;
+  color:var(--pdr-gold-light);
+  font-size:10px;
+  letter-spacing:.16em;
+}
+
+.property-detail-reference .pd-ref-video h2{
+  margin:0 0 7px;
+  max-width:680px;
+  color:#fff;
+  font-family:var(--font-display);
+  font-size:clamp(24px,2.1vw,32px);
+  font-weight:500;
+  line-height:1.18;
+  letter-spacing:-.02em;
+}
+
+.property-detail-reference .pd-ref-video p:not(.pd-ref-eyebrow){
+  margin:0;
+  max-width:680px;
+  color:rgba(255,255,255,.7);
+  font-size:13px;
+  line-height:1.65;
+}
+
+.property-detail-reference .pd-ref-video>a{
+  position:relative;
+  z-index:2;
+  min-height:50px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:13px 20px;
+  border:1px solid var(--pdr-gold);
+  border-radius:2px;
+  background:var(--pdr-gold);
+  color:var(--pdr-navy);
+  font-size:11px;
+  font-weight:850;
+  letter-spacing:.035em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  transition:background .22s ease,color .22s ease,border-color .22s ease,transform .22s ease;
+}
+
+.property-detail-reference .pd-ref-video>a:hover{
+  transform:translateY(-2px);
+  background:var(--pdr-gold-light);
+  border-color:var(--pdr-gold-light);
+  color:var(--pdr-navy);
+}
+
+.property-detail-reference .pd-ref-video>a svg{
+  width:17px;
+  height:17px;
+}
+
+/* Al desaparecer la franja CTA, el formulario queda próximo al recorrido sin un vacío excesivo. */
+.property-detail-reference .pd-ref-video + .pd-ref-contact-section{
+  margin-top:58px;
+}
+
+@media(max-width:900px){
+  .property-detail-reference .pd-ref-video{
+    grid-template-columns:66px minmax(0,1fr);
+    gap:22px;
+    padding:30px 28px;
+  }
+
+  .property-detail-reference .pd-ref-video__icon{
+    width:62px;
+    height:62px;
+  }
+
+  .property-detail-reference .pd-ref-video>a{
+    grid-column:1/-1;
+    justify-self:start;
+    margin-left:88px;
+  }
+}
+
+@media(max-width:640px){
+  .property-detail-reference .pd-ref-video{
+    grid-template-columns:52px minmax(0,1fr);
+    gap:16px;
+    margin-top:34px;
+    padding:24px 20px 25px;
+  }
+
+  .property-detail-reference .pd-ref-video__icon{
+    width:50px;
+    height:50px;
+  }
+
+  .property-detail-reference .pd-ref-video__icon svg{
+    width:26px;
+    height:26px;
+  }
+
+  .property-detail-reference .pd-ref-video h2{
+    font-size:21px;
+  }
+
+  .property-detail-reference .pd-ref-video p:not(.pd-ref-eyebrow){
+    font-size:11.5px;
+    line-height:1.55;
+  }
+
+  .property-detail-reference .pd-ref-video>a{
+    grid-column:1/-1;
+    width:100%;
+    min-height:48px;
+    margin:2px 0 0;
+    padding-inline:16px;
+  }
+
+  .property-detail-reference .pd-ref-video + .pd-ref-contact-section{
+    margin-top:36px;
+  }
+}

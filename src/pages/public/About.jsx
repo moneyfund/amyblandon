@@ -3,7 +3,7 @@ import {
   Award,
   Clock3,
   Handshake,
-  Quote,
+  Home,
   ShieldCheck,
   Target,
   TrendingUp,
@@ -28,6 +28,13 @@ export default function About() {
       .catch(() => setContent(initialAboutContent));
   }, []);
 
+  const commitments = useMemo(() => [
+    { title: content.commitment1Title, text: content.commitment1Text, icon: ShieldCheck },
+    { title: content.commitment2Title, text: content.commitment2Text, icon: Home },
+    { title: content.commitment3Title, text: content.commitment3Text, icon: TrendingUp },
+    { title: content.commitment4Title, text: content.commitment4Text, icon: Handshake },
+  ], [content]);
+
   const values = useMemo(() => [
     { title: content.value1Title, text: content.value1Text, icon: UserRound },
     { title: content.value2Title, text: content.value2Text, icon: Handshake },
@@ -37,7 +44,6 @@ export default function About() {
   ], [content]);
 
   const heroImage = images.aboutPage || images.aboutHome || images.heroPerson || images.realEstateHero;
-  const quoteImage = images.aboutHome || images.realEstateHero || images.aboutPage || images.heroPerson;
 
   return (
     <div className="amy-about-page">
@@ -55,18 +61,10 @@ export default function About() {
               <span className="amy-about-hero__accent content-preserve-format">{content.heroTitleAccent}</span>
               <span className="content-preserve-format">{content.heroTitleLine3}</span>
             </h1>
-            <p className="amy-about-hero__lead content-preserve-format">{content.heroLead}</p>
-            <p className="amy-about-hero__role content-preserve-format">{content.heroRole}</p>
-
-            <div className="amy-about-credentials" aria-label="Experiencia y reconocimientos principales">
-              <div className="amy-about-credential">
-                <Award aria-hidden="true" />
-                <span><strong className="content-preserve-format">{content.credential1Title}</strong><small className="content-preserve-format">{content.credential1Text}</small></span>
-              </div>
-              <div className="amy-about-credential">
-                <Clock3 aria-hidden="true" />
-                <span><strong className="content-preserve-format">{content.credential2Title}</strong><small className="content-preserve-format">{content.credential2Text}</small></span>
-              </div>
+            <div className="amy-about-hero__divider" aria-hidden="true">
+              <span />
+              <i />
+              <span />
             </div>
           </RevealOnScroll>
 
@@ -82,19 +80,52 @@ export default function About() {
               objectPosition="center top"
             />
             <span className="amy-about-hero__media-line" aria-hidden="true" />
+
+            <div className="amy-about-photo-credentials" aria-label="Experiencia y reconocimientos principales">
+              <article className="amy-about-photo-credential">
+                <Award aria-hidden="true" />
+                <span>
+                  <strong className="content-preserve-format">{content.credential1Title}</strong>
+                  <small className="content-preserve-format">{content.credential1Text}</small>
+                </span>
+              </article>
+              <article className="amy-about-photo-credential">
+                <Clock3 aria-hidden="true" />
+                <span>
+                  <strong className="content-preserve-format">{content.credential2Title}</strong>
+                  <small className="content-preserve-format">{content.credential2Text}</small>
+                </span>
+              </article>
+            </div>
           </RevealOnScroll>
         </div>
       </section>
 
       <section className="amy-about-history" aria-labelledby="amy-about-history-title">
-        <div className="amy-about-shell amy-about-history__grid">
-          <RevealOnScroll className="amy-about-history__heading" direction="left">
+        <div className="amy-about-shell amy-about-history__combined">
+          <RevealOnScroll className="amy-about-history__story" direction="left">
             <p className="amy-about-kicker content-preserve-format">{content.historyKicker}</p>
             <h2 id="amy-about-history-title" className="content-preserve-format">{content.historyTitle}</h2>
-          </RevealOnScroll>
-          <RevealOnScroll className="amy-about-history__copy" direction="right" delay={80}>
             <span className="amy-about-history__rule" aria-hidden="true" />
-            <p className="content-preserve-format">{content.historyText}</p>
+            <p className="amy-about-history__text content-preserve-format">{content.historyText}</p>
+          </RevealOnScroll>
+
+          <RevealOnScroll className="amy-about-commitments" direction="right" delay={80}>
+            <div className="amy-about-commitments__heading">
+              <span aria-hidden="true" />
+              <p className="content-preserve-format">{content.commitmentsKicker}</p>
+              <i aria-hidden="true" />
+              <span aria-hidden="true" />
+            </div>
+            <div className="amy-about-commitments__grid">
+              {commitments.map(({ title, text, icon: Icon }) => (
+                <article className="amy-about-commitment" key={title}>
+                  <Icon aria-hidden="true" />
+                  <h3 className="content-preserve-format">{title}</h3>
+                  <p className="content-preserve-format">{text}</p>
+                </article>
+              ))}
+            </div>
           </RevealOnScroll>
         </div>
       </section>
@@ -133,26 +164,6 @@ export default function About() {
           <RevealOnScroll className="amy-about-recognition__copy" direction="right" delay={80}>
             <h2 id="amy-about-recognition-title" className="content-preserve-format">{content.recognitionTitle}</h2>
             <p className="content-preserve-format">{content.recognitionText}</p>
-          </RevealOnScroll>
-        </div>
-      </section>
-
-      <section className="amy-about-quote" aria-labelledby="amy-about-quote-title">
-        <div className="amy-about-shell amy-about-quote__grid">
-          <RevealOnScroll className="amy-about-quote__media" direction="left">
-            <SafeImage
-              className="amy-about-quote__image"
-              src={quoteImage}
-              alt="Amy Blandón"
-              width="1000"
-              height="1180"
-              objectPosition="center top"
-            />
-          </RevealOnScroll>
-          <RevealOnScroll className="amy-about-quote__copy" direction="right" delay={80}>
-            <Quote aria-hidden="true" />
-            <p className="amy-about-kicker content-preserve-format">{content.quoteKicker}</p>
-            <blockquote id="amy-about-quote-title" className="content-preserve-format">{content.quoteText}</blockquote>
           </RevealOnScroll>
         </div>
       </section>

@@ -2,11 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import ProtectedAdminRoute from '../components/admin/ProtectedAdminRoute';
 import AdminLayout from '../layouts/AdminLayout';
 import PublicLayout from '../layouts/PublicLayout';
-import {
-  Dashboard,
-  InquiriesAdmin,
-  SettingsAdmin,
-} from '../pages/admin/AdminPages';
+import { Dashboard, InquiriesAdmin, SettingsAdmin } from '../pages/admin/AdminPages';
 import AdminProperties from '../pages/admin/AdminProperties';
 import ContentAdmin from '../pages/admin/ContentAdminV2';
 import PropertyWorkspace from '../pages/admin/PropertyWorkspace';
@@ -24,6 +20,7 @@ import InsuranceQuote from '../pages/public/InsuranceQuote';
 import SellWithAmy from '../pages/public/SellWithAmy';
 import { Resources, Article, Contact, NotFound } from '../pages/public/BasicPages';
 import About from '../pages/public/About';
+import Recognitions from '../pages/public/Recognitions';
 
 export default function AppRoutes() {
   return (
@@ -46,6 +43,7 @@ export default function AppRoutes() {
         <Route path="insurance" element={<Navigate to="/seguros" replace />} />
         <Route path="insurance/quote" element={<InsuranceQuote />} />
         <Route path="sobre-mi" element={<About />} />
+        <Route path="sobre-mi/reconocimientos" element={<Recognitions />} />
         <Route path="about" element={<Navigate to="/sobre-mi" replace />} />
         <Route path="resources" element={<Resources />} />
         <Route path="resources/:slug" element={<Article />} />

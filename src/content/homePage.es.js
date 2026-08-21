@@ -15,7 +15,6 @@ export const homePageContent = {
   nav: [
     { label: 'Inicio', to: '/' },
     { label: 'Sobre mí', to: '/sobre-mi' },
-    { label: 'Reconocimientos', to: '/sobre-mi/reconocimientos' },
     { label: 'Bienes raíces', to: '/propiedades' },
     { label: 'Seguros', to: '/seguros' },
     { label: 'Contacto', to: '/contacto' }

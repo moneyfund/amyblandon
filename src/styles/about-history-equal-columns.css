@@ -29,3 +29,38 @@
     padding-right:10px;
   }
 }
+
+/* Acceso a la subpágina de reconocimientos desde Mi historia. */
+.amy-about-page .amy-about-history__recognitions{
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  margin-top:28px;
+  padding:10px 0 8px;
+  border-bottom:1px solid rgba(201,154,68,.72);
+  color:var(--amy-navy,#092a37);
+  font-size:13px;
+  font-weight:750;
+  letter-spacing:.02em;
+  text-decoration:none;
+  transition:color .22s ease,gap .22s ease,border-color .22s ease;
+}
+
+.amy-about-page .amy-about-history__recognitions:hover{
+  gap:17px;
+  color:var(--amy-gold,#c99a44);
+  border-color:var(--amy-gold,#c99a44);
+}
+
+.amy-about-page .amy-about-history__recognitions-arrow{
+  color:var(--amy-gold,#c99a44);
+  font-size:18px;
+  line-height:1;
+}
+
+@media(max-width:560px){
+  .amy-about-page .amy-about-history__recognitions{
+    margin-top:22px;
+    font-size:12px;
+  }
+}

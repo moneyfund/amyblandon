@@ -84,6 +84,7 @@ import './styles/about-history-equal-columns.css';
 import './styles/about-purpose-quote-final.css';
 import './styles/about-hero-managed-slider.css';
 import './styles/recognitions-page.css';
+import './styles/desktop-viewport-normalization.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

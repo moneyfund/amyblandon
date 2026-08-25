@@ -7,8 +7,19 @@ import { useSiteImages } from '../../contexts/SiteImagesContext';
 import { whatsappLink } from '../../utils/whatsapp';
 
 const referenceHeroLines = ['Tu próxima', 'inversión,', 'comienza con', 'una buena', 'decisión'];
-const referenceHeroTitle = homePageContent.hero.plainTitle.toLocaleLowerCase('es');
 const HERO_SLIDE_INTERVAL = 3000;
+
+function normalizeComparableTitle(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[¡!¿?.,;:–—-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLocaleLowerCase('es');
+}
+
+const referenceHeroTitle = normalizeComparableTitle(homePageContent.hero.plainTitle);
 
 function resolveHeroTitleLines(value) {
   const title = String(value || '').trim();
@@ -21,8 +32,9 @@ function resolveHeroTitleLines(value) {
 
   if (explicitLines.length > 1) return explicitLines;
 
-  const normalized = title.replace(/\s+/g, ' ').toLocaleLowerCase('es');
-  if (normalized === referenceHeroTitle) return referenceHeroLines;
+  // Firestore puede guardar la misma frase con mayúsculas o puntuación distinta.
+  // Si semánticamente es el título aprobado, mantenemos siempre sus 5 filas exactas.
+  if (normalizeComparableTitle(title) === referenceHeroTitle) return referenceHeroLines;
 
   return [title];
 }

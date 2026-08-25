@@ -113,16 +113,26 @@
 }
 
 @media (min-width: 921px){
-  /* ===== SOBRE MÍ ===== */
+  /* ===== SOBRE MÍ =====
+   * El hero comienza en el flujo normal, inmediatamente DESPUÉS del navbar.
+   * No se usa margen negativo ni superposición con el header.
+   */
+  .amy-about-page{
+    position: relative !important;
+  }
+
   .amy-about-hero{
+    position: relative !important;
+    margin-top: 0 !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
+    transform: none !important;
   }
 
   .amy-about-hero__grid{
-    min-height: 660px !important;
-    height: 660px !important;
-    max-height: 660px !important;
+    min-height: 720px !important;
+    height: 720px !important;
+    max-height: 720px !important;
     grid-template-columns: 1fr 1fr !important;
     gap: 0 !important;
     align-items: stretch !important;
@@ -133,7 +143,7 @@
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
-    padding: 104px 48px 54px 50px !important;
+    padding: 112px 48px 58px 50px !important;
   }
 
   .amy-about-hero__copy .amy-about-kicker{
@@ -142,8 +152,8 @@
 
   .amy-about-hero__copy h1,
   .amy-about-hero h1{
-    max-width: 650px !important;
-    font-size: 64px !important;
+    max-width: 670px !important;
+    font-size: 67px !important;
     line-height: 1.06 !important;
     letter-spacing: -0.045em !important;
   }
@@ -157,9 +167,16 @@
   .amy-about-hero__media--managed .amy-about-hero__person-slide,
   .amy-about-hero__media--managed .amy-about-hero__managed-background,
   .amy-about-hero__media--managed .amy-about-hero__person-slide img{
-    height: 660px !important;
-    min-height: 660px !important;
-    max-height: 660px !important;
+    height: 720px !important;
+    min-height: 720px !important;
+    max-height: 720px !important;
+  }
+
+  .amy-about-hero__media{
+    align-self: stretch !important;
+    margin-top: 0 !important;
+    top: auto !important;
+    transform: none !important;
   }
 
   .amy-about-hero__managed-background img{
@@ -178,7 +195,7 @@
   }
 
   .amy-about-photo-credentials{
-    top: 205px !important;
+    top: 230px !important;
     right: 24px !important;
     width: min(232px, 43%) !important;
   }
@@ -195,22 +212,22 @@
   .amy-about-hero__media--managed .amy-about-hero__person-slide,
   .amy-about-hero__media--managed .amy-about-hero__managed-background,
   .amy-about-hero__media--managed .amy-about-hero__person-slide img{
-    height: 630px !important;
-    min-height: 630px !important;
-    max-height: 630px !important;
+    height: 680px !important;
+    min-height: 680px !important;
+    max-height: 680px !important;
   }
 
   .amy-about-hero__copy{
-    padding: 96px 36px 48px 38px !important;
+    padding: 102px 36px 50px 38px !important;
   }
 
   .amy-about-hero__copy h1,
   .amy-about-hero h1{
-    font-size: 58px !important;
+    font-size: 60px !important;
   }
 
   .amy-about-photo-credentials{
-    top: 190px !important;
+    top: 210px !important;
     right: 18px !important;
     width: min(220px, 46%) !important;
   }

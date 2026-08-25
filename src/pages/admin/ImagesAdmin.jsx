@@ -119,7 +119,7 @@ export default function ImagesAdmin() {
           <Images size={18} /> Imágenes Hero BR <span className="admin-image-tabs__count">5</span>
         </button>
         <button type="button" role="tab" aria-selected={activeTab === 'recognitions'} className={activeTab === 'recognitions' ? 'active' : ''} onClick={() => setActiveTab('recognitions')}>
-          <Images size={18} /> Reconocimientos <span className="admin-image-tabs__count">6</span>
+          <Images size={18} /> Mis Reconocimientos <span className="admin-image-tabs__count">6</span>
         </button>
       </div>
 
@@ -136,9 +136,9 @@ export default function ImagesAdmin() {
         <section className="admin-card admin-hero-br-note admin-recognition-note">
           <Images aria-hidden="true" />
           <div>
-            <h2>Diplomas y reconocimientos de Amy</h2>
-            <p>Sube aquí los diplomas, certificaciones, premios y reconocimientos que quieras mostrar públicamente en la nueva sección “Reconocimientos”. Puedes reemplazar cada espacio individualmente.</p>
-            <strong>Recomendación: fotografía o escaneo nítido, sin reflejos y con todo el documento visible.</strong>
+            <h2>Mis Reconocimientos</h2>
+            <p>Este espacio es exclusivamente para subir los diplomas, certificados y reconocimientos de Amy que aparecerán en la página pública “Mis Reconocimientos”.</p>
+            <strong>Sube cada diploma completo, nítido y con buena resolución para que pueda ampliarse correctamente en la web.</strong>
           </div>
         </section>
       )}

@@ -28,25 +28,37 @@
   }
 
   .home-hero .home-kicker{
-    margin-bottom: 22px !important;
+    margin-bottom: 14px !important;
     font-size: 16px !important;
     line-height: 1.35 !important;
   }
 
   .home-hero h1{
-    max-width: 610px !important;
+    max-width: 650px !important;
     font-size: 62px !important;
-    line-height: 1.13 !important;
+    line-height: 1.16 !important;
     letter-spacing: -0.035em !important;
   }
 
+  /* Orden editorial aprobado del título: 3 líneas equilibradas. */
   .home-hero h1 > span{
-    display: block !important;
+    display: inline !important;
+  }
+
+  .home-hero h1 > span:nth-child(1)::after,
+  .home-hero h1 > span:nth-child(3)::after{
+    content: "\A";
+    white-space: pre;
+  }
+
+  .home-hero h1 > span:nth-child(2)::after,
+  .home-hero h1 > span:nth-child(4)::after{
+    content: " ";
   }
 
   .home-hero__copy > p:not(.home-kicker){
     max-width: 610px !important;
-    margin: 24px 0 30px !important;
+    margin: 22px 0 28px !important;
     font-size: 17px !important;
     line-height: 1.62 !important;
   }
@@ -102,7 +114,7 @@
   }
 
   .home-hero h1{
-    max-width: 560px !important;
+    max-width: 590px !important;
     font-size: 56px !important;
   }
 

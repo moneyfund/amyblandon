@@ -9,45 +9,17 @@ import { whatsappLink } from '../../utils/whatsapp';
 const referenceHeroLines = ['Tu próxima', 'inversión,', 'comienza con', 'una buena', 'decisión'];
 const HERO_SLIDE_INTERVAL = 3000;
 
-function normalizeComparableTitle(value) {
-  return String(value || '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[¡!¿?.,;:–—-]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .toLocaleLowerCase('es');
-}
-
-const referenceHeroTitle = normalizeComparableTitle(homePageContent.hero.plainTitle);
-
-function resolveHeroTitleLines(value) {
-  const title = String(value || '').trim();
-  if (!title) return referenceHeroLines;
-
-  const explicitLines = title
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean);
-
-  if (explicitLines.length > 1) return explicitLines;
-
-  // Firestore puede guardar la misma frase con mayúsculas o puntuación distinta.
-  // Si semánticamente es el título aprobado, mantenemos siempre sus 5 filas exactas.
-  if (normalizeComparableTitle(title) === referenceHeroTitle) return referenceHeroLines;
-
-  return [title];
-}
-
 export default function HomeHero({ content }) {
   const { images } = useSiteImages();
   const [slideIndex, setSlideIndex] = useState(0);
   const [isJumping, setIsJumping] = useState(false);
-  const title = content?.heroTitle || homePageContent.hero.plainTitle;
+
   const hero = {
-    plainTitle: title,
+    plainTitle: homePageContent.hero.plainTitle,
     eyebrow: content?.heroLabel || homePageContent.hero.eyebrow,
-    titleLines: resolveHeroTitleLines(title),
+    // La composición del título es parte fija del diseño aprobado del hero.
+    // Firestore puede editar otros textos, pero no debe rearmar estas cinco filas.
+    titleLines: referenceHeroLines,
     text: content?.heroSubtitle || homePageContent.hero.text,
     button: content?.heroButton || homePageContent.hero.button,
   };

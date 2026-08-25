@@ -233,7 +233,7 @@ export default function About() {
             <span className="amy-about-history__rule" aria-hidden="true" />
             <p className="amy-about-history__text content-preserve-format">{content.historyText}</p>
             <Link className="amy-about-history__recognitions" to="/sobre-mi/reconocimientos">
-              <span>Conoce mis reconocimientos</span>
+              <span>Mis reconocimientos</span>
               <span className="amy-about-history__recognitions-arrow" aria-hidden="true">→</span>
             </Link>
           </RevealOnScroll>

@@ -1,0 +1,216 @@
+/*
+ * Consistencia visual de heroes en escritorio.
+ * Mantiene la composición aprobada de Inicio y Sobre mí con variaciones mínimas
+ * entre laptops y monitores, evitando que ancho/alto del viewport cambien demasiado
+ * la escala aparente del contenido.
+ */
+
+@media (min-width: 1081px){
+  /* ===== INICIO ===== */
+  .home-hero,
+  .home-hero__inner,
+  .home-hero__media.home-hero__media--layered{
+    height: 800px !important;
+    min-height: 800px !important;
+    max-height: 800px !important;
+  }
+
+  .home-hero__inner{
+    grid-template-columns: 51.5% 48.5% !important;
+    gap: 0 !important;
+    align-items: stretch !important;
+  }
+
+  .home-hero__copy{
+    align-self: center !important;
+    padding: 122px 58px 52px 76px !important;
+    transform: none !important;
+  }
+
+  .home-hero .home-kicker{
+    margin-bottom: 22px !important;
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+  }
+
+  .home-hero h1{
+    max-width: 610px !important;
+    font-size: 62px !important;
+    line-height: 1.13 !important;
+    letter-spacing: -0.035em !important;
+  }
+
+  .home-hero h1 > span{
+    display: block !important;
+  }
+
+  .home-hero__copy > p:not(.home-kicker){
+    max-width: 610px !important;
+    margin: 24px 0 30px !important;
+    font-size: 17px !important;
+    line-height: 1.62 !important;
+  }
+
+  .home-hero__media.home-hero__media--layered,
+  .home-hero__background-viewport,
+  .home-hero__background-track,
+  .home-hero__background,
+  .home-hero__background img{
+    height: 800px !important;
+    min-height: 800px !important;
+    max-height: 800px !important;
+  }
+
+  .home-hero__background img{
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+
+  .home-hero__person{
+    left: -11% !important;
+    bottom: -2% !important;
+    width: 84% !important;
+    height: 92% !important;
+    transform: scale(1.10) !important;
+    transform-origin: left bottom !important;
+  }
+
+  .home-hero__person img{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center bottom !important;
+  }
+}
+
+/* Solo una compactación mínima en escritorios realmente estrechos. */
+@media (min-width: 1081px) and (max-width: 1280px){
+  .home-hero,
+  .home-hero__inner,
+  .home-hero__media.home-hero__media--layered,
+  .home-hero__background-viewport,
+  .home-hero__background-track,
+  .home-hero__background,
+  .home-hero__background img{
+    height: 760px !important;
+    min-height: 760px !important;
+    max-height: 760px !important;
+  }
+
+  .home-hero__copy{
+    padding: 112px 48px 44px 58px !important;
+  }
+
+  .home-hero h1{
+    max-width: 560px !important;
+    font-size: 56px !important;
+  }
+
+  .home-hero__copy > p:not(.home-kicker){
+    font-size: 16px !important;
+  }
+}
+
+@media (min-width: 921px){
+  /* ===== SOBRE MÍ ===== */
+  .amy-about-hero{
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .amy-about-hero__grid{
+    min-height: 660px !important;
+    height: 660px !important;
+    max-height: 660px !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0 !important;
+    align-items: stretch !important;
+  }
+
+  .amy-about-hero__copy{
+    align-self: stretch !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    padding: 104px 48px 54px 50px !important;
+  }
+
+  .amy-about-hero__copy .amy-about-kicker{
+    margin-bottom: 24px !important;
+  }
+
+  .amy-about-hero__copy h1,
+  .amy-about-hero h1{
+    max-width: 650px !important;
+    font-size: 64px !important;
+    line-height: 1.06 !important;
+    letter-spacing: -0.045em !important;
+  }
+
+  .amy-about-hero__media,
+  .amy-about-hero__image,
+  .amy-about-hero__image img,
+  .amy-about-hero__media--managed,
+  .amy-about-hero__media--managed .amy-about-hero__people-viewport,
+  .amy-about-hero__media--managed .amy-about-hero__people-track,
+  .amy-about-hero__media--managed .amy-about-hero__person-slide,
+  .amy-about-hero__media--managed .amy-about-hero__managed-background,
+  .amy-about-hero__media--managed .amy-about-hero__person-slide img{
+    height: 660px !important;
+    min-height: 660px !important;
+    max-height: 660px !important;
+  }
+
+  .amy-about-hero__managed-background img{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+
+  .amy-about-hero__media--managed .amy-about-hero__person-slide img{
+    width: 100% !important;
+    object-fit: contain !important;
+    object-position: center bottom !important;
+    transform: scale(1.015) !important;
+    transform-origin: center bottom !important;
+  }
+
+  .amy-about-photo-credentials{
+    top: 205px !important;
+    right: 24px !important;
+    width: min(232px, 43%) !important;
+  }
+}
+
+@media (min-width: 921px) and (max-width: 1180px){
+  .amy-about-hero__grid,
+  .amy-about-hero__media,
+  .amy-about-hero__image,
+  .amy-about-hero__image img,
+  .amy-about-hero__media--managed,
+  .amy-about-hero__media--managed .amy-about-hero__people-viewport,
+  .amy-about-hero__media--managed .amy-about-hero__people-track,
+  .amy-about-hero__media--managed .amy-about-hero__person-slide,
+  .amy-about-hero__media--managed .amy-about-hero__managed-background,
+  .amy-about-hero__media--managed .amy-about-hero__person-slide img{
+    height: 630px !important;
+    min-height: 630px !important;
+    max-height: 630px !important;
+  }
+
+  .amy-about-hero__copy{
+    padding: 96px 36px 48px 38px !important;
+  }
+
+  .amy-about-hero__copy h1,
+  .amy-about-hero h1{
+    font-size: 58px !important;
+  }
+
+  .amy-about-photo-credentials{
+    top: 190px !important;
+    right: 18px !important;
+    width: min(220px, 46%) !important;
+  }
+}

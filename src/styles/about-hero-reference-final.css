@@ -1,0 +1,137 @@
+/* Ajuste final del Hero Sobre mí basado en la referencia aprobada.
+ * Fondo a 50% de ancho, Amy anclada abajo y con más aire superior,
+ * manteniendo una composición estable similar al hero de Inicio.
+ */
+
+@media (min-width: 921px){
+  .amy-about-hero{
+    margin-top: 0 !important;
+    padding: 0 !important;
+  }
+
+  .amy-about-hero__grid{
+    grid-template-columns: 50% 50% !important;
+    height: 760px !important;
+    min-height: 760px !important;
+    max-height: 760px !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+  }
+
+  .amy-about-hero__copy{
+    height: 760px !important;
+    min-height: 760px !important;
+    max-height: 760px !important;
+    justify-content: center !important;
+    padding: 118px 56px 76px 72px !important;
+  }
+
+  .amy-about-hero__copy .amy-about-kicker{
+    margin-bottom: 24px !important;
+  }
+
+  .amy-about-hero__copy h1,
+  .amy-about-hero h1{
+    max-width: 650px !important;
+    font-size: 64px !important;
+    line-height: 1.06 !important;
+    letter-spacing: -0.045em !important;
+  }
+
+  .amy-about-hero__media,
+  .amy-about-hero__media--managed,
+  .amy-about-hero__media--managed .amy-about-hero__people-viewport,
+  .amy-about-hero__media--managed .amy-about-hero__people-track,
+  .amy-about-hero__media--managed .amy-about-hero__person-slide,
+  .amy-about-hero__media--managed .amy-about-hero__managed-background,
+  .amy-about-hero__image,
+  .amy-about-hero__image img{
+    height: 760px !important;
+    min-height: 760px !important;
+    max-height: 760px !important;
+  }
+
+  .amy-about-hero__media{
+    align-self: stretch !important;
+    overflow: hidden !important;
+  }
+
+  .amy-about-hero__managed-background,
+  .amy-about-hero__managed-background img{
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .amy-about-hero__managed-background img{
+    object-fit: cover !important;
+    object-position: center center !important;
+    transform: none !important;
+  }
+
+  /* Amy queda claramente más abajo que antes, sin pegar la cabeza al navbar. */
+  .amy-about-hero__media--managed .amy-about-hero__person-slide{
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+  }
+
+  .amy-about-hero__media--managed .amy-about-hero__person-slide img{
+    width: 92% !important;
+    height: 88% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    object-position: center bottom !important;
+    transform: none !important;
+    transform-origin: center bottom !important;
+  }
+
+  .amy-about-photo-credentials{
+    top: 300px !important;
+    right: 34px !important;
+    width: min(242px, 42%) !important;
+  }
+
+  .amy-about-hero__media-line{
+    bottom: 24px !important;
+  }
+}
+
+@media (min-width: 921px) and (max-width: 1180px){
+  .amy-about-hero__grid,
+  .amy-about-hero__copy,
+  .amy-about-hero__media,
+  .amy-about-hero__media--managed,
+  .amy-about-hero__media--managed .amy-about-hero__people-viewport,
+  .amy-about-hero__media--managed .amy-about-hero__people-track,
+  .amy-about-hero__media--managed .amy-about-hero__person-slide,
+  .amy-about-hero__media--managed .amy-about-hero__managed-background,
+  .amy-about-hero__image,
+  .amy-about-hero__image img{
+    height: 710px !important;
+    min-height: 710px !important;
+    max-height: 710px !important;
+  }
+
+  .amy-about-hero__copy{
+    padding: 104px 40px 62px 46px !important;
+  }
+
+  .amy-about-hero__copy h1,
+  .amy-about-hero h1{
+    font-size: 58px !important;
+  }
+
+  .amy-about-hero__media--managed .amy-about-hero__person-slide img{
+    width: 94% !important;
+    height: 88% !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  .amy-about-photo-credentials{
+    top: 278px !important;
+    right: 20px !important;
+    width: min(220px, 45%) !important;
+  }
+}

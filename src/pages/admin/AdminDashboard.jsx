@@ -3,7 +3,7 @@ import {
   Building2,
   CircleDollarSign,
   FilePenLine,
-  HomeKey,
+  House,
   MessageSquareText,
   Sparkles,
 } from 'lucide-react';
@@ -81,7 +81,7 @@ export default function AdminDashboard() {
     {
       label: 'Alquiladas',
       value: properties.filter((item) => item.status === 'rented').length,
-      icon: HomeKey,
+      icon: House,
       tone: 'blue',
     },
     {

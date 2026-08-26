@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FileDown } from 'lucide-react';
+import { Building2, FileDown, Search, X } from 'lucide-react';
 import {
   deleteProperty,
   duplicateProperty,
@@ -58,6 +58,12 @@ const formatPrice = (property) => {
   } catch {
     return `$${Number(property.price || 0).toLocaleString('en-US')}`;
   }
+};
+
+const normalizeOperation = (value) => {
+  if (value === 'venta') return 'sale';
+  if (value === 'renta') return 'rent';
+  return value;
 };
 
 const asImageMeta = (image) => {
@@ -150,12 +156,8 @@ const decodeImageForPdf = async (image) => {
 export default function AdminProperties() {
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState('');
-  const [filters, setFilters] = useState({
-    propertyType: '',
-    operationType: '',
-    status: '',
-    publicationStatus: '',
-  });
+  const [operationType, setOperationType] = useState('');
+  const [propertyType, setPropertyType] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [pdfGeneratingId, setPdfGeneratingId] = useState('');
@@ -176,18 +178,35 @@ export default function AdminProperties() {
 
   const filtered = useMemo(
     () => items.filter((property) => {
-      const searchable = [property.title, property.internalCode, property.city, property.sector]
+      const searchable = [
+        property.title,
+        property.internalCode,
+        property.city,
+        property.state,
+        property.department,
+        property.sector,
+        property.address,
+        property.publicAddress,
+        property.propertyType,
+      ]
         .filter(Boolean)
         .join(' ')
         .toLowerCase();
+      const currentOperation = normalizeOperation(property.operationType || property.transactionType);
 
-      return searchable.includes(search.toLowerCase())
-        && Object.entries(filters).every(([key, value]) => !value || property[key] === value);
+      return (!search || searchable.includes(search.toLowerCase().trim()))
+        && (!operationType || currentOperation === operationType)
+        && (!propertyType || property.propertyType === propertyType);
     }),
-    [items, search, filters],
+    [items, search, operationType, propertyType],
   );
 
-  const changeFilter = (key, value) => setFilters((current) => ({ ...current, [key]: value }));
+  const hasSearch = Boolean(search || operationType || propertyType);
+  const clearSearch = () => {
+    setSearch('');
+    setOperationType('');
+    setPropertyType('');
+  };
 
   const remove = async (property) => {
     if (!window.confirm(`¿Eliminar definitivamente “${property.title}” y sus fotografías?`)) return;
@@ -279,47 +298,44 @@ export default function AdminProperties() {
         <Link className="btn primary" to="/admin/properties/new">Agregar propiedad</Link>
       </div>
 
-      <section className="admin-card admin-filters-card">
-        <h2>Buscar y filtrar</h2>
-        <div className="filters admin-property-filters">
-          <input
-            placeholder="Buscar por título, código, ciudad o sector"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            aria-label="Buscar propiedades"
-          />
+      <section className="admin-property-searchbar" aria-label="Buscar propiedades">
+        <label className="admin-property-searchbar__keyword">
+          <Search size={20} aria-hidden="true" />
+          <span>
+            <small>¿Dónde quieres buscar?</small>
+            <input
+              placeholder="Ciudad, zona o nombre de propiedad"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              aria-label="Ubicación o palabra clave"
+            />
+          </span>
+        </label>
 
-          <select value={filters.propertyType} onChange={(event) => changeFilter('propertyType', event.target.value)}>
-            <option value="">Todos los tipos de propiedad</option>
-            {propertyTypeOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-          </select>
-
-          <select value={filters.operationType} onChange={(event) => changeFilter('operationType', event.target.value)}>
+        <label className="admin-property-searchbar__select">
+          <small>Operación</small>
+          <select value={operationType} onChange={(event) => setOperationType(event.target.value)} aria-label="Tipo de operación">
             <option value="">Venta y alquiler</option>
             {operationTypeOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
+        </label>
 
-          <select value={filters.status} onChange={(event) => changeFilter('status', event.target.value)}>
-            <option value="">Todos los estados comerciales</option>
-            {propertyStatusOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-          </select>
+        <label className="admin-property-searchbar__select admin-property-searchbar__select--type">
+          <Building2 size={18} aria-hidden="true" />
+          <span>
+            <small>Tipo de propiedad</small>
+            <select value={propertyType} onChange={(event) => setPropertyType(event.target.value)}>
+              <option value="">Propiedades</option>
+              {propertyTypeOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+            </select>
+          </span>
+        </label>
 
-          <select value={filters.publicationStatus} onChange={(event) => changeFilter('publicationStatus', event.target.value)}>
-            <option value="">Todos los estados de publicación</option>
-            {publicationStatusOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-          </select>
-
-          <button
-            type="button"
-            className="btn secondary"
-            onClick={() => {
-              setSearch('');
-              setFilters({ propertyType: '', operationType: '', status: '', publicationStatus: '' });
-            }}
-          >
-            Limpiar filtros
+        {hasSearch && (
+          <button type="button" className="admin-property-searchbar__clear" onClick={clearSearch} aria-label="Limpiar búsqueda" title="Limpiar búsqueda">
+            <X size={18} />
           </button>
-        </div>
+        )}
       </section>
 
       {error && <p className="error">{error}</p>}
@@ -360,7 +376,7 @@ export default function AdminProperties() {
                   </td>
                   <td>{[property.city, property.sector].filter(Boolean).join(', ') || '—'}</td>
                   <td>{formatPrice(property)}</td>
-                  <td>{labelFor(operationTypeOptions, property.operationType)}</td>
+                  <td>{labelFor(operationTypeOptions, normalizeOperation(property.operationType || property.transactionType))}</td>
                   <td>
                     <span className={`status-badge status-badge--${property.status || 'unknown'}`}>
                       {labelFor(propertyStatusOptions, property.status)}
@@ -397,7 +413,7 @@ export default function AdminProperties() {
             </tbody>
           </table>
 
-          {!filtered.length && <p className="empty">No hay propiedades que coincidan con la búsqueda y los filtros seleccionados.</p>}
+          {!filtered.length && <p className="empty">No hay propiedades que coincidan con la búsqueda.</p>}
         </div>
       )}
     </>

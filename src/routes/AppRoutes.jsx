@@ -2,7 +2,8 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import ProtectedAdminRoute from '../components/admin/ProtectedAdminRoute';
 import AdminLayout from '../layouts/AdminLayout';
 import PublicLayout from '../layouts/PublicLayout';
-import { Dashboard, InquiriesAdmin, SettingsAdmin } from '../pages/admin/AdminPages';
+import { InquiriesAdmin, SettingsAdmin } from '../pages/admin/AdminPages';
+import AdminDashboard from '../pages/admin/AdminDashboard';
 import AdminProperties from '../pages/admin/AdminProperties';
 import ContentAdmin from '../pages/admin/ContentAdminV2';
 import PropertyWorkspace from '../pages/admin/PropertyWorkspace';
@@ -54,7 +55,7 @@ export default function AppRoutes() {
 
       <Route element={<ProtectedAdminRoute />}>
         <Route path="admin" element={<AdminLayout />}>
-          <Route index element={<Dashboard />} />
+          <Route index element={<AdminDashboard />} />
           <Route path="properties" element={<AdminProperties />} />
           <Route path="properties/new" element={<PropertyWorkspace />} />
           <Route path="properties/:id/edit" element={<PropertyWorkspace />} />

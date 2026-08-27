@@ -34,6 +34,8 @@ export default function AdminLayout() {
   const { theme } = useSiteTheme();
   const [open, setOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(readCollapsedPreference);
+  const [showIntro, setShowIntro] = useState(true);
+  const [introLeaving, setIntroLeaving] = useState(false);
   const navigate = useNavigate();
   const publicUrl = window.location.hostname.endsWith('github.io')
     ? `${window.location.origin}${import.meta.env.BASE_URL}#/`
@@ -47,6 +49,16 @@ export default function AdminLayout() {
     }
   }, [sidebarCollapsed]);
 
+  useEffect(() => {
+    const fadeTimer = window.setTimeout(() => setIntroLeaving(true), 1450);
+    const hideTimer = window.setTimeout(() => setShowIntro(false), 1850);
+
+    return () => {
+      window.clearTimeout(fadeTimer);
+      window.clearTimeout(hideTimer);
+    };
+  }, []);
+
   const signOut = async () => {
     await logout();
     navigate('/admin/login');
@@ -56,11 +68,36 @@ export default function AdminLayout() {
     '--admin-sidebar-bg': theme.footerBackground || '#001929',
   };
 
+  const adminIntroStyle = {
+    '--admin-intro-bg': theme.footerBackground || '#001929',
+  };
+
   return (
     <div
       className={`admin-shell ${sidebarCollapsed ? 'admin-shell--sidebar-collapsed' : ''}`}
       style={adminThemeStyle}
     >
+      {showIntro && (
+        <div
+          className={`admin-intro-loader ${introLeaving ? 'admin-intro-loader--leaving' : ''}`}
+          style={adminIntroStyle}
+          role="status"
+          aria-label="Cargando panel privado de Amy Blandón"
+        >
+          <div className="admin-intro-loader__content">
+            <div className="admin-intro-loader__logo">
+              {images.brandLogo
+                ? <img src={images.brandLogo} alt="Amy Blandón" />
+                : <span>AMY BLANDON</span>}
+            </div>
+            <p>Tu espacio privado de gestión</p>
+            <div className="admin-intro-loader__progress" aria-hidden="true">
+              <span />
+            </div>
+          </div>
+        </div>
+      )}
+
       <aside className={open ? 'open' : ''}>
         <div className="admin-brand">
           <div className="admin-brand__logo">

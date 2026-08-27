@@ -50,8 +50,8 @@ export default function AdminLayout() {
   }, [sidebarCollapsed]);
 
   useEffect(() => {
-    const fadeTimer = window.setTimeout(() => setIntroLeaving(true), 1450);
-    const hideTimer = window.setTimeout(() => setShowIntro(false), 1850);
+    const fadeTimer = window.setTimeout(() => setIntroLeaving(true), 2450);
+    const hideTimer = window.setTimeout(() => setShowIntro(false), 2850);
 
     return () => {
       window.clearTimeout(fadeTimer);
@@ -90,7 +90,7 @@ export default function AdminLayout() {
                 ? <img src={images.brandLogo} alt="Amy Blandón" />
                 : <span>AMY BLANDON</span>}
             </div>
-            <p>Tu espacio privado de gestión</p>
+            <p>Construyendo confianza, creando oportunidades.</p>
             <div className="admin-intro-loader__progress" aria-hidden="true">
               <span />
             </div>

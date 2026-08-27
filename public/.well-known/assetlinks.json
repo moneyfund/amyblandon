@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.amyblandon.admin.preview",
+      "sha256_cert_fingerprints": [
+        "5C:71:AC:AC:29:A3:2B:07:B0:BA:71:38:B4:47:A8:7B:04:AC:7D:49:DE:7A:EC:79:7F:63:9E:07:7D:B1:9A:1E"
+      ]
+    }
+  }
+]

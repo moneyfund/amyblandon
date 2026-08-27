@@ -88,6 +88,7 @@ import './styles/desktop-viewport-normalization.css';
 import './styles/hero-desktop-consistency.css';
 import './styles/about-hero-reference-final.css';
 import './styles/admin-mobile-app.css';
+import './styles/admin-intro-loader.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

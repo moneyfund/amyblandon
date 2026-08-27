@@ -67,12 +67,15 @@
 
 .admin-intro-loader__content>p{
   margin:18px 0 0;
-  color:rgba(255,255,255,.82);
-  font-size:clamp(.72rem,1.5vw,.92rem);
-  font-weight:600;
-  line-height:1.4;
-  letter-spacing:.24em;
-  text-transform:uppercase;
+  max-width:560px;
+  color:rgba(255,255,255,.84);
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(.92rem,1.7vw,1.12rem);
+  font-style:italic;
+  font-weight:400;
+  line-height:1.55;
+  letter-spacing:.045em;
+  text-transform:none;
   animation:adminIntroCopyIn .65s .16s ease both;
 }
 
@@ -125,9 +128,9 @@
 
   .admin-intro-loader__content>p{
     margin-top:14px;
-    max-width:92vw;
-    font-size:.68rem;
-    letter-spacing:.18em;
+    max-width:88vw;
+    font-size:.88rem;
+    letter-spacing:.025em;
   }
 
   .admin-intro-loader__progress{

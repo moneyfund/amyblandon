@@ -7,15 +7,25 @@ android {
     compileSdk 35
 
     defaultConfig {
-        applicationId 'com.amyblandon.admin'
+        applicationId 'com.amyblandon.admin.preview'
         minSdk 24
         targetSdk 35
-        versionCode 1
-        versionName '1.0'
+        versionCode 2
+        versionName '1.1'
+    }
+
+    signingConfigs {
+        preview {
+            storeFile file('amy-preview.jks')
+            storePassword 'AmyPreview2026'
+            keyAlias 'amy-preview'
+            keyPassword 'AmyPreview2026'
+        }
     }
 
     buildTypes {
         release {
+            signingConfig signingConfigs.preview
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -25,4 +35,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+}
+
+dependencies {
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0'
 }

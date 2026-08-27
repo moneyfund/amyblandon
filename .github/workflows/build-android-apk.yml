@@ -32,14 +32,20 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Build debug APK
+      - name: Restore preview signing key
+        run: base64 --decode android-app/preview-keystore.b64 > android-app/app/amy-preview.jks
+
+      - name: Build signed v1.1 APK
         working-directory: android-app
-        run: gradle :app:assembleDebug --stacktrace
+        run: gradle :app:assembleRelease --stacktrace
+
+      - name: Verify APK signature
+        run: apksigner verify --print-certs android-app/app/build/outputs/apk/release/app-release.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: amy-blandon-admin-v1-apk
-          path: android-app/app/build/outputs/apk/debug/app-debug.apk
+          name: amy-blandon-admin-v1.1-google-apk
+          path: android-app/app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
           retention-days: 30

@@ -1,4 +1,4 @@
-/* Catálogo público: cards compactas en móvil + paginación. */
+/* Catálogo público: paginación + ajuste compacto SOLO para cards estándar en móvil. */
 
 .re-pagination {
   width: 100%;
@@ -47,23 +47,26 @@
 }
 
 @media (max-width: 700px) {
-  .real-estate-page .re-catalog .re-shell,
-  .real-estate-page .re-featured,
-  .real-estate-page .properties-grid {
+  .real-estate-page .re-catalog .re-shell {
     min-width: 0 !important;
     max-width: 100% !important;
   }
 
-  .real-estate-page .re-catalog .properties-grid,
-  .real-estate-page .re-featured .properties-grid {
+  /*
+   * Solo el grid estándar del catálogo se compacta.
+   * El grid interno de .re-featured queda intacto porque ya tiene su diseño móvil propio.
+   */
+  .real-estate-page .re-catalog .re-shell > .properties-grid {
     width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) !important;
     gap: 22px !important;
     overflow: visible !important;
   }
 
-  .real-estate-page .re-catalog .property-card {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card {
     width: 100% !important;
     min-width: 0 !important;
     max-width: 100% !important;
@@ -72,7 +75,7 @@
     overflow: hidden !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-image {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-image {
     width: 100% !important;
     height: auto !important;
     min-height: 0 !important;
@@ -80,20 +83,20 @@
     overflow: hidden !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-image img {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-image img {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-body {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-body {
     width: 100% !important;
     min-width: 0 !important;
     padding: 20px 18px 18px !important;
     box-sizing: border-box !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-card__title {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-card__title {
     min-height: 50px !important;
     max-height: 50px !important;
     margin-bottom: 8px !important;
@@ -101,7 +104,7 @@
     line-height: 1.18 !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-location {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-location {
     min-width: 0 !important;
     font-size: 13px !important;
     overflow: hidden;
@@ -109,23 +112,23 @@
     white-space: nowrap;
   }
 
-  .real-estate-page .re-catalog .property-card .property-price-row {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-price-row {
     margin-top: 13px !important;
     gap: 8px !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-price--after-location {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-price--after-location {
     font-size: 25px !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-features {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-features {
     width: 100% !important;
     min-width: 0 !important;
     gap: 10px !important;
     overflow: hidden !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-features__row {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-features__row {
     width: 100% !important;
     min-width: 0 !important;
     max-width: 100% !important;
@@ -135,15 +138,15 @@
     overflow: visible !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-features__row--areas {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-features__row--areas {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-features__row--rooms {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-features__row--rooms {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-feature-item {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-feature-item {
     width: 100% !important;
     min-width: 0 !important;
     max-width: 100% !important;
@@ -151,29 +154,29 @@
     overflow: hidden;
   }
 
-  .real-estate-page .re-catalog .property-card .property-feature-item > div {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-feature-item > div {
     min-width: 0 !important;
     max-width: 100% !important;
     overflow: hidden;
   }
 
-  .real-estate-page .re-catalog .property-card .property-feature-item b,
-  .real-estate-page .re-catalog .property-card .property-feature-item span {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-feature-item b,
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-feature-item span {
     max-width: 100% !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-feature-item b {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-feature-item b {
     font-size: 11.5px !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-feature-item span {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-feature-item span {
     font-size: 9px !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-actions {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-actions {
     width: 100% !important;
     min-width: 0 !important;
     display: grid !important;
@@ -182,13 +185,13 @@
     align-items: stretch !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-actions .text-link,
-  .real-estate-page .re-catalog .property-card .property-actions button {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-actions .text-link,
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-actions button {
     min-width: 0 !important;
     box-sizing: border-box !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-actions .text-link {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-actions .text-link {
     width: 100% !important;
     padding: 0 14px !important;
     display: inline-flex !important;
@@ -213,29 +216,29 @@
 }
 
 @media (max-width: 390px) {
-  .real-estate-page .re-catalog .property-card .property-body {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-body {
     padding: 18px 15px 16px !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-card__title {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-card__title {
     font-size: 19px !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-features__row--rooms {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-features__row--rooms {
     gap: 8px !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-feature-item > svg {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-feature-item > svg {
     width: 14px !important;
     height: 14px !important;
     min-width: 14px !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-feature-item b {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-feature-item b {
     font-size: 10.5px !important;
   }
 
-  .real-estate-page .re-catalog .property-card .property-feature-item span {
+  .real-estate-page .re-catalog .re-shell > .properties-grid > .property-card .property-feature-item span {
     font-size: 8.5px !important;
   }
 }

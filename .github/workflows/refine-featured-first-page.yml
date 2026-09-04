@@ -1,0 +1,73 @@
+name: Refine featured first page
+
+on:
+  push:
+    paths:
+      - '.github/workflows/refine-featured-first-page.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Keep three featured plus six regular properties on page one
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('src/pages/public/Properties.jsx')
+          text = path.read_text()
+
+          old = """  const totalPages = Math.max(1, Math.ceil(filtered.length / PROPERTIES_PER_PAGE));
+          const pageStart = (currentPage - 1) * PROPERTIES_PER_PAGE;
+          const pageProperties = filtered.slice(pageStart, pageStart + PROPERTIES_PER_PAGE);
+          const featured = pageProperties.filter((property) => property.featured);
+          const standardProperties = featured.length ? pageProperties.filter((property) => !property.featured) : pageProperties;
+          const hasSearch = Boolean(q || propertyType || operationType === 'rent');
+          """
+          new = """  const featured = currentPage === 1
+            ? filtered.filter((property) => property.featured).slice(0, 3)
+            : [];
+          const standardPool = filtered.filter((property) => !property.featured);
+          const totalPages = Math.max(1, Math.ceil(standardPool.length / PROPERTIES_PER_PAGE));
+          const pageStart = (currentPage - 1) * PROPERTIES_PER_PAGE;
+          const standardProperties = standardPool.slice(pageStart, pageStart + PROPERTIES_PER_PAGE);
+          const hasSearch = Boolean(q || propertyType || operationType === 'rent');
+          """
+          if old not in text:
+              raise SystemExit('pagination block not found')
+          text = text.replace(old, new, 1)
+
+          old = """{featured.length > 0 && <div className=\"re-featured\"><div className=\"re-subheading\"><Sparkles /><div><h3 className=\"content-preserve-format\">{content.featuredTitle}</h3><p className=\"content-preserve-format\">{content.featuredText}</p></div></div><div className=\"properties-grid\">{featured.map((property) => <PropertyCard key={property.id} property={property} />)}</div></div>}"""
+          new = """{featured.length > 0 && <div className=\"re-featured\"><div className=\"re-subheading\"><div><h3 className=\"content-preserve-format\">{content.featuredTitle}</h3><p className=\"content-preserve-format\">{content.featuredText}</p></div></div><div className=\"properties-grid\">{featured.map((property) => <PropertyCard key={property.id} property={property} />)}</div></div>}"""
+          if old not in text:
+              raise SystemExit('featured heading block not found')
+          text = text.replace(old, new, 1)
+          path.write_text(text)
+
+          path = Path('src/components/home/FeaturedProperties.jsx')
+          text = path.read_text()
+          old = "setProperties(items.filter((property) => Boolean(property.featured)));"
+          new = "setProperties(items.filter((property) => Boolean(property.featured)).slice(0, 3));"
+          if old not in text:
+              raise SystemExit('home featured assignment not found')
+          text = text.replace(old, new, 1)
+          path.write_text(text)
+          PY
+
+      - name: Validate and commit
+        shell: bash
+        run: |
+          npm ci --prefer-offline --no-audit --no-fund
+          npm run build
+          git diff --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/pages/public/Properties.jsx src/components/home/FeaturedProperties.jsx
+          git commit -m "Show three featured plus six regular properties"
+          git push

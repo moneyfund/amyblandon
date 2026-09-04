@@ -80,11 +80,9 @@ jobs:
           path.write_text(text)
           PY
 
-      - name: Validate and commit
+      - name: Commit patch
         shell: bash
         run: |
-          npm ci
-          npm run build
           git diff --check
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

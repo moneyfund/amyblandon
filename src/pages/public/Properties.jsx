@@ -222,7 +222,7 @@ export default function Properties() {
           </div>
         </div>
         <div className="re-results__meta">
-          <p className="re-results__count">{filtered.length} {filtered.length === 1 ? 'propiedad disponible' : 'propiedades disponibles'}</p>
+          <p className="re-results__count">{filtered.length} {filtered.length === 1 ? 'propiedad' : 'propiedades'}</p>
           {hasSearch && <button type="button" onClick={clear}>Ver todo el portafolio</button>}
         </div>
 

@@ -30,6 +30,7 @@ import MapView from './MapView';
 import {
   labelFor,
   operationTypeOptions,
+  propertyStatusOptions,
   propertyTypeOptions,
 } from '../../config/adminLabels.es';
 import { getDynamicFields } from '../../config/propertyWorkspace.es';
@@ -205,7 +206,8 @@ export default function PropertyDetail() {
   const videoMeta = getVideoMeta(property.videoUrl);
   const propertyTypeLabel = labelFor(propertyTypeOptions, property.propertyType, 'Propiedad');
   const operation = normalizeOperation(property.operationType || property.transactionType);
-  const operationLabel = labelFor(operationTypeOptions, operation, 'Disponible');
+  const operationLabel = labelFor(operationTypeOptions, operation, 'Operación');
+  const statusLabel = labelFor(propertyStatusOptions, property.status || 'available', 'Disponible');
   const locationText = property.publicAddress
     || [property.sector, property.city, property.department].filter(Boolean).join(', ')
     || property.city
@@ -239,7 +241,8 @@ export default function PropertyDetail() {
 
   const technicalDetails = [
     { label: 'Tipo de propiedad', value: propertyTypeLabel },
-    { label: 'Estado', value: operationLabel },
+    { label: 'Operación', value: operationLabel },
+    { label: 'Estado', value: statusLabel },
     hasValue(property.constructionArea || property.builtArea) && {
       label: 'Área de construcción',
       value: `${property.constructionArea || property.builtArea} ${property.areaUnit || 'm²'}`,
@@ -337,6 +340,7 @@ export default function PropertyDetail() {
         <aside className="pd-ref-summary">
           <div className="pd-ref-summary__badges">
             <span>{operationLabel}</span>
+            <span>{statusLabel}</span>
             {property.featured && <span className="is-featured"><Sparkles size={13} /> Destacada</span>}
           </div>
           <h1>{property.title}</h1>

@@ -90,7 +90,6 @@ import './styles/about-hero-reference-final.css';
 import './styles/admin-mobile-app.css';
 import './styles/admin-intro-loader.css';
 import './styles/property-catalog-pagination-mobile.css';
-import './styles/viewport-fill-final.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

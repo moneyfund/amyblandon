@@ -339,7 +339,7 @@ export default function PropertyDetail() {
 
         <aside className="pd-ref-summary">
           <div className="pd-ref-summary__badges">
-            <span>{operationLabel}</span>
+            {!['sold', 'rented'].includes(property.status) && <span>{operationLabel}</span>}
             <span>{statusLabel}</span>
             {property.featured && <span className="is-featured"><Sparkles size={13} /> Destacada</span>}
           </div>

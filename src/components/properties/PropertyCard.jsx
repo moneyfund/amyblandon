@@ -1,4 +1,4 @@
-import { Bath, BedDouble, Car, Heart, Ruler, Share2 } from 'lucide-react';
+import { Bath, BedDouble, Car, Compass, Heart, Map as MapIcon, MapPin, Ruler, Share2 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { money } from '../../utils/format';
 import { useFavorites } from '../../hooks/useFavorites';
@@ -14,6 +14,17 @@ const normalizeOperation = (value) => {
   if (value === 'renta') return 'rent';
   return value;
 };
+
+const terminalStatuses = new Set(['sold', 'rented']);
+
+const terrainValueLabels = {
+  landType: { urban: 'Urbano', semiurban: 'Semiurbano', semirural: 'Semirrural', rural: 'Rural' },
+  topography: { flat: 'Plana', semiflat: 'Semiplana', sloped: 'Inclinada', mixed: 'Mixta', irregular: 'Irregular' },
+  landShape: { regular: 'Regular', irregular: 'Irregular', rectangular: 'Rectangular', corner: 'Esquinero' },
+};
+
+const propertyDetailValue = (property, key) => property?.[key] ?? property?.propertyDetails?.[key] ?? '';
+const terrainValue = (key, value) => terrainValueLabels[key]?.[value] || value;
 
 const propertyLocationLabel = (property = {}) => {
   const country = firstText(property.country, 'Nicaragua');
@@ -106,6 +117,34 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
     hasValue(p.parkingSpaces) && { icon: Car, value: p.parkingSpaces, label: 'Parqueo' },
   ].filter(Boolean);
 
+  const isLandCard = ['land', 'lot'].includes(p.propertyType);
+  const landType = propertyDetailValue(p, 'landType');
+  const topography = propertyDetailValue(p, 'topography');
+  const accessType = propertyDetailValue(p, 'accessType');
+  const streetType = propertyDetailValue(p, 'streetType');
+  const landShape = propertyDetailValue(p, 'landShape');
+  const soilType = propertyDetailValue(p, 'soilType');
+  const terrainFeatures = isLandCard ? [
+    hasValue(p.landArea || p.area) && {
+      icon: Ruler,
+      value: `${p.landArea || p.area} ${areaUnit}`,
+      label: 'Área total',
+    },
+    {
+      icon: Compass,
+      value: hasValue(landType) ? terrainValue('landType', landType) : p.propertyType === 'lot' ? 'Solar' : 'Terreno',
+      label: 'Categoría',
+    },
+    hasValue(topography) && { icon: MapIcon, value: terrainValue('topography', topography), label: 'Topografía' },
+    hasValue(accessType) && { icon: MapPin, value: accessType, label: 'Acceso' },
+    hasValue(streetType) && { icon: Car, value: streetType, label: 'Calle' },
+    hasValue(landShape) && { icon: MapIcon, value: terrainValue('landShape', landShape), label: 'Forma' },
+    hasValue(soilType) && { icon: Compass, value: soilType, label: 'Suelo' },
+  ].filter(Boolean).slice(0, 5) : [];
+
+  const primaryFeatures = isLandCard ? terrainFeatures.slice(0, 2) : areaFeatures;
+  const secondaryFeatures = isLandCard ? terrainFeatures.slice(2, 5) : roomFeatures;
+
   const share = async () => {
     try {
       const url = shareUrl();
@@ -126,7 +165,7 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
     >
       <Link to={detailPath} className="property-image" aria-label={`Ver ${p.title || 'propiedad'}`}>
         <span className="property-card__badges">
-          <span className="property-card__badge">{operationLabel}</span>
+          {!terminalStatuses.has(p.status) && <span className="property-card__badge">{operationLabel}</span>}
           <span className={`property-card__badge property-card__badge--${p.status || 'available'}`}>{statusLabel}</span>
         </span>
         {coverImage ? (
@@ -147,16 +186,16 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
           <strong className="property-price property-price--after-location">{money(p.price, p.currency)}</strong>
           {p.priceNegotiable && <span className="property-price-negotiable">Negociable</span>}
         </div>
-        {(areaFeatures.length > 0 || roomFeatures.length > 0) && (
+        {(primaryFeatures.length > 0 || secondaryFeatures.length > 0) && (
           <div className="property-features">
-            {areaFeatures.length > 0 && (
+            {primaryFeatures.length > 0 && (
               <div className="property-features__row property-features__row--areas">
-                {areaFeatures.map((feature) => <FeatureItem key={feature.label} {...feature} />)}
+                {primaryFeatures.map((feature) => <FeatureItem key={feature.label} {...feature} />)}
               </div>
             )}
-            {roomFeatures.length > 0 && (
+            {secondaryFeatures.length > 0 && (
               <div className="property-features__row property-features__row--rooms">
-                {roomFeatures.map((feature) => <FeatureItem key={feature.label} {...feature} />)}
+                {secondaryFeatures.map((feature) => <FeatureItem key={feature.label} {...feature} />)}
               </div>
             )}
           </div>

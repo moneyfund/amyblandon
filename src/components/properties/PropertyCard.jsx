@@ -294,6 +294,7 @@ const resolveDynamicFeature = (property, key) => {
 };
 
 const buildCardFeatures = (property, areaUnit, operationLabel, statusLabel) => {
+  const maxFeatures = property.propertyType === 'investment' ? 4 : 5;
   const preferred = preferredFeatureKeys[property.propertyType] || preferredFeatureKeys.other;
   const dynamicKeys = getDynamicFields(property.propertyType).map((item) => item.key);
   const orderedKeys = [...new Set([...preferred, ...dynamicKeys])];
@@ -307,7 +308,7 @@ const buildCardFeatures = (property, areaUnit, operationLabel, statusLabel) => {
   };
 
   orderedKeys.forEach((key) => {
-    if (features.length >= 5) return;
+    if (features.length >= maxFeatures) return;
     addFeature(resolveCoreFeature(property, key, areaUnit) || resolveDynamicFeature(property, key));
   });
 
@@ -345,10 +346,10 @@ const buildCardFeatures = (property, areaUnit, operationLabel, statusLabel) => {
   ].filter(Boolean);
 
   genericFallbacks.forEach((feature) => {
-    if (features.length < 5) addFeature(feature);
+    if (features.length < maxFeatures) addFeature(feature);
   });
 
-  return features.slice(0, 5);
+  return features.slice(0, maxFeatures);
 };
 
 function UbiIcon() {

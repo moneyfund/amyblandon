@@ -23,6 +23,8 @@ const quickCategories = [
   { value: 'commercial', label: 'Local comercial', hint: 'Negocios', icon: Building2 },
 ];
 
+const PROPERTIES_PER_PAGE = 6;
+
 const normalizeOperation = (value) => {
   if (value === 'venta') return 'sale';
   if (value === 'renta') return 'rent';
@@ -55,6 +57,7 @@ export default function Properties() {
   const [operationType, setOperationType] = useState('sale');
   const [propertyType, setPropertyType] = useState('');
   const [view, setView] = useState('grid');
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     let active = true;
@@ -102,9 +105,20 @@ export default function Properties() {
       && (!propertyType || property.propertyType === propertyType);
   }), [properties, q, operationType, propertyType]);
 
-  const featured = filtered.filter((property) => property.featured);
-  const standardProperties = featured.length ? filtered.filter((property) => !property.featured) : filtered;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PROPERTIES_PER_PAGE));
+  const pageStart = (currentPage - 1) * PROPERTIES_PER_PAGE;
+  const pageProperties = filtered.slice(pageStart, pageStart + PROPERTIES_PER_PAGE);
+  const featured = pageProperties.filter((property) => property.featured);
+  const standardProperties = featured.length ? pageProperties.filter((property) => !property.featured) : pageProperties;
   const hasSearch = Boolean(q || propertyType || operationType === 'rent');
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [q, operationType, propertyType]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(totalPages);
+  }, [currentPage, totalPages]);
   const clear = () => {
     setQ('');
     setOperationType('sale');
@@ -120,6 +134,11 @@ export default function Properties() {
   const chooseCategory = (value) => {
     setPropertyType(value);
     window.setTimeout(showResults, 80);
+  };
+  const goToPage = (page) => {
+    const nextPage = Math.min(Math.max(page, 1), totalPages);
+    setCurrentPage(nextPage);
+    window.setTimeout(showResults, 40);
   };
   const heroImage = images.realEstateHero || images.aboutPage;
   const resultLabel = loading
@@ -245,6 +264,24 @@ export default function Properties() {
               : view === 'map' ? <MapView embedded properties={filtered} /> : <>
                 {featured.length > 0 && <div className="re-featured"><div className="re-subheading"><Sparkles /><div><h3 className="content-preserve-format">{content.featuredTitle}</h3><p className="content-preserve-format">{content.featuredText}</p></div></div><div className="properties-grid">{featured.map((property) => <PropertyCard key={property.id} property={property} />)}</div></div>}
                 {standardProperties.length > 0 && <div className="properties-grid">{standardProperties.map((property) => <PropertyCard key={property.id} property={property} />)}</div>}
+                {totalPages > 1 && (
+                  <nav className="re-pagination" aria-label="Páginas de propiedades">
+                    <button type="button" className="re-pagination__button" disabled={currentPage === 1} onClick={() => goToPage(currentPage - 1)}>Anterior</button>
+                    {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+                      <button
+                        type="button"
+                        key={pageNumber}
+                        className={`re-pagination__page ${pageNumber === currentPage ? 'is-active' : ''}`}
+                        aria-current={pageNumber === currentPage ? 'page' : undefined}
+                        aria-label={`Ir a la página ${pageNumber}`}
+                        onClick={() => goToPage(pageNumber)}
+                      >
+                        {pageNumber}
+                      </button>
+                    ))}
+                    <button type="button" className="re-pagination__button" disabled={currentPage === totalPages} onClick={() => goToPage(currentPage + 1)}>Siguiente</button>
+                  </nav>
+                )}
               </>}
       </div>
     </section>

@@ -23,40 +23,42 @@ jobs:
           path = Path('src/pages/public/Properties.jsx')
           text = path.read_text()
 
-          old = """  const totalPages = Math.max(1, Math.ceil(filtered.length / PROPERTIES_PER_PAGE));
-          const pageStart = (currentPage - 1) * PROPERTIES_PER_PAGE;
-          const pageProperties = filtered.slice(pageStart, pageStart + PROPERTIES_PER_PAGE);
-          const featured = pageProperties.filter((property) => property.featured);
-          const standardProperties = featured.length ? pageProperties.filter((property) => !property.featured) : pageProperties;
-          const hasSearch = Boolean(q || propertyType || operationType === 'rent');
-          """
-          new = """  const featured = currentPage === 1
-            ? filtered.filter((property) => property.featured).slice(0, 3)
-            : [];
-          const standardPool = filtered.filter((property) => !property.featured);
-          const totalPages = Math.max(1, Math.ceil(standardPool.length / PROPERTIES_PER_PAGE));
-          const pageStart = (currentPage - 1) * PROPERTIES_PER_PAGE;
-          const standardProperties = standardPool.slice(pageStart, pageStart + PROPERTIES_PER_PAGE);
-          const hasSearch = Boolean(q || propertyType || operationType === 'rent');
-          """
+          old = (
+              "  const totalPages = Math.max(1, Math.ceil(filtered.length / PROPERTIES_PER_PAGE));\n"
+              "  const pageStart = (currentPage - 1) * PROPERTIES_PER_PAGE;\n"
+              "  const pageProperties = filtered.slice(pageStart, pageStart + PROPERTIES_PER_PAGE);\n"
+              "  const featured = pageProperties.filter((property) => property.featured);\n"
+              "  const standardProperties = featured.length ? pageProperties.filter((property) => !property.featured) : pageProperties;\n"
+              "  const hasSearch = Boolean(q || propertyType || operationType === 'rent');\n"
+          )
+          new = (
+              "  const featured = currentPage === 1\n"
+              "    ? filtered.filter((property) => property.featured).slice(0, 3)\n"
+              "    : [];\n"
+              "  const standardPool = filtered.filter((property) => !property.featured);\n"
+              "  const totalPages = Math.max(1, Math.ceil(standardPool.length / PROPERTIES_PER_PAGE));\n"
+              "  const pageStart = (currentPage - 1) * PROPERTIES_PER_PAGE;\n"
+              "  const standardProperties = standardPool.slice(pageStart, pageStart + PROPERTIES_PER_PAGE);\n"
+              "  const hasSearch = Boolean(q || propertyType || operationType === 'rent');\n"
+          )
           if old not in text:
               raise SystemExit('pagination block not found')
           text = text.replace(old, new, 1)
 
-          old = """{featured.length > 0 && <div className=\"re-featured\"><div className=\"re-subheading\"><Sparkles /><div><h3 className=\"content-preserve-format\">{content.featuredTitle}</h3><p className=\"content-preserve-format\">{content.featuredText}</p></div></div><div className=\"properties-grid\">{featured.map((property) => <PropertyCard key={property.id} property={property} />)}</div></div>}"""
-          new = """{featured.length > 0 && <div className=\"re-featured\"><div className=\"re-subheading\"><div><h3 className=\"content-preserve-format\">{content.featuredTitle}</h3><p className=\"content-preserve-format\">{content.featuredText}</p></div></div><div className=\"properties-grid\">{featured.map((property) => <PropertyCard key={property.id} property={property} />)}</div></div>}"""
-          if old not in text:
-              raise SystemExit('featured heading block not found')
-          text = text.replace(old, new, 1)
+          old_heading = '<div className="re-subheading"><Sparkles /><div>'
+          new_heading = '<div className="re-subheading"><div>'
+          if old_heading not in text:
+              raise SystemExit('featured heading icon not found')
+          text = text.replace(old_heading, new_heading, 1)
           path.write_text(text)
 
           path = Path('src/components/home/FeaturedProperties.jsx')
           text = path.read_text()
-          old = "setProperties(items.filter((property) => Boolean(property.featured)));"
-          new = "setProperties(items.filter((property) => Boolean(property.featured)).slice(0, 3));"
-          if old not in text:
+          old_home = 'setProperties(items.filter((property) => Boolean(property.featured)));'
+          new_home = 'setProperties(items.filter((property) => Boolean(property.featured)).slice(0, 3));'
+          if old_home not in text:
               raise SystemExit('home featured assignment not found')
-          text = text.replace(old, new, 1)
+          text = text.replace(old_home, new_home, 1)
           path.write_text(text)
           PY
 

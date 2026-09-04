@@ -17,7 +17,7 @@ import MapView from './MapView';
 const quickCategories = [
   { value: '', label: 'Todas', hint: 'Ver portafolio', icon: Sparkles },
   { value: 'house', label: 'Casas', hint: 'Residencial', icon: Home },
-  { value: 'land', label: 'Solares', hint: 'Inversión', icon: Map },
+  { value: 'lot', label: 'Solares', hint: 'Inversión', icon: Map },
   { value: 'farm', label: 'Fincas', hint: 'Productivo', icon: Compass },
   { value: 'quinta', label: 'Quintas', hint: 'Descanso', icon: Home },
   { value: 'commercial', label: 'Local comercial', hint: 'Negocios', icon: Building2 },

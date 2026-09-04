@@ -1,0 +1,90 @@
+name: Fix public property status display
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-public-property-status.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Patch public property status UI
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace(path, old, new):
+              p = Path(path)
+              text = p.read_text()
+              if old not in text:
+                  raise SystemExit(f'Expected text not found in {path}: {old[:120]!r}')
+              p.write_text(text.replace(old, new, 1))
+
+          card = 'src/components/properties/PropertyCard.jsx'
+          replace(
+              card,
+              "import { labelFor, operationTypeOptions } from '../../config/adminLabels.es';",
+              "import { labelFor, operationTypeOptions, propertyStatusOptions } from '../../config/adminLabels.es';",
+          )
+          replace(
+              card,
+              "const firstText = (...values) => values.find((value) => typeof value === 'string' && value.trim())?.trim() || '';",
+              "const firstText = (...values) => values.find((value) => typeof value === 'string' && value.trim())?.trim() || '';\n\nconst normalizeOperation = (value) => {\n  if (value === 'venta') return 'sale';\n  if (value === 'renta') return 'rent';\n  return value;\n};",
+          )
+          replace(
+              card,
+              "  const areaUnit = p.areaUnit || 'm²';",
+              "  const areaUnit = p.areaUnit || 'm²';\n  const operationLabel = labelFor(operationTypeOptions, normalizeOperation(p.operationType || p.transactionType), 'Operación');\n  const statusLabel = labelFor(propertyStatusOptions, p.status || 'available', 'Disponible');",
+          )
+          replace(
+              card,
+              "          <span className=\"property-card__badge\">{labelFor(operationTypeOptions, p.operationType || p.transactionType, 'Disponible')}</span>",
+              "          <span className=\"property-card__badge\">{operationLabel}</span>\n          <span className={`property-card__badge property-card__badge--${p.status || 'available'}`}>{statusLabel}</span>",
+          )
+
+          detail = 'src/pages/public/PropertyDetail.jsx'
+          replace(
+              detail,
+              "  operationTypeOptions,\n  propertyTypeOptions,",
+              "  operationTypeOptions,\n  propertyStatusOptions,\n  propertyTypeOptions,",
+          )
+          replace(
+              detail,
+              "  const operationLabel = labelFor(operationTypeOptions, operation, 'Disponible');",
+              "  const operationLabel = labelFor(operationTypeOptions, operation, 'Operación');\n  const statusLabel = labelFor(propertyStatusOptions, property.status || 'available', 'Disponible');",
+          )
+          replace(
+              detail,
+              "    { label: 'Estado', value: operationLabel },",
+              "    { label: 'Operación', value: operationLabel },\n    { label: 'Estado', value: statusLabel },",
+          )
+          replace(
+              detail,
+              "            <span>{operationLabel}</span>\n            {property.featured",
+              "            <span>{operationLabel}</span>\n            <span>{statusLabel}</span>\n            {property.featured",
+          )
+
+          properties = 'src/pages/public/Properties.jsx'
+          replace(
+              properties,
+              "          <p className=\"re-results__count\">{filtered.length} {filtered.length === 1 ? 'propiedad disponible' : 'propiedades disponibles'}</p>",
+              "          <p className=\"re-results__count\">{filtered.length} {filtered.length === 1 ? 'propiedad' : 'propiedades'}</p>",
+          )
+          PY
+
+      - name: Commit fix
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/properties/PropertyCard.jsx src/pages/public/PropertyDetail.jsx src/pages/public/Properties.jsx
+          git diff --cached --check
+          git commit -m "Show commercial property status on public site"
+          git push

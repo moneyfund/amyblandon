@@ -17,7 +17,7 @@ export default function FeaturedProperties({ content }) {
       {},
       (items) => {
         if (!active) return;
-        setProperties(items.filter((property) => Boolean(property.featured)));
+        setProperties(items.filter((property) => Boolean(property.featured)).slice(0, 3));
         setError(false);
         setLoading(false);
       },

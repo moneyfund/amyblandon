@@ -105,11 +105,13 @@ export default function Properties() {
       && (!propertyType || property.propertyType === propertyType);
   }), [properties, q, operationType, propertyType]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PROPERTIES_PER_PAGE));
+  const featured = currentPage === 1
+    ? filtered.filter((property) => property.featured).slice(0, 3)
+    : [];
+  const standardPool = filtered.filter((property) => !property.featured);
+  const totalPages = Math.max(1, Math.ceil(standardPool.length / PROPERTIES_PER_PAGE));
   const pageStart = (currentPage - 1) * PROPERTIES_PER_PAGE;
-  const pageProperties = filtered.slice(pageStart, pageStart + PROPERTIES_PER_PAGE);
-  const featured = pageProperties.filter((property) => property.featured);
-  const standardProperties = featured.length ? pageProperties.filter((property) => !property.featured) : pageProperties;
+  const standardProperties = standardPool.slice(pageStart, pageStart + PROPERTIES_PER_PAGE);
   const hasSearch = Boolean(q || propertyType || operationType === 'rent');
 
   useEffect(() => {
@@ -262,7 +264,7 @@ export default function Properties() {
           : error ? <div className="re-empty"><Compass /><h3>No pudimos conectar con el catálogo</h3><p>{error}</p></div>
             : filtered.length === 0 ? <div className="re-empty"><Search /><h3>No encontramos coincidencias</h3><p>Prueba con otra ubicación, operación o tipo de propiedad.</p><button type="button" className="btn re-btn--gold" onClick={clear}>Ver todas las propiedades</button></div>
               : view === 'map' ? <MapView embedded properties={filtered} /> : <>
-                {featured.length > 0 && <div className="re-featured"><div className="re-subheading"><Sparkles /><div><h3 className="content-preserve-format">{content.featuredTitle}</h3><p className="content-preserve-format">{content.featuredText}</p></div></div><div className="properties-grid">{featured.map((property) => <PropertyCard key={property.id} property={property} />)}</div></div>}
+                {featured.length > 0 && <div className="re-featured"><div className="re-subheading"><div><h3 className="content-preserve-format">{content.featuredTitle}</h3><p className="content-preserve-format">{content.featuredText}</p></div></div><div className="properties-grid">{featured.map((property) => <PropertyCard key={property.id} property={property} />)}</div></div>}
                 {standardProperties.length > 0 && <div className="properties-grid">{standardProperties.map((property) => <PropertyCard key={property.id} property={property} />)}</div>}
                 {totalPages > 1 && (
                   <nav className="re-pagination" aria-label="Páginas de propiedades">

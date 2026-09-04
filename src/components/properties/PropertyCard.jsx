@@ -1,8 +1,28 @@
-import { Bath, BedDouble, Car, Compass, Heart, Map as MapIcon, MapPin, Ruler, Share2 } from 'lucide-react';
+import {
+  Bath,
+  BedDouble,
+  Building2,
+  Car,
+  Compass,
+  Heart,
+  Home,
+  Map as MapIcon,
+  MapPin,
+  Ruler,
+  Share2,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { money } from '../../utils/format';
 import { useFavorites } from '../../hooks/useFavorites';
-import { labelFor, operationTypeOptions, propertyStatusOptions } from '../../config/adminLabels.es';
+import {
+  labelFor,
+  operationTypeOptions,
+  propertyStatusOptions,
+  propertyTypeOptions,
+} from '../../config/adminLabels.es';
+import { getDynamicFields } from '../../config/propertyWorkspace.es';
 
 const hasValue = (value) => value !== undefined && value !== null && value !== '' && Number(value) !== 0;
 const imageUrl = (image) => typeof image === 'string' ? image : image?.url || '';
@@ -17,14 +37,198 @@ const normalizeOperation = (value) => {
 
 const terminalStatuses = new Set(['sold', 'rented']);
 
-const terrainValueLabels = {
-  landType: { urban: 'Urbano', semiurban: 'Semiurbano', semirural: 'Semirrural', rural: 'Rural' },
-  topography: { flat: 'Plana', semiflat: 'Semiplana', sloped: 'Inclinada', mixed: 'Mixta', irregular: 'Irregular' },
-  landShape: { regular: 'Regular', irregular: 'Irregular', rectangular: 'Rectangular', corner: 'Esquinero' },
+const propertyDetailValue = (property, key) => property?.[key] ?? property?.propertyDetails?.[key] ?? '';
+
+const compactValue = (value, maxLength = 20) => {
+  const text = String(value ?? '').trim();
+  if (!text) return '';
+  return text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text;
 };
 
-const propertyDetailValue = (property, key) => property?.[key] ?? property?.propertyDetails?.[key] ?? '';
-const terrainValue = (key, value) => terrainValueLabels[key]?.[value] || value;
+const featureIcons = {
+  landArea: Ruler,
+  constructionArea: Ruler,
+  bedrooms: BedDouble,
+  bathrooms: Bath,
+  parkingSpaces: Car,
+  yearBuilt: Building2,
+  levels: Building2,
+  livingRoom: Home,
+  diningRoom: Home,
+  kitchen: Home,
+  patio: Home,
+  terrace: Home,
+  laundryArea: Home,
+  furnished: Home,
+  constructionStatus: Building2,
+  security: ShieldCheck,
+  floorLevel: Building2,
+  elevator: Building2,
+  balcony: Home,
+  maintenanceFee: Sparkles,
+  condoAmenities: Sparkles,
+  pool: Sparkles,
+  gardens: Compass,
+  socialArea: Home,
+  viewType: Compass,
+  mainHouse: Home,
+  caretakerHouse: Home,
+  well: MapPin,
+  vehicleAccess: Car,
+  naturalEnvironment: Compass,
+  potentialUse: Compass,
+  landType: Compass,
+  topography: MapIcon,
+  landShape: MapIcon,
+  soilType: Compass,
+  streetType: Car,
+  accessType: MapPin,
+  documentation: ShieldCheck,
+  currentUse: Compass,
+  waterSource: MapPin,
+  fences: ShieldCheck,
+  paddocks: Compass,
+  crops: Compass,
+  existingInfrastructure: Building2,
+  commercialFront: Ruler,
+  trafficLevel: Car,
+  commercialZone: MapPin,
+  internalWarehouse: Building2,
+  permittedUse: Compass,
+  idealFor: Sparkles,
+  height: Ruler,
+  truckAccess: Car,
+  internalOffices: Building2,
+  threePhasePower: Sparkles,
+  loadingArea: Car,
+  industrialZone: MapPin,
+  privateRooms: Home,
+  meetingRoom: Home,
+  reception: Home,
+  connectivity: Sparkles,
+  corporateLocation: MapPin,
+  units: Home,
+  commercialSpaces: Building2,
+  occupancyStatus: Building2,
+  currentIncome: Sparkles,
+  rooms: BedDouble,
+  restaurant: Home,
+  conferenceRoom: Home,
+  parkingCapacity: Car,
+  investmentDetails: Sparkles,
+  projectType: Building2,
+  existingPermits: ShieldCheck,
+  availableStudies: Sparkles,
+  capitalGainProjection: Sparkles,
+  mainRoadsProximity: MapPin,
+  investorIdeal: Sparkles,
+  beachDistance: MapPin,
+  oceanView: Compass,
+  rentalPotential: Sparkles,
+  specificFeatures: Sparkles,
+};
+
+const featureLabels = {
+  landArea: 'Área total',
+  constructionArea: 'Construcción',
+  bedrooms: 'Habitaciones',
+  bathrooms: 'Baños',
+  parkingSpaces: 'Parqueo',
+  yearBuilt: 'Año',
+  levels: 'Niveles',
+  livingRoom: 'Sala',
+  diningRoom: 'Comedor',
+  kitchen: 'Cocina',
+  patio: 'Patio',
+  terrace: 'Terraza',
+  laundryArea: 'Lavandería',
+  furnished: 'Amueblada',
+  constructionStatus: 'Construcción',
+  security: 'Seguridad',
+  floorLevel: 'Nivel',
+  elevator: 'Ascensor',
+  balcony: 'Balcón',
+  maintenanceFee: 'Mantenimiento',
+  condoAmenities: 'Amenidades',
+  pool: 'Piscina',
+  gardens: 'Jardines',
+  socialArea: 'Área social',
+  viewType: 'Vista',
+  mainHouse: 'Casa principal',
+  caretakerHouse: 'Casa cuidador',
+  well: 'Pozo',
+  vehicleAccess: 'Acceso vehicular',
+  naturalEnvironment: 'Entorno',
+  potentialUse: 'Uso potencial',
+  landType: 'Categoría',
+  topography: 'Topografía',
+  landShape: 'Forma',
+  soilType: 'Suelo',
+  streetType: 'Calle',
+  accessType: 'Acceso',
+  documentation: 'Documentación',
+  currentUse: 'Uso actual',
+  waterSource: 'Agua',
+  fences: 'Cercas',
+  paddocks: 'Potreros',
+  crops: 'Cultivos',
+  existingInfrastructure: 'Infraestructura',
+  commercialFront: 'Frente',
+  trafficLevel: 'Tráfico',
+  commercialZone: 'Zona',
+  internalWarehouse: 'Bodega interna',
+  permittedUse: 'Uso permitido',
+  idealFor: 'Ideal para',
+  height: 'Altura',
+  truckAccess: 'Camiones',
+  internalOffices: 'Oficinas',
+  threePhasePower: 'Energía',
+  loadingArea: 'Carga/descarga',
+  industrialZone: 'Zona',
+  privateRooms: 'Ambientes',
+  meetingRoom: 'Sala reunión',
+  reception: 'Recepción',
+  connectivity: 'Conectividad',
+  corporateLocation: 'Entorno',
+  units: 'Unidades',
+  commercialSpaces: 'Locales',
+  occupancyStatus: 'Ocupación',
+  currentIncome: 'Ingreso',
+  rooms: 'Habitaciones',
+  restaurant: 'Restaurante',
+  conferenceRoom: 'Salón eventos',
+  parkingCapacity: 'Parqueo',
+  investmentDetails: 'Inversión',
+  projectType: 'Proyecto',
+  existingPermits: 'Permisos',
+  availableStudies: 'Estudios',
+  capitalGainProjection: 'Plusvalía',
+  mainRoadsProximity: 'Vías principales',
+  investorIdeal: 'Inversionista',
+  beachDistance: 'Distancia al mar',
+  oceanView: 'Vista al mar',
+  rentalPotential: 'Alquiler vacacional',
+  specificFeatures: 'Características',
+};
+
+const preferredFeatureKeys = {
+  house: ['landArea', 'constructionArea', 'bedrooms', 'bathrooms', 'parkingSpaces', 'levels', 'terrace', 'security', 'yearBuilt'],
+  apartment: ['constructionArea', 'bedrooms', 'bathrooms', 'parkingSpaces', 'floorLevel', 'elevator', 'balcony', 'furnished'],
+  condo: ['constructionArea', 'bedrooms', 'bathrooms', 'parkingSpaces', 'floorLevel', 'elevator', 'balcony', 'furnished'],
+  villa: ['landArea', 'constructionArea', 'bedrooms', 'bathrooms', 'parkingSpaces', 'pool', 'gardens', 'viewType'],
+  quinta: ['landArea', 'constructionArea', 'mainHouse', 'pool', 'gardens', 'well', 'vehicleAccess', 'potentialUse'],
+  beach_house: ['constructionArea', 'bedrooms', 'bathrooms', 'parkingSpaces', 'beachDistance', 'oceanView', 'pool', 'furnished'],
+  land: ['landArea', 'landType', 'topography', 'accessType', 'streetType', 'landShape', 'soilType', 'potentialUse'],
+  lot: ['landArea', 'landType', 'topography', 'accessType', 'streetType', 'landShape', 'soilType', 'potentialUse'],
+  farm: ['landArea', 'currentUse', 'topography', 'accessType', 'waterSource', 'well', 'fences', 'crops', 'existingInfrastructure'],
+  commercial: ['constructionArea', 'commercialFront', 'trafficLevel', 'streetType', 'parkingSpaces', 'commercialZone', 'internalWarehouse', 'permittedUse'],
+  warehouse: ['constructionArea', 'height', 'truckAccess', 'loadingArea', 'threePhasePower', 'internalOffices', 'parkingSpaces', 'industrialZone'],
+  office: ['constructionArea', 'privateRooms', 'meetingRoom', 'reception', 'elevator', 'parkingSpaces', 'furnished', 'connectivity'],
+  building: ['constructionArea', 'levels', 'units', 'commercialSpaces', 'elevator', 'parkingSpaces', 'occupancyStatus', 'currentIncome'],
+  hotel: ['rooms', 'parkingCapacity', 'pool', 'restaurant', 'conferenceRoom', 'furnished', 'occupancyStatus'],
+  investment: ['landArea', 'projectType', 'potentialUse', 'mainRoadsProximity', 'existingPermits', 'availableStudies', 'capitalGainProjection'],
+  other: ['constructionArea', 'landArea', 'parkingSpaces', 'yearBuilt', 'specificFeatures'],
+};
 
 const propertyLocationLabel = (property = {}) => {
   const country = firstText(property.country, 'Nicaragua');
@@ -47,6 +251,104 @@ const propertyLocationLabel = (property = {}) => {
       values.findIndex((item) => item.toLowerCase() === value.toLowerCase()) === index
     ))
     .join(', ');
+};
+
+const resolveCoreFeature = (property, key, areaUnit) => {
+  if (key === 'landArea') {
+    const value = property.landArea || property.area;
+    return hasValue(value) ? { key, icon: Ruler, value: `${value} ${areaUnit}`, label: featureLabels[key] } : null;
+  }
+  if (key === 'constructionArea') {
+    const value = property.constructionArea || property.builtArea;
+    return hasValue(value) ? { key, icon: Ruler, value: `${value} ${areaUnit}`, label: featureLabels[key] } : null;
+  }
+  if (key === 'bedrooms') {
+    return hasValue(property.bedrooms) ? { key, icon: BedDouble, value: property.bedrooms, label: featureLabels[key] } : null;
+  }
+  if (key === 'bathrooms') {
+    return hasValue(property.bathrooms) ? { key, icon: Bath, value: property.bathrooms, label: featureLabels[key] } : null;
+  }
+  if (key === 'parkingSpaces') {
+    return hasValue(property.parkingSpaces) ? { key, icon: Car, value: property.parkingSpaces, label: featureLabels[key] } : null;
+  }
+  if (key === 'yearBuilt') {
+    return hasValue(property.yearBuilt) ? { key, icon: Building2, value: property.yearBuilt, label: featureLabels[key] } : null;
+  }
+  return null;
+};
+
+const resolveDynamicFeature = (property, key) => {
+  const raw = propertyDetailValue(property, key);
+  if (!hasValue(raw)) return null;
+
+  const definition = getDynamicFields(property.propertyType).find((item) => item.key === key);
+  const option = definition?.options?.find(([optionValue]) => String(optionValue) === String(raw));
+  const displayValue = option?.[1] ?? raw;
+
+  return {
+    key,
+    icon: featureIcons[key] || Sparkles,
+    value: compactValue(displayValue),
+    label: featureLabels[key] || definition?.label || 'Detalle',
+  };
+};
+
+const buildCardFeatures = (property, areaUnit, operationLabel, statusLabel) => {
+  const preferred = preferredFeatureKeys[property.propertyType] || preferredFeatureKeys.other;
+  const dynamicKeys = getDynamicFields(property.propertyType).map((item) => item.key);
+  const orderedKeys = [...new Set([...preferred, ...dynamicKeys])];
+  const features = [];
+  const usedKeys = new Set();
+
+  const addFeature = (feature) => {
+    if (!feature || !hasValue(feature.value) || usedKeys.has(feature.key)) return;
+    usedKeys.add(feature.key);
+    features.push(feature);
+  };
+
+  orderedKeys.forEach((key) => {
+    if (features.length >= 5) return;
+    addFeature(resolveCoreFeature(property, key, areaUnit) || resolveDynamicFeature(property, key));
+  });
+
+  const genericFallbacks = [
+    {
+      key: 'propertyType',
+      icon: Building2,
+      value: labelFor(propertyTypeOptions, property.propertyType, 'Propiedad'),
+      label: 'Tipo',
+    },
+    firstText(property.sector, property.city) && {
+      key: 'city',
+      icon: MapPin,
+      value: compactValue(firstText(property.sector, property.city)),
+      label: 'Ubicación',
+    },
+    firstText(property.department, property.state) && {
+      key: 'department',
+      icon: Compass,
+      value: compactValue(firstText(property.department, property.state)),
+      label: 'Departamento',
+    },
+    {
+      key: 'status',
+      icon: ShieldCheck,
+      value: statusLabel,
+      label: 'Estado',
+    },
+    !terminalStatuses.has(property.status) && {
+      key: 'operation',
+      icon: Sparkles,
+      value: operationLabel,
+      label: 'Operación',
+    },
+  ].filter(Boolean);
+
+  genericFallbacks.forEach((feature) => {
+    if (features.length < 5) addFeature(feature);
+  });
+
+  return features.slice(0, 5);
 };
 
 function UbiIcon() {
@@ -91,59 +393,15 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
   const areaUnit = p.areaUnit || 'm²';
   const operationLabel = labelFor(operationTypeOptions, normalizeOperation(p.operationType || p.transactionType), 'Operación');
   const statusLabel = labelFor(propertyStatusOptions, p.status || 'available', 'Disponible');
+  const cardFeatures = buildCardFeatures(p, areaUnit, operationLabel, statusLabel);
+  const primaryFeatures = cardFeatures.slice(0, 2);
+  const secondaryFeatures = cardFeatures.slice(2, 5);
 
   const shareUrl = () => {
     const { origin, pathname, hash } = window.location;
     if (hash) return `${origin}${pathname}#${detailPath}`;
     return `${origin}${detailPath}`;
   };
-
-  const areaFeatures = [
-    hasValue(p.landArea || p.area) && {
-      icon: Ruler,
-      value: `${p.landArea || p.area} ${areaUnit}`,
-      label: 'Área total',
-    },
-    hasValue(p.constructionArea || p.builtArea) && {
-      icon: Ruler,
-      value: `${p.constructionArea || p.builtArea} ${areaUnit}`,
-      label: 'Área construida',
-    },
-  ].filter(Boolean);
-
-  const roomFeatures = [
-    hasValue(p.bedrooms) && { icon: BedDouble, value: p.bedrooms, label: 'Habitaciones' },
-    hasValue(p.bathrooms) && { icon: Bath, value: p.bathrooms, label: 'Baños' },
-    hasValue(p.parkingSpaces) && { icon: Car, value: p.parkingSpaces, label: 'Parqueo' },
-  ].filter(Boolean);
-
-  const isLandCard = ['land', 'lot'].includes(p.propertyType);
-  const landType = propertyDetailValue(p, 'landType');
-  const topography = propertyDetailValue(p, 'topography');
-  const accessType = propertyDetailValue(p, 'accessType');
-  const streetType = propertyDetailValue(p, 'streetType');
-  const landShape = propertyDetailValue(p, 'landShape');
-  const soilType = propertyDetailValue(p, 'soilType');
-  const terrainFeatures = isLandCard ? [
-    hasValue(p.landArea || p.area) && {
-      icon: Ruler,
-      value: `${p.landArea || p.area} ${areaUnit}`,
-      label: 'Área total',
-    },
-    {
-      icon: Compass,
-      value: hasValue(landType) ? terrainValue('landType', landType) : p.propertyType === 'lot' ? 'Solar' : 'Terreno',
-      label: 'Categoría',
-    },
-    hasValue(topography) && { icon: MapIcon, value: terrainValue('topography', topography), label: 'Topografía' },
-    hasValue(accessType) && { icon: MapPin, value: accessType, label: 'Acceso' },
-    hasValue(streetType) && { icon: Car, value: streetType, label: 'Calle' },
-    hasValue(landShape) && { icon: MapIcon, value: terrainValue('landShape', landShape), label: 'Forma' },
-    hasValue(soilType) && { icon: Compass, value: soilType, label: 'Suelo' },
-  ].filter(Boolean).slice(0, 5) : [];
-
-  const primaryFeatures = isLandCard ? terrainFeatures.slice(0, 2) : areaFeatures;
-  const secondaryFeatures = isLandCard ? terrainFeatures.slice(2, 5) : roomFeatures;
 
   const share = async () => {
     try {
@@ -186,16 +444,16 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
           <strong className="property-price property-price--after-location">{money(p.price, p.currency)}</strong>
           {p.priceNegotiable && <span className="property-price-negotiable">Negociable</span>}
         </div>
-        {(primaryFeatures.length > 0 || secondaryFeatures.length > 0) && (
+        {cardFeatures.length > 0 && (
           <div className="property-features">
             {primaryFeatures.length > 0 && (
               <div className="property-features__row property-features__row--areas">
-                {primaryFeatures.map((feature) => <FeatureItem key={feature.label} {...feature} />)}
+                {primaryFeatures.map((feature) => <FeatureItem key={feature.key} {...feature} />)}
               </div>
             )}
             {secondaryFeatures.length > 0 && (
               <div className="property-features__row property-features__row--rooms">
-                {secondaryFeatures.map((feature) => <FeatureItem key={feature.label} {...feature} />)}
+                {secondaryFeatures.map((feature) => <FeatureItem key={feature.key} {...feature} />)}
               </div>
             )}
           </div>

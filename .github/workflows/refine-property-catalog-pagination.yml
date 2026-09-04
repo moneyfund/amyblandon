@@ -20,146 +20,63 @@ jobs:
           python - <<'PY'
           from pathlib import Path
 
-          # Properties pagination: six visible properties per page.
           path = Path('src/pages/public/Properties.jsx')
           text = path.read_text()
 
-          old = """const quickCategories = [
-            { value: '', label: 'Todas', hint: 'Ver portafolio', icon: Sparkles },
-            { value: 'house', label: 'Casas', hint: 'Residencial', icon: Home },
-            { value: 'lot', label: 'Solares', hint: 'Inversión', icon: Map },
-            { value: 'farm', label: 'Fincas', hint: 'Productivo', icon: Compass },
-            { value: 'quinta', label: 'Quintas', hint: 'Descanso', icon: Home },
-            { value: 'commercial', label: 'Local comercial', hint: 'Negocios', icon: Building2 },
-          ];
-          """
-          new = old + "\nconst PROPERTIES_PER_PAGE = 6;\n"
-          if old not in text:
-              raise SystemExit('quickCategories block not found')
-          text = text.replace(old, new, 1)
+          marker = "];\n\nconst normalizeOperation"
+          if "const PROPERTIES_PER_PAGE = 6;" not in text:
+              if marker not in text:
+                  raise SystemExit('pagination constant marker not found')
+              text = text.replace(marker, "];\n\nconst PROPERTIES_PER_PAGE = 6;\n\nconst normalizeOperation", 1)
 
           old = "  const [view, setView] = useState('grid');\n"
-          new = "  const [view, setView] = useState('grid');\n  const [currentPage, setCurrentPage] = useState(1);\n"
-          if old not in text:
-              raise SystemExit('view state not found')
-          text = text.replace(old, new, 1)
+          if "currentPage" not in text:
+              if old not in text:
+                  raise SystemExit('view state not found')
+              text = text.replace(old, old + "  const [currentPage, setCurrentPage] = useState(1);\n", 1)
 
-          old = """  const featured = filtered.filter((property) => property.featured);
-          const standardProperties = featured.length ? filtered.filter((property) => !property.featured) : filtered;
-          const hasSearch = Boolean(q || propertyType || operationType === 'rent');
-          """
-          new = """  const totalPages = Math.max(1, Math.ceil(filtered.length / PROPERTIES_PER_PAGE));
-          const pageStart = (currentPage - 1) * PROPERTIES_PER_PAGE;
-          const pageProperties = filtered.slice(pageStart, pageStart + PROPERTIES_PER_PAGE);
-          const featured = pageProperties.filter((property) => property.featured);
-          const standardProperties = featured.length ? pageProperties.filter((property) => !property.featured) : pageProperties;
-          const hasSearch = Boolean(q || propertyType || operationType === 'rent');
+          old = "  const featured = filtered.filter((property) => property.featured);\n  const standardProperties = featured.length ? filtered.filter((property) => !property.featured) : filtered;\n  const hasSearch = Boolean(q || propertyType || operationType === 'rent');\n"
+          new = "  const totalPages = Math.max(1, Math.ceil(filtered.length / PROPERTIES_PER_PAGE));\n  const pageStart = (currentPage - 1) * PROPERTIES_PER_PAGE;\n  const pageProperties = filtered.slice(pageStart, pageStart + PROPERTIES_PER_PAGE);\n  const featured = pageProperties.filter((property) => property.featured);\n  const standardProperties = featured.length ? pageProperties.filter((property) => !property.featured) : pageProperties;\n  const hasSearch = Boolean(q || propertyType || operationType === 'rent');\n\n  useEffect(() => {\n    setCurrentPage(1);\n  }, [q, operationType, propertyType]);\n\n  useEffect(() => {\n    if (currentPage > totalPages) setCurrentPage(totalPages);\n  }, [currentPage, totalPages]);\n"
+          if "const pageProperties = filtered.slice" not in text:
+              if old not in text:
+                  raise SystemExit('featured block not found')
+              text = text.replace(old, new, 1)
 
-          useEffect(() => {
-            setCurrentPage(1);
-          }, [q, operationType, propertyType]);
+          choose = "  const chooseCategory = (value) => {\n    setPropertyType(value);\n    window.setTimeout(showResults, 80);\n  };\n"
+          go = "  const goToPage = (page) => {\n    const nextPage = Math.min(Math.max(page, 1), totalPages);\n    setCurrentPage(nextPage);\n    window.setTimeout(showResults, 40);\n  };\n"
+          if "const goToPage = (page)" not in text:
+              if choose not in text:
+                  raise SystemExit('chooseCategory block not found')
+              text = text.replace(choose, choose + go, 1)
 
-          useEffect(() => {
-            if (currentPage > totalPages) setCurrentPage(totalPages);
-          }, [currentPage, totalPages]);
-          """
-          if old not in text:
-              raise SystemExit('featured block not found')
-          text = text.replace(old, new, 1)
+          old = "                {standardProperties.length > 0 && <div className=\"properties-grid\">{standardProperties.map((property) => <PropertyCard key={property.id} property={property} />)}</div>}\n              </>}\n"
+          pagination = "                {standardProperties.length > 0 && <div className=\"properties-grid\">{standardProperties.map((property) => <PropertyCard key={property.id} property={property} />)}</div>}\n                {totalPages > 1 && (\n                  <nav className=\"re-pagination\" aria-label=\"Páginas de propiedades\">\n                    <button type=\"button\" className=\"re-pagination__button\" disabled={currentPage === 1} onClick={() => goToPage(currentPage - 1)}>Anterior</button>\n                    {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (\n                      <button\n                        type=\"button\"\n                        key={pageNumber}\n                        className={`re-pagination__page ${pageNumber === currentPage ? 'is-active' : ''}`}\n                        aria-current={pageNumber === currentPage ? 'page' : undefined}\n                        aria-label={`Ir a la página ${pageNumber}`}\n                        onClick={() => goToPage(pageNumber)}\n                      >\n                        {pageNumber}\n                      </button>\n                    ))}\n                    <button type=\"button\" className=\"re-pagination__button\" disabled={currentPage === totalPages} onClick={() => goToPage(currentPage + 1)}>Siguiente</button>\n                  </nav>\n                )}\n              </>}\n"
+          if "className=\"re-pagination\"" not in text:
+              if old not in text:
+                  raise SystemExit('catalog render block not found')
+              text = text.replace(old, pagination, 1)
 
-          old = """  const chooseCategory = (value) => {
-            setPropertyType(value);
-            window.setTimeout(showResults, 80);
-          };
-          """
-          new = old + """  const goToPage = (page) => {
-            const nextPage = Math.min(Math.max(page, 1), totalPages);
-            setCurrentPage(nextPage);
-            window.setTimeout(showResults, 40);
-          };
-          """
-          if old not in text:
-              raise SystemExit('chooseCategory block not found')
-          text = text.replace(old, new, 1)
-
-          old = """                {standardProperties.length > 0 && <div className=\"properties-grid\">{standardProperties.map((property) => <PropertyCard key={property.id} property={property} />)}</div>}
-              </>}
-          """
-          new = """                {standardProperties.length > 0 && <div className=\"properties-grid\">{standardProperties.map((property) => <PropertyCard key={property.id} property={property} />)}</div>}
-                {totalPages > 1 && (
-                  <nav className=\"re-pagination\" aria-label=\"Páginas de propiedades\">
-                    <button
-                      type=\"button\"
-                      className=\"re-pagination__button\"
-                      disabled={currentPage === 1}
-                      onClick={() => goToPage(currentPage - 1)}
-                    >
-                      Anterior
-                    </button>
-                    {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
-                      <button
-                        type=\"button\"
-                        key={pageNumber}
-                        className={`re-pagination__page ${pageNumber === currentPage ? 'is-active' : ''}`}
-                        aria-current={pageNumber === currentPage ? 'page' : undefined}
-                        aria-label={`Ir a la página ${pageNumber}`}
-                        onClick={() => goToPage(pageNumber)}
-                      >
-                        {pageNumber}
-                      </button>
-                    ))}
-                    <button
-                      type=\"button\"
-                      className=\"re-pagination__button\"
-                      disabled={currentPage === totalPages}
-                      onClick={() => goToPage(currentPage + 1)}
-                    >
-                      Siguiente
-                    </button>
-                  </nav>
-                )}
-              </>}
-          """
-          if old not in text:
-              raise SystemExit('catalog render block not found')
-          text = text.replace(old, new, 1)
           path.write_text(text)
 
-          # Investment projects use four features maximum to avoid overflow.
           path = Path('src/components/properties/PropertyCard.jsx')
           text = path.read_text()
-          old = """const buildCardFeatures = (property, areaUnit, operationLabel, statusLabel) => {
-            const preferred = preferredFeatureKeys[property.propertyType] || preferredFeatureKeys.other;
-            const dynamicKeys = getDynamicFields(property.propertyType).map((item) => item.key);
-            const orderedKeys = [...new Set([...preferred, ...dynamicKeys])];
-            const features = [];
-            const usedKeys = new Set();
-          """
-          new = """const buildCardFeatures = (property, areaUnit, operationLabel, statusLabel) => {
-            const maxFeatures = property.propertyType === 'investment' ? 4 : 5;
-            const preferred = preferredFeatureKeys[property.propertyType] || preferredFeatureKeys.other;
-            const dynamicKeys = getDynamicFields(property.propertyType).map((item) => item.key);
-            const orderedKeys = [...new Set([...preferred, ...dynamicKeys])];
-            const features = [];
-            const usedKeys = new Set();
-          """
-          if old not in text:
-              raise SystemExit('buildCardFeatures header not found')
-          text = text.replace(old, new, 1)
-          text = text.replace("    if (features.length >= 5) return;\n", "    if (features.length >= maxFeatures) return;\n", 1)
-          text = text.replace("    if (features.length < 5) addFeature(feature);\n", "    if (features.length < maxFeatures) addFeature(feature);\n", 1)
-          text = text.replace("  return features.slice(0, 5);\n", "  return features.slice(0, maxFeatures);\n", 1)
+          header = "const buildCardFeatures = (property, areaUnit, operationLabel, statusLabel) => {\n  const preferred"
+          if "const maxFeatures = property.propertyType === 'investment' ? 4 : 5;" not in text:
+              if header not in text:
+                  raise SystemExit('feature builder marker not found')
+              text = text.replace(header, "const buildCardFeatures = (property, areaUnit, operationLabel, statusLabel) => {\n  const maxFeatures = property.propertyType === 'investment' ? 4 : 5;\n  const preferred", 1)
+          text = text.replace("    if (features.length >= 5) return;", "    if (features.length >= maxFeatures) return;", 1)
+          text = text.replace("    if (features.length < 5) addFeature(feature);", "    if (features.length < maxFeatures) addFeature(feature);", 1)
+          text = text.replace("  return features.slice(0, 5);", "  return features.slice(0, maxFeatures);", 1)
           path.write_text(text)
 
-          # Load the final mobile catalog override last.
           path = Path('src/main.jsx')
           text = path.read_text()
           marker = "import './styles/admin-intro-loader.css';\n"
-          addition = marker + "import './styles/property-catalog-pagination-mobile.css';\n"
-          if marker not in text:
-              raise SystemExit('main import marker not found')
           if "property-catalog-pagination-mobile.css" not in text:
-              text = text.replace(marker, addition, 1)
+              if marker not in text:
+                  raise SystemExit('main import marker not found')
+              text = text.replace(marker, marker + "import './styles/property-catalog-pagination-mobile.css';\n", 1)
           path.write_text(text)
           PY
 

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  ArrowRight, Building2, ChartNoAxesCombined, Check, Compass, Home,
+  ArrowRight, Building2, ChartNoAxesCombined, Check, ChevronDown, Compass, Home,
   List, Map, Search, ShieldCheck, Sparkles, UserRoundCheck,
 } from 'lucide-react';
 import PropertyCard from '../../components/properties/PropertyCard';
@@ -17,7 +17,7 @@ import MapView from './MapView';
 const quickCategories = [
   { value: '', label: 'Todas', hint: 'Ver portafolio', icon: Sparkles },
   { value: 'house', label: 'Casas', hint: 'Residencial', icon: Home },
-  { value: 'land', label: 'Terrenos', hint: 'Inversión', icon: Map },
+  { value: 'land', label: 'Solares', hint: 'Inversión', icon: Map },
   { value: 'farm', label: 'Fincas', hint: 'Productivo', icon: Compass },
   { value: 'quinta', label: 'Quintas', hint: 'Descanso', icon: Home },
   { value: 'commercial', label: 'Local comercial', hint: 'Negocios', icon: Building2 },
@@ -206,6 +206,19 @@ export default function Properties() {
           </div>
         </RevealOnScroll>
       </div>
+
+      <button
+        type="button"
+        className="re-discover-more"
+        onClick={showResults}
+        aria-label="Descubre más propiedades"
+      >
+        <span className="re-discover-more__label">Descubre más</span>
+        <span className="re-discover-more__arrows" aria-hidden="true">
+          <ChevronDown />
+          <ChevronDown />
+        </span>
+      </button>
     </section>
 
     <section className="re-section re-catalog re-catalog--front" id="propiedades">

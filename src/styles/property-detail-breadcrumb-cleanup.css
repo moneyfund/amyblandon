@@ -1,5 +1,6 @@
-/* El detalle de propiedad no necesita breadcrumb: en móvil competía visualmente con el navbar. */
-.property-detail-page .property-detail-breadcrumb {
+/* El detalle de propiedad no necesita breadcrumb: se elimina la ruta visual sobre la galería. */
+.property-detail-page .property-detail-breadcrumb,
+.property-detail-page .pd-ref-breadcrumb {
   display: none !important;
 }
 

@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore';
 import { db, firebaseEnabled } from '../firebase/firebase';
 import { demoProperties } from '../data/demoData';
+import { featurePresetsByType, servicePresetsByType } from '../config/propertyWorkspace.es';
 import { deleteStorageFile } from './storageService';
 
 const collectionName = 'properties';
@@ -118,6 +119,57 @@ const propertiesFromSnapshot = (snapshot, admin = false) => sortProperties(
   admin,
 );
 
+const knownPresetValues = (presetsByType) => new Set(Object.values(presetsByType).flat());
+const knownFeaturePresets = knownPresetValues(featurePresetsByType);
+const knownServicePresets = knownPresetValues(servicePresetsByType);
+
+const keepCurrentTypePresetsAndCustom = (value, propertyType, presetsByType, knownPresets) => {
+  const list = asList(value);
+  if (!propertyType) return list;
+  const allowed = new Set(presetsByType[propertyType] || presetsByType.other || []);
+  return list.filter((item) => allowed.has(item) || !knownPresets.has(item));
+};
+
+const sanitizeTypeSpecificData = (payload) => {
+  const type = payload.propertyType;
+  if (!type) return payload;
+
+  payload.features = keepCurrentTypePresetsAndCustom(
+    payload.features,
+    type,
+    featurePresetsByType,
+    knownFeaturePresets,
+  );
+  payload.services = keepCurrentTypePresetsAndCustom(
+    payload.services,
+    type,
+    servicePresetsByType,
+    knownServicePresets,
+  );
+  payload.amenities = [...new Set([...payload.features, ...payload.services])];
+
+  const noResidentialCore = new Set([
+    'land', 'lot', 'farm', 'commercial', 'warehouse', 'building', 'office', 'hotel', 'investment', 'other',
+  ]);
+  const noParkingCore = new Set(['land', 'lot', 'farm', 'hotel', 'investment', 'other']);
+  const noYearBuiltCore = new Set(['land', 'lot', 'farm', 'investment', 'other']);
+  const noConstructionArea = new Set(['land', 'lot']);
+
+  if (type === 'apartment' || type === 'condo') payload.landArea = null;
+  if (noConstructionArea.has(type)) {
+    payload.constructionArea = null;
+    payload.builtArea = null;
+  }
+  if (noResidentialCore.has(type)) {
+    payload.bedrooms = null;
+    payload.bathrooms = null;
+  }
+  if (noParkingCore.has(type)) payload.parkingSpaces = null;
+  if (noYearBuiltCore.has(type)) payload.yearBuilt = null;
+
+  return payload;
+};
+
 export async function getProperties({ admin = false } = {}) {
   if (!firebaseEnabled) return sortProperties(demoProperties.map(normalize), admin);
 
@@ -152,12 +204,26 @@ export async function getProperty(id) {
 }
 
 export async function saveProperty(data, id, uid) {
-  const payload = { ...data, updatedBy: uid || data.updatedBy || '', updatedAt: serverTimestamp() };
+  const payload = sanitizeTypeSpecificData({
+    ...data,
+    updatedBy: uid || data.updatedBy || '',
+    updatedAt: serverTimestamp(),
+  });
   const hasStructuredAmenities = hasOwn(data, 'features') || hasOwn(data, 'services');
 
   if (hasStructuredAmenities) {
-    const features = asList(data.features);
-    const services = asList(data.services);
+    const features = keepCurrentTypePresetsAndCustom(
+      data.features,
+      data.propertyType,
+      featurePresetsByType,
+      knownFeaturePresets,
+    );
+    const services = keepCurrentTypePresetsAndCustom(
+      data.services,
+      data.propertyType,
+      servicePresetsByType,
+      knownServicePresets,
+    );
     payload.features = features;
     payload.services = services;
     payload.amenities = [...new Set([...features, ...services])];

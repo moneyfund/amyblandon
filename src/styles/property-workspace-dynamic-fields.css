@@ -1,0 +1,70 @@
+/* Adapta los campos generales del paso de características al tipo de propiedad.
+   El tipo activo se sincroniza desde propertyWorkspace.es.js. */
+
+/* Apartamentos y condominios no requieren área de terreno individual. */
+:root:is([data-property-type='apartment'], [data-property-type='condo'])
+  #property-details > .property-workspace__grid:first-of-type > :nth-child(1) {
+  display: none;
+}
+
+/* Terrenos, solares, fincas y proyectos de inversión no deben mostrar campos residenciales. */
+:root:is(
+  [data-property-type='land'],
+  [data-property-type='lot'],
+  [data-property-type='farm'],
+  [data-property-type='investment'],
+  [data-property-type='other']
+) #property-details > .property-workspace__grid:first-of-type > :nth-child(4),
+:root:is(
+  [data-property-type='land'],
+  [data-property-type='lot'],
+  [data-property-type='farm'],
+  [data-property-type='investment'],
+  [data-property-type='other']
+) #property-details > .property-workspace__grid:first-of-type > :nth-child(5),
+:root:is(
+  [data-property-type='land'],
+  [data-property-type='lot'],
+  [data-property-type='farm'],
+  [data-property-type='investment'],
+  [data-property-type='other']
+) #property-details > .property-workspace__grid:first-of-type > :nth-child(6),
+:root:is(
+  [data-property-type='land'],
+  [data-property-type='lot'],
+  [data-property-type='farm'],
+  [data-property-type='investment'],
+  [data-property-type='other']
+) #property-details > .property-workspace__grid:first-of-type > :nth-child(7) {
+  display: none;
+}
+
+/* Terrenos y solares trabajan solo con área de terreno; la construcción se describe solo si aplica. */
+:root:is([data-property-type='land'], [data-property-type='lot'])
+  #property-details > .property-workspace__grid:first-of-type > :nth-child(2) {
+  display: none;
+}
+
+/* Tipos comerciales e institucionales usan sus propios campos de baños/ambientes. */
+:root:is(
+  [data-property-type='commercial'],
+  [data-property-type='warehouse'],
+  [data-property-type='building'],
+  [data-property-type='office'],
+  [data-property-type='hotel']
+) #property-details > .property-workspace__grid:first-of-type > :nth-child(4),
+:root:is(
+  [data-property-type='commercial'],
+  [data-property-type='warehouse'],
+  [data-property-type='building'],
+  [data-property-type='office'],
+  [data-property-type='hotel']
+) #property-details > .property-workspace__grid:first-of-type > :nth-child(5) {
+  display: none;
+}
+
+/* Hotel usa capacidad de estacionamiento específica en su bloque dinámico. */
+:root[data-property-type='hotel']
+  #property-details > .property-workspace__grid:first-of-type > :nth-child(6) {
+  display: none;
+}

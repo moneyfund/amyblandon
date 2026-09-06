@@ -1,0 +1,134 @@
+/* Mapa inmobiliario: vista general del catálogo y marcadores de precio. */
+.mapWrap--embedded{
+  display:block !important;
+  width:100%;
+  height:100%;
+  min-width:0;
+}
+
+.mapWrap--embedded .leaflet-container{
+  width:100%;
+  height:100% !important;
+}
+
+.re-catalog .mapWrap--embedded{
+  height:clamp(500px,62vh,680px);
+  min-height:500px;
+  margin-top:8px;
+  overflow:hidden;
+  border:1px solid rgba(4,43,58,.14);
+  background:#e8ece9;
+  box-shadow:0 20px 46px rgba(4,31,45,.10);
+}
+
+.re-catalog .mapWrap--embedded .leaflet-container{
+  min-height:500px;
+  border:0;
+}
+
+.pd-ref-map .mapWrap--embedded{
+  height:100%;
+  min-height:0;
+}
+
+.pd-ref-map .mapWrap--embedded .leaflet-container{
+  min-height:0;
+  border:0;
+}
+
+.property-price-marker{
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+  min-width:88px;
+  height:34px !important;
+  padding:0 12px;
+  border:2px solid rgba(255,255,255,.96);
+  border-radius:999px;
+  background:var(--amy-gold,#c99a44);
+  color:#fff;
+  box-shadow:0 8px 18px rgba(4,31,45,.24);
+  font-family:var(--font-body,Arial,sans-serif);
+  font-size:12px;
+  font-weight:800;
+  line-height:1;
+  letter-spacing:.01em;
+  white-space:nowrap;
+}
+
+.property-price-marker::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-7px;
+  width:10px;
+  height:10px;
+  border-right:2px solid rgba(255,255,255,.96);
+  border-bottom:2px solid rgba(255,255,255,.96);
+  background:var(--amy-gold,#c99a44);
+  transform:translateX(-50%) rotate(45deg);
+}
+
+.property-price-marker:hover{
+  z-index:900 !important;
+  background:#d0a64f;
+  box-shadow:0 11px 24px rgba(4,31,45,.30);
+}
+
+.map-property-popup{
+  min-width:190px;
+  display:grid;
+  gap:5px;
+  padding:2px 1px;
+  color:var(--amy-navy,#042b3a);
+  font-family:var(--font-body,Arial,sans-serif);
+}
+
+.map-property-popup strong{
+  color:var(--amy-gold,#c99a44);
+  font-size:17px;
+  line-height:1.2;
+}
+
+.map-property-popup span{
+  color:#465b64;
+  font-size:12px;
+  font-weight:700;
+  line-height:1.4;
+}
+
+.map-property-popup a{
+  width:max-content;
+  margin-top:4px;
+  color:var(--amy-navy,#042b3a);
+  border-bottom:1px solid var(--amy-gold,#c99a44);
+  font-size:11px;
+  font-weight:800;
+}
+
+.re-catalog .leaflet-control-zoom a{
+  color:var(--amy-navy,#042b3a);
+}
+
+@media(max-width:820px){
+  .re-catalog .mapWrap--embedded,
+  .re-catalog .mapWrap--embedded .leaflet-container{
+    height:540px;
+    min-height:540px;
+  }
+}
+
+@media(max-width:580px){
+  .re-catalog .mapWrap--embedded,
+  .re-catalog .mapWrap--embedded .leaflet-container{
+    height:470px;
+    min-height:470px;
+  }
+
+  .property-price-marker{
+    min-width:78px;
+    height:31px !important;
+    padding:0 9px;
+    font-size:11px;
+  }
+}

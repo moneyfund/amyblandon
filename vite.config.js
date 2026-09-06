@@ -8,12 +8,18 @@ function pdfFooterBrandFix() {
     transform(code, id) {
       if (!id.includes('propertyTechnicalSheetPdf.js')) return null;
 
-      // El favicon cargado como Image podía quedar decodificado pero no pintarse
-      // al rasterizar el canvas del PDF. Forzamos el fallback dibujado directamente
-      // con Canvas (fondo dorado + monograma AB), que no depende de red, SVG, CORS
-      // ni de la vida útil de un object URL.
+      // La ficha no debe depender de SVG, red, CORS, caché ni object URLs para
+      // la marca del footer. Forzamos el fallback pintado directamente en Canvas.
       const faviconLoad = "  const faviconImage = await loadImage(`${import.meta.env.BASE_URL}favicon-amy.svg`);";
-      return code.replace(faviconLoad, '  const faviconImage = null;');
+      const transformed = code.replace(faviconLoad, '  const faviconImage = null;');
+
+      // Si una futura edición cambia esa línea, el build debe fallar en vez de
+      // publicar silenciosamente una versión donde el logo vuelva a quedar vacío.
+      if (transformed === code) {
+        throw new Error('No se pudo aplicar el arreglo determinístico del logo del PDF.');
+      }
+
+      return transformed;
     },
   };
 }

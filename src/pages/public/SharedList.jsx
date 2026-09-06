@@ -83,14 +83,14 @@ export default function SharedList() {
     <div className="shared-list-public">
       <SEO
         title={`${list.listName || 'Selección de propiedades'} | Amy Blandón`}
-        description={`Selección inmobiliaria privada preparada para ${list.clientName || 'un cliente'}.`}
+        description="Selección inmobiliaria privada preparada por Amy Blandón."
       />
 
       <section className="shared-list-public__hero">
         <div className="shared-list-public__hero-inner">
           <Link className="shared-list-public__back" to="/bienes-raices"><ArrowLeft /> Bienes raíces</Link>
           <div className="shared-list-public__eyebrow"><Sparkles /> Selección inmobiliaria personalizada</div>
-          <p className="shared-list-public__client">Preparada para <strong>{list.clientName || 'ti'}</strong></p>
+          <p className="shared-list-public__client">Preparada especialmente para ti</p>
           <h1>{list.listName || 'Propiedades seleccionadas para ti'}</h1>
           <p className="shared-list-public__lead">
             Amy Blandón ha preparado esta selección de propiedades para que puedas revisarlas con calma, comparar opciones y abrir cada ficha con todos sus detalles.

@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import L from 'leaflet';
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import '../../styles/property-map-catalog.css';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -35,6 +37,20 @@ const mapPoint = (property) => {
   return { ...property, latitude, longitude };
 };
 
+const propertyPrice = (property) => (
+  property?.priceOnRequest
+    ? 'Consultar'
+    : money(property?.price, property?.currency)
+);
+
+const priceMarkerIcon = (property) => L.divIcon({
+  className: 'property-price-marker',
+  html: propertyPrice(property),
+  iconSize: [96, 34],
+  iconAnchor: [48, 24],
+  popupAnchor: [0, -26],
+});
+
 function Fit({ items, embedded }) {
   const map = useMap();
 
@@ -46,13 +62,17 @@ function Fit({ items, embedded }) {
 
       if (items.length === 1) {
         const [property] = items;
-        map.setView([property.latitude, property.longitude], embedded ? 15 : 13, { animate: false });
+        map.setView(
+          [property.latitude, property.longitude],
+          embedded ? 14 : 13,
+          { animate: false },
+        );
         return;
       }
 
       map.fitBounds(items.map((property) => [property.latitude, property.longitude]), {
-        padding: embedded ? [22, 22] : [40, 40],
-        maxZoom: embedded ? 15 : 14,
+        padding: embedded ? [44, 44] : [54, 54],
+        maxZoom: embedded ? 14 : 13,
         animate: false,
       });
     };
@@ -114,6 +134,21 @@ export default function MapView({ embedded = false, properties }) {
     [safeItems],
   );
 
+  const initialCenter = useMemo(() => {
+    if (!mappedItems.length) return [12.8654, -85.2072];
+    const totals = mappedItems.reduce(
+      (accumulator, property) => ({
+        latitude: accumulator.latitude + property.latitude,
+        longitude: accumulator.longitude + property.longitude,
+      }),
+      { latitude: 0, longitude: 0 },
+    );
+    return [
+      totals.latitude / mappedItems.length,
+      totals.longitude / mappedItems.length,
+    ];
+  }, [mappedItems]);
+
   return (
     <section className={embedded ? 'mapWrap embedded mapWrap--embedded' : 'mapWrap'}>
       {!embedded && (
@@ -124,9 +159,9 @@ export default function MapView({ embedded = false, properties }) {
 
       {mappedItems.length ? (
         <MapContainer
-          center={[12.8654, -85.2072]}
-          zoom={7}
-          scrollWheelZoom={false}
+          center={initialCenter}
+          zoom={mappedItems.length === 1 ? 14 : 10}
+          scrollWheelZoom
           style={embedded ? { width: '100%', height: '100%' } : undefined}
         >
           <TileLayer
@@ -138,11 +173,15 @@ export default function MapView({ embedded = false, properties }) {
             <Marker
               key={property.id || property.slug}
               position={[property.latitude, property.longitude]}
+              icon={embedded ? priceMarkerIcon(property) : undefined}
+              riseOnHover
             >
               <Popup>
-                {money(property.price, property.currency)}
-                <br />
-                {property.title}
+                <div className="map-property-popup">
+                  <strong>{propertyPrice(property)}</strong>
+                  <span>{property.title}</span>
+                  <Link to={`/properties/${property.slug || property.id}`}>Ver propiedad</Link>
+                </div>
               </Popup>
             </Marker>
           ))}

@@ -362,6 +362,7 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
   const galleryImages = decodedGallery.length
     ? decodedGallery
     : (await Promise.all(preparedGallery.map(loadImage))).filter(Boolean);
+  const faviconImage = await loadImage(`${import.meta.env.BASE_URL}favicon-amy.svg`);
   const heroHeight = 560;
   const hasCover = drawPremiumGallery(ctx, galleryImages, PAGE.width, heroHeight);
 
@@ -501,14 +502,29 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
   ctx.fillText('Información clave', detailsX + 30, sectionY + 48);
   ctx.fillStyle = COLORS.gold;
   ctx.fillRect(detailsX + 30, sectionY + 66, 70, 4);
-  ctx.font = '600 16px Arial, sans-serif';
   const detailItems = details.length ? details : [
     { label: 'Tipo', value: typeLabel },
     { label: 'Operación', value: operationLabel },
     { label: 'Ubicación', value: location },
   ];
+  const isLandOrLot = property.propertyType === 'land' || property.propertyType === 'lot';
   detailItems.slice(0, 5).forEach((item, index) => {
     const y = sectionY + 111 + (index * 38);
+
+    if (isLandOrLot) {
+      const valueOffset = 264;
+      ctx.fillStyle = 'rgba(255,255,255,.62)';
+      ctx.font = '600 14px Arial, sans-serif';
+      ctx.fillText(`${cleanText(item.label).toUpperCase()}:`, detailsX + 30, y);
+
+      ctx.fillStyle = COLORS.white;
+      ctx.font = '600 15px Arial, sans-serif';
+      const valueLines = wrapLines(ctx, cleanText(item.value), columnWidth - valueOffset - 30, 1);
+      drawLines(ctx, valueLines, detailsX + valueOffset, y, 20, COLORS.white);
+      return;
+    }
+
+    ctx.font = '600 16px Arial, sans-serif';
     ctx.fillStyle = 'rgba(255,255,255,.62)';
     ctx.fillText(`${cleanText(item.label).toUpperCase()}:`, detailsX + 30, y);
     ctx.fillStyle = COLORS.white;
@@ -522,12 +538,20 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
   ctx.fillStyle = COLORS.gold;
   ctx.fillRect(0, contactY, PAGE.width, 5);
 
-  fillRoundedRect(ctx, 70, contactY + 30, 66, 66, 14, COLORS.gold);
-  ctx.fillStyle = COLORS.navy;
-  ctx.textAlign = 'center';
-  ctx.font = '800 26px Georgia, serif';
-  ctx.fillText('AB', 103, contactY + 73);
-  ctx.textAlign = 'left';
+  if (faviconImage) {
+    ctx.save();
+    roundedRectPath(ctx, 70, contactY + 30, 66, 66, 14);
+    ctx.clip();
+    ctx.drawImage(faviconImage, 70, contactY + 30, 66, 66);
+    ctx.restore();
+  } else {
+    fillRoundedRect(ctx, 70, contactY + 30, 66, 66, 14, COLORS.gold);
+    ctx.fillStyle = COLORS.navy;
+    ctx.textAlign = 'center';
+    ctx.font = '800 26px Georgia, serif';
+    ctx.fillText('AB', 103, contactY + 73);
+    ctx.textAlign = 'left';
+  }
 
   ctx.fillStyle = COLORS.white;
   ctx.font = '800 24px Arial, sans-serif';

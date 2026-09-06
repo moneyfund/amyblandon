@@ -5,6 +5,7 @@ import PublicLayout from '../layouts/PublicLayout';
 import { InquiriesAdmin, SettingsAdmin } from '../pages/admin/AdminPages';
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import AdminProperties from '../pages/admin/AdminProperties';
+import AdminSharedLists from '../pages/admin/AdminSharedLists';
 import ContentAdmin from '../pages/admin/ContentAdminV2';
 import PropertyWorkspace from '../pages/admin/PropertyWorkspace';
 import ImagesAdmin from '../pages/admin/ImagesAdmin';
@@ -14,6 +15,7 @@ import { ComingSoon, Unauthorized } from '../pages/admin/AdminUtilityPages';
 import Home from '../pages/public/Home';
 import Properties from '../pages/public/Properties';
 import PropertyDetail from '../pages/public/PropertyDetail';
+import SharedList from '../pages/public/SharedList';
 import MapView from '../pages/public/MapView';
 import Insurance from '../pages/public/Insurance';
 import InsuranceCoverageDetail from '../pages/public/InsuranceCoverageDetail';
@@ -35,6 +37,7 @@ export default function AppRoutes() {
         <Route path="propiedades" element={<Properties />} />
         <Route path="properties" element={<Navigate to="/propiedades" replace />} />
         <Route path="properties/:slug" element={<PropertyDetail />} />
+        <Route path="seleccion/:token" element={<SharedList />} />
         <Route path="map" element={<MapView />} />
         <Route path="real-estate" element={<Properties />} />
         <Route path="bienes-raices" element={<Properties />} />
@@ -59,6 +62,7 @@ export default function AppRoutes() {
           <Route path="properties" element={<AdminProperties />} />
           <Route path="properties/new" element={<PropertyWorkspace />} />
           <Route path="properties/:id/edit" element={<PropertyWorkspace />} />
+          <Route path="shared-lists" element={<AdminSharedLists />} />
           <Route path="content" element={<ContentAdmin />} />
           <Route path="images" element={<ImagesAdmin />} />
           <Route path="customization" element={<CustomizationAdmin />} />

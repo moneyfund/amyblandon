@@ -11,7 +11,8 @@ import {
 } from 'firebase/firestore';
 import { db, firebaseEnabled } from '../firebase/firebase';
 
-const COLLECTION = 'siteContent';
+const PUBLIC_COLLECTION = 'siteContent';
+const PRIVATE_COLLECTION = 'clients';
 const PREFIX = 'sharedList_';
 
 const timestampValue = (value) => {
@@ -44,29 +45,46 @@ export const sharedListUrl = (token) => {
 export async function createSharedList({ listName, clientName, propertyIds }, uid = '') {
   const token = makeToken();
   const normalizedIds = [...new Set((propertyIds || []).filter(Boolean))];
-  const payload = {
+  const cleanListName = String(listName || '').trim();
+  const cleanClientName = String(clientName || '').trim();
+  const id = docIdFor(token);
+
+  const publicPayload = {
     contentType: 'sharedList',
     token,
-    listName: String(listName || '').trim(),
-    clientName: String(clientName || '').trim(),
+    listName: cleanListName,
     propertyIds: normalizedIds,
     active: true,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  };
+
+  const privatePayload = {
+    recordType: 'sharedList',
+    token,
+    listName: cleanListName,
+    clientName: cleanClientName,
+    propertyIds: normalizedIds,
     createdBy: uid || '',
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   };
 
-  if (!firebaseEnabled) return { ...payload, token };
+  if (!firebaseEnabled) return { ...privatePayload, token };
 
-  await setDoc(doc(db, COLLECTION, docIdFor(token)), payload);
-  return { ...payload, token };
+  await Promise.all([
+    setDoc(doc(db, PUBLIC_COLLECTION, id), publicPayload),
+    setDoc(doc(db, PRIVATE_COLLECTION, id), privatePayload),
+  ]);
+
+  return { ...privatePayload, token };
 }
 
 export async function getSharedList(token) {
   const cleanToken = String(token || '').trim();
   if (!cleanToken || !firebaseEnabled) return null;
 
-  const snapshot = await getDoc(doc(db, COLLECTION, docIdFor(cleanToken)));
+  const snapshot = await getDoc(doc(db, PUBLIC_COLLECTION, docIdFor(cleanToken)));
   if (!snapshot.exists()) return null;
 
   const data = snapshot.data();
@@ -79,8 +97,8 @@ export async function listSharedLists() {
   if (!firebaseEnabled) return [];
 
   const snapshot = await getDocs(query(
-    collection(db, COLLECTION),
-    where('contentType', '==', 'sharedList'),
+    collection(db, PRIVATE_COLLECTION),
+    where('recordType', '==', 'sharedList'),
   ));
 
   return snapshot.docs
@@ -91,6 +109,11 @@ export async function listSharedLists() {
 export async function deleteSharedList(token) {
   const cleanToken = String(token || '').trim();
   if (!cleanToken || !firebaseEnabled) return true;
-  await deleteDoc(doc(db, COLLECTION, docIdFor(cleanToken)));
+  const id = docIdFor(cleanToken);
+
+  await Promise.all([
+    deleteDoc(doc(db, PUBLIC_COLLECTION, id)),
+    deleteDoc(doc(db, PRIVATE_COLLECTION, id)),
+  ]);
   return true;
 }

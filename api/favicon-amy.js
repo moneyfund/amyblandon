@@ -27,12 +27,14 @@ export default async function handler(_req, res) {
 
     const image = Buffer.from(base64, 'base64');
     res.setHeader('Content-Type', 'image/png');
-    res.setHeader('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800');
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    res.setHeader('Pragma', 'no-cache');
     res.status(200).send(image);
   } catch (error) {
     console.error('No se pudo servir el favicon activo para la ficha técnica:', error);
     res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
-    res.setHeader('Cache-Control', 'public, s-maxage=300');
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    res.setHeader('Pragma', 'no-cache');
     res.status(200).send(FALLBACK_SVG.trim());
   }
 }

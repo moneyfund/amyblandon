@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import L from 'leaflet';
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../../styles/property-map-catalog.css';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
@@ -21,6 +21,11 @@ const coordinate = (value) => {
   if (value === '' || value === null || value === undefined) return null;
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : null;
+};
+
+const imageUrl = (image) => {
+  if (typeof image === 'string') return image;
+  return image?.url || '';
 };
 
 const mapPoint = (property) => {
@@ -43,12 +48,25 @@ const propertyPrice = (property) => (
     : money(property?.price, property?.currency)
 );
 
+const propertyCover = (property) => {
+  const gallery = Array.isArray(property?.images) ? property.images : [property?.images];
+  return imageUrl(property?.coverImage) || gallery.map(imageUrl).find(Boolean) || '';
+};
+
+const propertyLocation = (property) => (
+  property?.publicAddress
+  || [property?.sector, property?.city, property?.department].filter(Boolean).join(', ')
+  || property?.city
+  || 'Nicaragua'
+);
+
 const priceMarkerIcon = (property) => L.divIcon({
   className: 'property-price-marker',
   html: propertyPrice(property),
   iconSize: [96, 34],
   iconAnchor: [48, 24],
   popupAnchor: [0, -26],
+  tooltipAnchor: [0, -26],
 });
 
 function Fit({ items, embedded }) {
@@ -96,7 +114,32 @@ function Fit({ items, embedded }) {
   return null;
 }
 
+function PropertyHoverCard({ property }) {
+  const cover = propertyCover(property);
+  const area = property.landArea || property.area || property.constructionArea || property.builtArea;
+  const areaUnit = property.areaUnit || 'm²';
+
+  return (
+    <article className="map-property-hover-card">
+      <div className="map-property-hover-card__media">
+        {cover ? <img src={cover} alt="" /> : <div className="map-property-hover-card__placeholder">AB</div>}
+        <span>{propertyPrice(property)}</span>
+      </div>
+      <div className="map-property-hover-card__body">
+        <h3>{property.title || 'Propiedad'}</h3>
+        <p>{propertyLocation(property)}</p>
+        <div className="map-property-hover-card__facts">
+          {area ? <span>{area} {areaUnit}</span> : null}
+          {property.bedrooms ? <span>{property.bedrooms} hab.</span> : null}
+          {property.bathrooms ? <span>{property.bathrooms} baños</span> : null}
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export default function MapView({ embedded = false, properties }) {
+  const location = useLocation();
   const [items, setItems] = useState(Array.isArray(properties) ? properties : []);
   const [loadError, setLoadError] = useState('');
 
@@ -149,6 +192,8 @@ export default function MapView({ embedded = false, properties }) {
     ];
   }, [mappedItems]);
 
+  const isCatalogMap = embedded && ['/bienes-raices', '/propiedades', '/real-estate'].includes(location.pathname);
+
   return (
     <section className={embedded ? 'mapWrap embedded mapWrap--embedded' : 'mapWrap'}>
       {!embedded && (
@@ -176,6 +221,16 @@ export default function MapView({ embedded = false, properties }) {
               icon={embedded ? priceMarkerIcon(property) : undefined}
               riseOnHover
             >
+              {isCatalogMap && (
+                <Tooltip
+                  direction="top"
+                  offset={[0, -10]}
+                  opacity={1}
+                  className="property-hover-tooltip"
+                >
+                  <PropertyHoverCard property={property} />
+                </Tooltip>
+              )}
               <Popup>
                 <div className="map-property-popup">
                   <strong>{propertyPrice(property)}</strong>

@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, LockKeyhole, Sparkles } from 'lucide-react';
+import { ArrowLeft, LockKeyhole } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import PropertyCard from '../../components/properties/PropertyCard';
 import SEO from '../../components/common/SEO';
 import { getProperties } from '../../services/propertyService';
 import { getSharedList } from '../../services/sharedListService';
 import '../../styles/shared-lists.css';
+import '../../styles/shared-list-compact.css';
 
 export default function SharedList() {
   const { token } = useParams();
@@ -80,46 +81,32 @@ export default function SharedList() {
   }
 
   return (
-    <div className="shared-list-public">
+    <div className="shared-list-public shared-list-public--compact">
       <SEO
         title={`${list.listName || 'Selección de propiedades'} | Amy Blandón`}
         description="Selección inmobiliaria privada preparada por Amy Blandón."
       />
 
-      <section className="shared-list-public__hero">
-        <div className="shared-list-public__hero-inner">
-          <Link className="shared-list-public__back" to="/bienes-raices"><ArrowLeft /> Bienes raíces</Link>
-          <div className="shared-list-public__eyebrow"><Sparkles /> Selección inmobiliaria personalizada</div>
-          <p className="shared-list-public__client">Preparada especialmente para ti</p>
+      <section className="shared-list-compact__intro">
+        <div className="shared-list-compact__inner">
           <h1>{list.listName || 'Propiedades seleccionadas para ti'}</h1>
-          <p className="shared-list-public__lead">
-            Amy Blandón ha preparado esta selección de propiedades para que puedas revisarlas con calma, comparar opciones y abrir cada ficha con todos sus detalles.
+          <p>
+            Estas propiedades fueron seleccionadas exclusivamente para ti
+            {list.clientName ? <>, <strong>{list.clientName}</strong></> : null}.
           </p>
-          <div className="shared-list-public__summary">
-            <strong>{selectedProperties.length}</strong>
-            <span>{selectedProperties.length === 1 ? 'propiedad seleccionada' : 'propiedades seleccionadas'}</span>
-          </div>
         </div>
       </section>
 
-      <section className="shared-list-public__catalog">
-        <div className="shared-list-public__shell">
-          <div className="shared-list-public__catalog-heading">
-            <div>
-              <p>SELECCIÓN PRIVADA</p>
-              <h2>Explora las propiedades</h2>
-            </div>
-            <span>Abre cualquier propiedad para ver fotografías, ubicación y detalles completos.</span>
-          </div>
-
+      <section className="shared-list-compact__catalog">
+        <div className="shared-list-compact__catalog-inner">
           {selectedProperties.length ? (
-            <div className="properties-grid shared-list-public__grid">
+            <div className="properties-grid shared-list-compact__grid">
               {selectedProperties.map((property) => (
                 <PropertyCard key={property.id} property={property} />
               ))}
             </div>
           ) : (
-            <div className="shared-list-public__empty">
+            <div className="shared-list-compact__empty">
               <h3>Esta selección no tiene propiedades disponibles en este momento.</h3>
               <p>Es posible que alguna propiedad haya dejado de estar publicada.</p>
             </div>

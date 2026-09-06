@@ -13,6 +13,7 @@ const SIDEBAR_STORAGE_KEY = 'amy-admin-sidebar-collapsed';
 const links = [
   ['Panel principal', '/admin'],
   ['Propiedades', '/admin/properties'],
+  ['Listas compartidas', '/admin/shared-lists'],
   ['Contenido de la web', '/admin/content'],
   ['Imágenes', '/admin/images'],
   ['Personalización', '/admin/customization'],

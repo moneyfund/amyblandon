@@ -48,24 +48,23 @@ async function runEnhancement(section, button, status) {
       const { article, image } = items[index];
       status.textContent = `Mejorando fotografía ${index + 1} de ${items.length}…`;
       const result = await enhanceStoredPropertyImage(image.src);
-      if (result.skipped) {
-        alreadyImproved += 1;
-      } else {
-        improved += 1;
-        image.src = cacheBustedUrl(image.src);
-      }
+
+      if (result.url) image.src = cacheBustedUrl(result.url);
+      if (result.skipped) alreadyImproved += 1;
+      else improved += 1;
+
       addEnhancedBadge(article);
     }
 
     if (improved) {
-      status.textContent = `${improved} fotografía${improved === 1 ? '' : 's'} mejorada${improved === 1 ? '' : 's'} con un ajuste natural.`;
+      status.textContent = `${improved} fotografía${improved === 1 ? '' : 's'} mejorada${improved === 1 ? '' : 's'} correctamente. Guarda la propiedad para conservar la versión optimizada.`;
     } else if (alreadyImproved === items.length) {
       status.textContent = 'Todas las fotografías ya tienen aplicada la mejora automática.';
     } else {
       status.textContent = 'La mejora automática terminó correctamente.';
     }
   } catch (error) {
-    console.error('[Amy] Mejora automática:', error);
+    console.error('[Amy] Mejora automática:', error, error?.serverResponse || '');
     status.textContent = error?.message || 'No se pudo completar la mejora automática.';
     status.classList.add('is-error');
   } finally {

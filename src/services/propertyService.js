@@ -14,6 +14,7 @@ import {
 import { db, firebaseEnabled } from '../firebase/firebase';
 import { demoProperties } from '../data/demoData';
 import { featurePresetsByType, servicePresetsByType } from '../config/propertyWorkspace.es';
+import { resolveEnhancedImageUrl } from '../utils/imageAutoEnhanceEngine';
 import { deleteStorageFile } from './storageService';
 
 const collectionName = 'properties';
@@ -75,6 +76,37 @@ const normalizeImage = (image) => {
 const asImages = (value) => {
   const source = Array.isArray(value) ? value : value ? [value] : [];
   return source.map(normalizeImage).filter(Boolean);
+};
+
+const applyEnhancedImageReferences = (data = {}) => {
+  const replaceImage = (image) => {
+    if (!image) return image;
+    const sourceUrl = typeof image === 'string' ? image : (image.url || image.src || '');
+    if (!sourceUrl) return image;
+    const enhancedUrl = resolveEnhancedImageUrl(sourceUrl);
+    if (!enhancedUrl || enhancedUrl === sourceUrl) return image;
+
+    if (typeof image === 'string') return enhancedUrl;
+    return {
+      ...image,
+      url: enhancedUrl,
+      src: image.src ? enhancedUrl : image.src,
+      path: storagePathFromDownloadUrl(enhancedUrl),
+      type: 'image/webp',
+    };
+  };
+
+  const images = Array.isArray(data.images)
+    ? data.images.map(replaceImage)
+    : data.images ? [replaceImage(data.images)] : data.images;
+
+  return {
+    ...data,
+    images,
+    coverImage: data.coverImage ? resolveEnhancedImageUrl(data.coverImage) : data.coverImage,
+    image: data.image ? resolveEnhancedImageUrl(data.image) : data.image,
+    imagen: data.imagen ? resolveEnhancedImageUrl(data.imagen) : data.imagen,
+  };
 };
 
 const normalize = (data = {}) => {
@@ -204,23 +236,24 @@ export async function getProperty(id) {
 }
 
 export async function saveProperty(data, id, uid) {
+  const resolvedData = applyEnhancedImageReferences(data);
   const payload = sanitizeTypeSpecificData({
-    ...data,
-    updatedBy: uid || data.updatedBy || '',
+    ...resolvedData,
+    updatedBy: uid || resolvedData.updatedBy || '',
     updatedAt: serverTimestamp(),
   });
-  const hasStructuredAmenities = hasOwn(data, 'features') || hasOwn(data, 'services');
+  const hasStructuredAmenities = hasOwn(resolvedData, 'features') || hasOwn(resolvedData, 'services');
 
   if (hasStructuredAmenities) {
     const features = keepCurrentTypePresetsAndCustom(
-      data.features,
-      data.propertyType,
+      resolvedData.features,
+      resolvedData.propertyType,
       featurePresetsByType,
       knownFeaturePresets,
     );
     const services = keepCurrentTypePresetsAndCustom(
-      data.services,
-      data.propertyType,
+      resolvedData.services,
+      resolvedData.propertyType,
       servicePresetsByType,
       knownServicePresets,
     );

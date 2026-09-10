@@ -8,6 +8,7 @@ import { SiteThemeProvider } from './contexts/SiteThemeContext';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import AppRoutes from './routes/AppRoutes';
 import './utils/propertyDetailEnhancer.js';
+import './utils/propertyImageTools.js';
 import './styles/global.css';
 import './styles/reference-typography.css';
 import './styles/reference-cards-footer.css';
@@ -91,6 +92,7 @@ import './styles/about-hero-reference-final.css';
 import './styles/admin-mobile-app.css';
 import './styles/admin-intro-loader.css';
 import './styles/property-catalog-pagination-mobile.css';
+import './styles/property-image-tools.css';
 
 const Router = window.location.hostname.endsWith('github.io') ? HashRouter : BrowserRouter;
 

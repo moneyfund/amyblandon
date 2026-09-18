@@ -100,13 +100,44 @@ const applyEnhancedImageReferences = (data = {}) => {
     ? data.images.map(replaceImage)
     : data.images ? [replaceImage(data.images)] : data.images;
 
-  return {
+  const resolved = {
     ...data,
     images,
     coverImage: data.coverImage ? resolveEnhancedImageUrl(data.coverImage) : data.coverImage,
-    image: data.image ? resolveEnhancedImageUrl(data.image) : data.image,
-    imagen: data.imagen ? resolveEnhancedImageUrl(data.imagen) : data.imagen,
   };
+
+  if (hasOwn(data, 'image')) {
+    resolved.image = data.image ? resolveEnhancedImageUrl(data.image) : data.image;
+  }
+  if (hasOwn(data, 'imagen')) {
+    resolved.imagen = data.imagen ? resolveEnhancedImageUrl(data.imagen) : data.imagen;
+  }
+
+  return resolved;
+};
+
+const isPlainObject = (value) => {
+  if (!value || typeof value !== 'object') return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+};
+
+const stripUndefined = (value) => {
+  if (Array.isArray(value)) {
+    return value
+      .filter((item) => item !== undefined)
+      .map((item) => stripUndefined(item));
+  }
+
+  if (isPlainObject(value)) {
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([, item]) => item !== undefined)
+        .map(([key, item]) => [key, stripUndefined(item)]),
+    );
+  }
+
+  return value;
 };
 
 const normalize = (data = {}) => {
@@ -280,15 +311,15 @@ export async function saveProperty(data, id, uid) {
         createdBy: uid || '',
         createdAt: serverTimestamp(),
       };
-    await setDoc(propertyRef, dataToSave, { merge: true });
+    await setDoc(propertyRef, stripUndefined(dataToSave), { merge: true });
     return { id };
   }
 
-  return addDoc(collection(db, collectionName), {
+  return addDoc(collection(db, collectionName), stripUndefined({
     ...payload,
     createdBy: uid || '',
     createdAt: serverTimestamp(),
-  });
+  }));
 }
 
 export async function updatePropertyStatus(id, changes, uid) {

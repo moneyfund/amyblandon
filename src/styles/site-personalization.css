@@ -33,6 +33,14 @@
 .public-site--real-estate .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__phone,
 .public-site--insurance .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__phone{background:var(--site-navbar-bg,#fff)!important;color:var(--site-accent)!important;box-shadow:0 10px 28px var(--theme-shadow)!important}
 
+/* Detalle de propiedad: conserva el navbar transparente inicial, pero fuerza texto oscuro para que sea legible sobre el fondo claro. */
+.public-site--property-detail .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) :is(.brand-logo__tagline,.brand-logo__tagline--image,.public-navbar__menu,.public-navbar__toggle){
+  color:#111!important;
+}
+.public-site--property-detail .public-navbar:not(.public-navbar--scrolled):not(.public-navbar--open) .public-navbar__menu>a:not(.public-navbar__phone){
+  color:#111!important;
+}
+
 /* Footer: se elimina cualquier dependencia del antiguo negro fijo. */
 .public-footer-reveal{background:var(--site-footer-bg)!important}
 .public-footer{background:radial-gradient(circle at 12% 0%,color-mix(in srgb,var(--site-accent) 15%,transparent),transparent 34%),var(--site-footer-bg)!important;color:var(--site-footer-text)!important;border-top-color:color-mix(in srgb,var(--site-accent) 38%,transparent)!important}

@@ -433,6 +433,12 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
         ) : (
           <span className="property-image__placeholder">Imagen pendiente</span>
         )}
+        {Boolean(p.financingAvailable) && (
+          <span className="property-card__financing-badge" aria-label="Financiamiento disponible">
+            <span>Financiamiento</span>
+            <strong>disponible</strong>
+          </span>
+        )}
         {p.status === 'sold' && (
           <span className="property-card__sold-watermark" aria-label="Propiedad vendida">VENDIDA</span>
         )}

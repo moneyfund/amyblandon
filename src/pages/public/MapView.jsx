@@ -28,6 +28,16 @@ const imageUrl = (image) => {
   return image?.url || '';
 };
 
+const normalizeOperation = (value) => {
+  if (value === 'venta') return 'sale';
+  if (value === 'renta') return 'rent';
+  return value;
+};
+
+const propertyOperation = (property) => normalizeOperation(
+  property?.operationType || property?.transactionType,
+);
+
 const mapPoint = (property) => {
   const latitude = coordinate(property?.latitude);
   const longitude = coordinate(property?.longitude);
@@ -61,7 +71,7 @@ const propertyLocation = (property) => (
 );
 
 const priceMarkerIcon = (property) => L.divIcon({
-  className: 'property-price-marker',
+  className: `property-price-marker${propertyOperation(property) === 'rent' ? ' property-price-marker--rent' : ''}`,
   html: propertyPrice(property),
   iconSize: [96, 34],
   iconAnchor: [48, 24],
@@ -119,11 +129,14 @@ function PropertyHoverCard({ property }) {
   const area = property.landArea || property.area || property.constructionArea || property.builtArea;
   const areaUnit = property.areaUnit || 'm²';
 
+  const isRent = propertyOperation(property) === 'rent';
+
   return (
-    <article className="map-property-hover-card">
+    <article className={`map-property-hover-card${isRent ? ' map-property-hover-card--rent' : ''}`}>
       <div className="map-property-hover-card__media">
         {cover ? <img src={cover} alt="" /> : <div className="map-property-hover-card__placeholder">AB</div>}
-        <span>{propertyPrice(property)}</span>
+        <span className="map-property-hover-card__price">{propertyPrice(property)}</span>
+        {property.status === 'sold' && <span className="map-property-hover-card__sold-watermark">VENDIDA</span>}
       </div>
       <div className="map-property-hover-card__body">
         <h3>{property.title || 'Propiedad'}</h3>

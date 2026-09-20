@@ -54,7 +54,7 @@ export default function Properties() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [q, setQ] = useState('');
-  const [operationType, setOperationType] = useState('sale');
+  const [operationType, setOperationType] = useState('');
   const [propertyType, setPropertyType] = useState('');
   const [view, setView] = useState('grid');
   const [currentPage, setCurrentPage] = useState(1);
@@ -112,7 +112,7 @@ export default function Properties() {
   const totalPages = Math.max(1, Math.ceil(standardPool.length / PROPERTIES_PER_PAGE));
   const pageStart = (currentPage - 1) * PROPERTIES_PER_PAGE;
   const standardProperties = standardPool.slice(pageStart, pageStart + PROPERTIES_PER_PAGE);
-  const hasSearch = Boolean(q || propertyType || operationType === 'rent');
+  const hasSearch = Boolean(q || propertyType || operationType);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -123,7 +123,7 @@ export default function Properties() {
   }, [currentPage, totalPages]);
   const clear = () => {
     setQ('');
-    setOperationType('sale');
+    setOperationType('');
     setPropertyType('');
   };
   const showResults = () => {
@@ -187,8 +187,9 @@ export default function Properties() {
                 value={operationType}
                 onChange={(event) => setOperationType(event.target.value)}
               >
+                <option value="">Venta / Renta</option>
                 <option value="sale">Venta</option>
-                <option value="rent">Alquilar</option>
+                <option value="rent">Renta</option>
               </select>
             </label>
           </div>

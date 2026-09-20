@@ -244,3 +244,73 @@
   pointer-events: none;
   user-select: none;
 }
+
+
+/* Financiamiento disponible: distintivo comercial discreto sobre la portada. */
+.property-card__financing-badge {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 4;
+  min-width: 132px;
+  display: grid;
+  gap: 1px;
+  padding: 9px 12px 10px;
+  border: 1px solid color-mix(in srgb, var(--amy-gold, #c99a44) 72%, white);
+  border-radius: 12px;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--amy-navy, #001929) 96%, #16384a), var(--amy-navy, #001929));
+  box-shadow:
+    0 10px 24px rgba(0, 25, 41, .24),
+    0 0 0 1px rgba(255, 255, 255, .08) inset;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.property-card__financing-badge::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 0 999px 999px 0;
+  background: var(--amy-gold, #c99a44);
+}
+
+.property-card__financing-badge span {
+  color: rgba(255, 255, 255, .9);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.property-card__financing-badge strong {
+  color: var(--amy-gold, #c99a44);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 580px) {
+  .property-card__financing-badge {
+    left: 10px;
+    bottom: 10px;
+    min-width: 118px;
+    padding: 8px 10px 9px;
+    border-radius: 10px;
+  }
+
+  .property-card__financing-badge span {
+    font-size: 8px;
+  }
+
+  .property-card__financing-badge strong {
+    font-size: 11px;
+  }
+}

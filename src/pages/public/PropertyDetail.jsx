@@ -303,6 +303,9 @@ export default function PropertyDetail() {
                 >
                   <img src={images[galleryIndex]} alt={property.title} />
                 </button>
+                {property.status === 'sold' && galleryIndex === 0 && (
+                  <span className="pd-ref-gallery__sold-watermark">VENDIDA</span>
+                )}
                 {images.length > 1 && (
                   <>
                     <button type="button" className="pd-ref-gallery__arrow pd-ref-gallery__arrow--prev" onClick={() => moveGallery(-1)} aria-label="Fotografía anterior">
@@ -339,8 +342,10 @@ export default function PropertyDetail() {
 
         <aside className="pd-ref-summary">
           <div className="pd-ref-summary__badges">
-            {!['sold', 'rented'].includes(property.status) && <span>{operationLabel}</span>}
-            <span>{statusLabel}</span>
+            {!['sold', 'rented'].includes(property.status) && (
+              <span className={operation === 'rent' ? 'is-rent' : undefined}>{operationLabel}</span>
+            )}
+            <span className={property.status === 'rented' || operation === 'rent' ? 'is-rent' : undefined}>{statusLabel}</span>
             {property.featured && <span className="is-featured"><Sparkles size={13} /> Destacada</span>}
           </div>
           <h1>{property.title}</h1>

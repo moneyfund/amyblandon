@@ -466,3 +466,31 @@
   .pd-ref-section-heading{align-items:flex-start;flex-direction:column;gap:15px}
   .pd-ref-section-heading h2{font-size:32px}
 }
+
+
+/* Estado comercial: las etiquetas de renta usan el mismo azul configurado para el footer. */
+.pd-ref-summary__badges .is-rent {
+  border-color: var(--site-footer-bg, var(--amy-hero-navy, #001929));
+  background: var(--site-footer-bg, var(--amy-hero-navy, #001929));
+  color: #fff;
+}
+
+/* Sello de venta únicamente sobre la imagen de portada. */
+.pd-ref-gallery__sold-watermark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  color: rgba(20, 137, 74, .86);
+  font-size: clamp(48px, 7vw, 96px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-shadow:
+    0 3px 3px rgba(255,255,255,.98),
+    0 0 18px rgba(255,255,255,.95);
+  pointer-events: none;
+  user-select: none;
+}

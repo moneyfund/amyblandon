@@ -64,6 +64,7 @@ export default function PublicLayout() {
     isAboutPage ? 'public-site--about' : '',
     isRealEstatePage ? 'public-site--real-estate' : '',
     isInsurancePage ? 'public-site--insurance' : '',
+    isPropertyDetailPage ? 'public-site--property-detail' : '',
   ].filter(Boolean).join(' ');
 
   const primaryDeep = `color-mix(in srgb, ${theme.primaryColor} 78%, #000000)`;

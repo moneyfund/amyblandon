@@ -245,3 +245,42 @@
     display:none;
   }
 }
+
+
+/* Marcadores de propiedades en renta: azul del footer en lugar de dorado. */
+.property-price-marker--rent {
+  background: var(--site-footer-bg, var(--amy-hero-navy, #001929));
+  color: #fff;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--site-footer-bg, #001929) 30%, transparent);
+}
+
+.property-price-marker--rent::after {
+  background: var(--site-footer-bg, var(--amy-hero-navy, #001929));
+}
+
+.property-price-marker--rent:hover {
+  background: var(--site-footer-bg, var(--amy-hero-navy, #001929));
+  filter: brightness(1.08);
+}
+
+.map-property-hover-card--rent .map-property-hover-card__price {
+  background: var(--site-footer-bg, var(--amy-hero-navy, #001929));
+  color: #fff;
+}
+
+.map-property-hover-card__sold-watermark {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  z-index: 3;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  color: rgba(20, 137, 74, .9);
+  font-size: 29px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: .12em;
+  text-shadow:
+    0 2px 2px rgba(255,255,255,.98),
+    0 0 10px rgba(255,255,255,.92);
+  pointer-events: none;
+}

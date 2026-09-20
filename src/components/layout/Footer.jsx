@@ -112,7 +112,10 @@ export default function Footer() {
           </p>
         </RevealOnScroll>
       </div>
-      <small className="content-preserve-format">{footer.copyright}</small>
+      <small className="content-preserve-format">
+        © 2026 - Amy Blandón.com | Powered by{' '}
+        <a href="https://xarcon-ni.com" target="_blank" rel="noopener noreferrer">Xarcon</a>
+      </small>
     </footer>
   );
 }

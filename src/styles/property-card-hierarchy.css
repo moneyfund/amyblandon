@@ -257,9 +257,8 @@
   gap: 1px;
   padding: 9px 12px 10px;
   border: 1px solid color-mix(in srgb, var(--amy-gold, #c99a44) 72%, white);
-  border-radius: 12px;
-  background:
-    linear-gradient(145deg, color-mix(in srgb, var(--amy-navy, #001929) 96%, #16384a), var(--amy-navy, #001929));
+  border-radius: 0;
+  background: var(--site-footer-bg, var(--amy-hero-navy, #001929));
   box-shadow:
     0 10px 24px rgba(0, 25, 41, .24),
     0 0 0 1px rgba(255, 255, 255, .08) inset;
@@ -303,7 +302,7 @@
     bottom: 10px;
     min-width: 118px;
     padding: 8px 10px 9px;
-    border-radius: 10px;
+    border-radius: 0;
   }
 
   .property-card__financing-badge span {

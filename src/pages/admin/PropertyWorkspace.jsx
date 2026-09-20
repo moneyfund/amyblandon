@@ -61,6 +61,7 @@ const createEmptyProperty = () => ({
   rentPeriod: 'monthly',
   priceNegotiable: false,
   priceOnRequest: false,
+  financingAvailable: false,
   propertyType: 'house',
   status: 'available',
   publicationStatus: 'draft',
@@ -814,6 +815,10 @@ export default function PropertyWorkspace() {
                   <label>
                     <input type="checkbox" checked={form.priceOnRequest} onChange={(event) => set('priceOnRequest', event.target.checked)} />
                     <span><strong>Precio a consultar</strong><small>Oculta el valor numérico en la presentación pública.</small></span>
+                  </label>
+                  <label>
+                    <input type="checkbox" checked={Boolean(form.financingAvailable)} onChange={(event) => set('financingAvailable', event.target.checked)} />
+                    <span><strong>Financiamiento disponible</strong><small>Muestra una etiqueta especial en la portada de la propiedad.</small></span>
                   </label>
                   <label>
                     <input type="checkbox" checked={form.featured} onChange={(event) => set('featured', event.target.checked)} />

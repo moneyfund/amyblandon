@@ -421,6 +421,7 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
       className="property-card"
       onMouseEnter={() => onSelect?.(p.id)}
       data-current-path={location.pathname}
+      data-operation={normalizeOperation(p.operationType || p.transactionType) || ''}
     >
       <Link to={detailPath} className="property-image" aria-label={`Ver ${p.title || 'propiedad'}`}>
         <span className="property-card__badges">
@@ -431,6 +432,9 @@ export default function PropertyCard({ property: p = {}, onSelect }) {
           <img src={coverImage} alt={p.title || 'Propiedad'} />
         ) : (
           <span className="property-image__placeholder">Imagen pendiente</span>
+        )}
+        {p.status === 'sold' && (
+          <span className="property-card__sold-watermark" aria-label="Propiedad vendida">VENDIDA</span>
         )}
       </Link>
       <div className="property-body">

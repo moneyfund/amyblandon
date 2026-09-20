@@ -103,12 +103,12 @@ export default function Properties() {
     return (!q || text.includes(q.toLowerCase().trim()))
       && (!operationType || currentOperation === operationType)
       && (!propertyType || property.propertyType === propertyType);
-  }), [properties, q, operationType, propertyType]);
+  }).sort((a, b) => Number(a.status === 'sold') - Number(b.status === 'sold')), [properties, q, operationType, propertyType]);
 
   const featured = currentPage === 1
-    ? filtered.filter((property) => property.featured).slice(0, 3)
+    ? filtered.filter((property) => property.featured && property.status !== 'sold').slice(0, 3)
     : [];
-  const standardPool = filtered.filter((property) => !property.featured);
+  const standardPool = filtered.filter((property) => !property.featured || property.status === 'sold');
   const totalPages = Math.max(1, Math.ceil(standardPool.length / PROPERTIES_PER_PAGE));
   const pageStart = (currentPage - 1) * PROPERTIES_PER_PAGE;
   const standardProperties = standardPool.slice(pageStart, pageStart + PROPERTIES_PER_PAGE);

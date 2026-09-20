@@ -19,7 +19,7 @@ export const propertyTypeOptions = [
 
 export const operationTypeOptions = [
   ['sale', 'Venta'],
-  ['rent', 'Alquiler'],
+  ['rent', 'Renta'],
 ];
 
 export const propertyStatusOptions = [

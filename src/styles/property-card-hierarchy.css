@@ -249,7 +249,7 @@
 /* Financiamiento disponible: distintivo comercial discreto sobre la portada. */
 .property-card__financing-badge {
   position: absolute;
-  left: 14px;
+  right: 14px;
   bottom: 14px;
   z-index: 4;
   min-width: 132px;
@@ -298,7 +298,7 @@
 
 @media (max-width: 580px) {
   .property-card__financing-badge {
-    left: 10px;
+    right: 10px;
     bottom: 10px;
     min-width: 118px;
     padding: 8px 10px 9px;

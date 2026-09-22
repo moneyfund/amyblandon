@@ -114,7 +114,7 @@ export default function Footer() {
       </div>
       <small className="content-preserve-format">
         © 2026 - Amy Blandón.com | Powered by{' '}
-        <a href="https://xarcon-ni.com" target="_blank" rel="noopener noreferrer">Xarcon</a>
+        <a href="https://xarcon-creative.vercel.app/" target="_blank" rel="noopener noreferrer">Xarcon</a>
       </small>
     </footer>
   );

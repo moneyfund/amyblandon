@@ -250,12 +250,12 @@ function drawPdfFooter(ctx, {
   );
 
   if (partnerLogoImage) {
-    const logoWidth = 190;
-    const logoHeight = 124;
+    const logoWidth = 116;
+    const logoHeight = 112;
     ctx.drawImage(
       partnerLogoImage,
       partnerCenter - (logoWidth / 2),
-      y + 16,
+      y + 18,
       logoWidth,
       logoHeight,
     );
@@ -263,7 +263,7 @@ function drawPdfFooter(ctx, {
 
   ctx.fillStyle = COLORS.goldLight;
   ctx.font = '700 11px Arial, sans-serif';
-  ctx.fillText('CARNET INMOBILIARIO · 0153-2026-A-1', partnerCenter, y + 158);
+  ctx.fillText('CARNET INMOBILIARIO · 0153-2026-A-1', partnerCenter, y + 151);
 
   ctx.fillStyle = 'rgba(255,255,255,.38)';
   ctx.font = '500 10px Arial, sans-serif';
@@ -530,7 +530,7 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
     ? document.querySelector('link[rel~="icon"]')?.href
     : '';
   const faviconImage = await loadImage(configuredFavicon || `${import.meta.env.BASE_URL}favicon-amy.svg`);
-  const partnerLogoImage = await loadImage(`${import.meta.env.BASE_URL}images/diamantes-realty-group-logo.svg`);
+  const partnerLogoImage = await loadImage(`${import.meta.env.BASE_URL}images/diamantes-realty-group-logo.png`);
   const heroHeight = 560;
   const hasCover = drawPremiumGallery(ctx, galleryImages.slice(0, 3), PAGE.width, heroHeight);
 

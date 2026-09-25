@@ -210,6 +210,106 @@ function drawPremiumGallery(ctx, images, width, height) {
   return true;
 }
 
+function drawGalleryPage(ctx, images, property, faviconImage) {
+  ctx.fillStyle = COLORS.ivory;
+  ctx.fillRect(0, 0, PAGE.width, PAGE.height);
+
+  ctx.fillStyle = COLORS.navy;
+  ctx.fillRect(0, 0, PAGE.width, 18);
+
+  ctx.fillStyle = COLORS.gold;
+  ctx.font = '800 14px Arial, sans-serif';
+  ctx.fillText('FICHA TÉCNICA · GALERÍA', 70, 88);
+
+  ctx.fillStyle = COLORS.navy;
+  ctx.font = '800 42px Arial, sans-serif';
+  ctx.fillText('Galería de fotos', 70, 142);
+
+  ctx.fillStyle = COLORS.muted;
+  ctx.font = '500 16px Arial, sans-serif';
+  const subtitle = cleanText(property.title || 'Propiedad');
+  const subtitleLines = wrapLines(ctx, subtitle, 1000, 1);
+  drawLines(ctx, subtitleLines, 70, 180, 24, COLORS.muted);
+
+  ctx.fillStyle = COLORS.gold;
+  ctx.fillRect(70, 205, 92, 4);
+
+  const left = 70;
+  const top = 250;
+  const totalWidth = 1100;
+  const totalHeight = 1230;
+  const columnGap = 24;
+  const rowGap = 20;
+  const frameWidth = (totalWidth - columnGap) / 2;
+  const frameHeight = (totalHeight - (rowGap * 3)) / 4;
+
+  for (let index = 0; index < 8; index += 1) {
+    const column = index % 2;
+    const row = Math.floor(index / 2);
+    const x = left + (column * (frameWidth + columnGap));
+    const y = top + (row * (frameHeight + rowGap));
+    const image = images[index] || null;
+
+    ctx.fillStyle = COLORS.white;
+    ctx.fillRect(x, y, frameWidth, frameHeight);
+
+    if (image) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x + 3, y + 3, frameWidth - 6, frameHeight - 6);
+      ctx.clip();
+      drawImageCover(ctx, image, x + 3, y + 3, frameWidth - 6, frameHeight - 6);
+      ctx.restore();
+    } else {
+      ctx.fillStyle = '#EEEAE1';
+      ctx.fillRect(x + 3, y + 3, frameWidth - 6, frameHeight - 6);
+      ctx.fillStyle = '#9A9488';
+      ctx.font = '600 13px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Fotografía no disponible', x + (frameWidth / 2), y + (frameHeight / 2));
+      ctx.textAlign = 'left';
+    }
+
+    ctx.strokeStyle = COLORS.gold;
+    ctx.lineWidth = 3;
+    ctx.strokeRect(x, y, frameWidth, frameHeight);
+  }
+
+  const footerY = 1545;
+  ctx.fillStyle = COLORS.navy;
+  ctx.fillRect(0, footerY, PAGE.width, PAGE.height - footerY);
+  ctx.fillStyle = COLORS.gold;
+  ctx.fillRect(0, footerY, PAGE.width, 5);
+
+  if (faviconImage) {
+    ctx.save();
+    roundedRectPath(ctx, 70, footerY + 28, 58, 58, 12);
+    ctx.clip();
+    ctx.drawImage(faviconImage, 70, footerY + 28, 58, 58);
+    ctx.restore();
+  }
+
+  ctx.fillStyle = COLORS.white;
+  ctx.font = '800 21px Arial, sans-serif';
+  ctx.fillText('Amy Blandón', 150, footerY + 50);
+  ctx.fillStyle = COLORS.goldLight;
+  ctx.font = '700 11px Arial, sans-serif';
+  ctx.fillText('ASESORÍA INMOBILIARIA · SEGUROS · INVERSIONES', 150, footerY + 75);
+
+  ctx.fillStyle = 'rgba(255,255,255,.76)';
+  ctx.font = '600 13px Arial, sans-serif';
+  ctx.fillText(amyContact.phone, 70, footerY + 126);
+  ctx.fillText(amyContact.email, 285, footerY + 126);
+
+  ctx.textAlign = 'right';
+  ctx.fillStyle = COLORS.goldLight;
+  ctx.fillText('amyblandon.com', 1170, footerY + 126);
+  ctx.fillStyle = 'rgba(255,255,255,.38)';
+  ctx.font = '500 10px Arial, sans-serif';
+  ctx.fillText('Página 2 de 2', 1170, PAGE.height - 22);
+  ctx.textAlign = 'left';
+}
+
 function drawMetricIcon(ctx, kind, x, y, size = 54) {
   fillRoundedRect(ctx, x, y, size, size, 12, COLORS.navy);
   ctx.save();
@@ -303,9 +403,19 @@ function concatBytes(chunks) {
   return output;
 }
 
-async function singlePagePdfFromCanvas(canvas) {
-  const jpegBlob = await canvasToJpegBlob(canvas);
-  const jpegBytes = new Uint8Array(await jpegBlob.arrayBuffer());
+async function multiPagePdfFromCanvases(canvases) {
+  if (!Array.isArray(canvases) || !canvases.length) {
+    throw new Error('No hay páginas para generar el PDF.');
+  }
+
+  const pages = await Promise.all(canvases.map(async (canvas) => {
+    const jpegBlob = await canvasToJpegBlob(canvas);
+    return {
+      canvas,
+      jpegBytes: new Uint8Array(await jpegBlob.arrayBuffer()),
+    };
+  }));
+
   const chunks = [];
   const offsets = [0];
   let length = 0;
@@ -319,25 +429,42 @@ async function singlePagePdfFromCanvas(canvas) {
     append(`${number} 0 obj\n${body}\nendobj\n`);
   };
 
+  const pageObjectNumbers = pages.map((_, index) => 3 + (index * 3));
+  const objectCount = 2 + (pages.length * 3);
+
   append('%PDF-1.4\n');
   addObject(1, '<< /Type /Catalog /Pages 2 0 R >>');
-  addObject(2, '<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
-  addObject(3, '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>');
+  addObject(
+    2,
+    `<< /Type /Pages /Kids [${pageObjectNumbers.map((number) => `${number} 0 R`).join(' ')}] /Count ${pages.length} >>`,
+  );
 
-  offsets[4] = length;
-  append(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${canvas.width} /Height ${canvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>\nstream\n`);
-  append(jpegBytes);
-  append('\nendstream\nendobj\n');
+  pages.forEach(({ canvas, jpegBytes }, index) => {
+    const pageObject = 3 + (index * 3);
+    const imageObject = pageObject + 1;
+    const contentObject = pageObject + 2;
+    const imageName = `Im${index}`;
 
-  const content = 'q\n595.28 0 0 841.89 0 0 cm\n/Im0 Do\nQ';
-  addObject(5, `<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
+    addObject(
+      pageObject,
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /${imageName} ${imageObject} 0 R >> >> /Contents ${contentObject} 0 R >>`,
+    );
+
+    offsets[imageObject] = length;
+    append(`${imageObject} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${canvas.width} /Height ${canvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>\nstream\n`);
+    append(jpegBytes);
+    append('\nendstream\nendobj\n');
+
+    const content = `q\n595.28 0 0 841.89 0 0 cm\n/${imageName} Do\nQ`;
+    addObject(contentObject, `<< /Length ${content.length} >>\nstream\n${content}\nendstream`);
+  });
 
   const xrefOffset = length;
-  append('xref\n0 6\n0000000000 65535 f \n');
-  for (let index = 1; index <= 5; index += 1) {
+  append(`xref\n0 ${objectCount + 1}\n0000000000 65535 f \n`);
+  for (let index = 1; index <= objectCount; index += 1) {
     append(`${String(offsets[index]).padStart(10, '0')} 00000 n \n`);
   }
-  append(`trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`);
+  append(`trailer\n<< /Size ${objectCount + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`);
   return new Blob([concatBytes(chunks)], { type: 'application/pdf' });
 }
 
@@ -354,17 +481,20 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
   ctx.fillRect(0, 0, PAGE.width, PAGE.height);
 
   const decodedGallery = Array.isArray(property.pdfGalleryBitmaps)
-    ? property.pdfGalleryBitmaps.filter((image) => image?.width && image?.height).slice(0, 3)
+    ? property.pdfGalleryBitmaps.filter((image) => image?.width && image?.height).slice(0, 8)
     : [];
   const preparedGallery = Array.isArray(property.pdfGalleryImages)
-    ? property.pdfGalleryImages.map(imageUrl).filter(Boolean).slice(0, 3)
+    ? property.pdfGalleryImages.map(imageUrl).filter(Boolean).slice(0, 8)
     : [];
   const galleryImages = decodedGallery.length
     ? decodedGallery
     : (await Promise.all(preparedGallery.map(loadImage))).filter(Boolean);
-  const faviconImage = await loadImage(`${import.meta.env.BASE_URL}favicon-amy.svg`);
+  const configuredFavicon = typeof document !== 'undefined'
+    ? document.querySelector('link[rel~="icon"]')?.href
+    : '';
+  const faviconImage = await loadImage(configuredFavicon || `${import.meta.env.BASE_URL}favicon-amy.svg`);
   const heroHeight = 560;
-  const hasCover = drawPremiumGallery(ctx, galleryImages, PAGE.width, heroHeight);
+  const hasCover = drawPremiumGallery(ctx, galleryImages.slice(0, 3), PAGE.width, heroHeight);
 
   if (hasCover) {
     const sideOverlay = ctx.createLinearGradient(0, 0, PAGE.width, 0);
@@ -544,13 +674,6 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
     ctx.clip();
     ctx.drawImage(faviconImage, 70, contactY + 30, 66, 66);
     ctx.restore();
-  } else {
-    fillRoundedRect(ctx, 70, contactY + 30, 66, 66, 14, COLORS.gold);
-    ctx.fillStyle = COLORS.navy;
-    ctx.textAlign = 'center';
-    ctx.font = '800 26px Georgia, serif';
-    ctx.fillText('AB', 103, contactY + 73);
-    ctx.textAlign = 'left';
   }
 
   ctx.fillStyle = COLORS.white;
@@ -577,7 +700,14 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
   ctx.fillText(`Generada ${new Date().toLocaleDateString('es-NI')}`, 1170, PAGE.height - 22);
   ctx.textAlign = 'left';
 
-  const pdfBlob = await singlePagePdfFromCanvas(canvas);
+  const galleryCanvas = document.createElement('canvas');
+  galleryCanvas.width = PAGE.width;
+  galleryCanvas.height = PAGE.height;
+  const galleryCtx = galleryCanvas.getContext('2d');
+  if (!galleryCtx) throw new Error('El navegador no pudo preparar la galería del documento.');
+  drawGalleryPage(galleryCtx, galleryImages.slice(0, 8), property, faviconImage);
+
+  const pdfBlob = await multiPagePdfFromCanvases([canvas, galleryCanvas]);
   const objectUrl = URL.createObjectURL(pdfBlob);
   const anchor = document.createElement('a');
   anchor.href = objectUrl;

@@ -105,6 +105,29 @@ function wrapLines(ctx, text, maxWidth, maxLines = Infinity) {
   return lines;
 }
 
+function wrapDescriptionLines(ctx, value, maxWidth, maxLines = Infinity) {
+  const paragraphs = String(value || '')
+    .replace(/\r\n?/g, '\n')
+    .split('\n');
+
+  const lines = [];
+  for (const rawParagraph of paragraphs) {
+    if (lines.length >= maxLines) break;
+
+    const paragraph = rawParagraph.trim();
+    if (!paragraph) {
+      if (lines.length && lines.length < maxLines) lines.push('');
+      continue;
+    }
+
+    const wrapped = wrapLines(ctx, paragraph, maxWidth, maxLines - lines.length);
+    lines.push(...wrapped);
+  }
+
+  if (!lines.length) return wrapLines(ctx, 'Información descriptiva pendiente.', maxWidth, maxLines);
+  return lines.slice(0, maxLines);
+}
+
 function drawLines(ctx, lines, x, y, lineHeight, color) {
   ctx.fillStyle = color;
   lines.forEach((line, index) => ctx.fillText(line, x, y + (index * lineHeight)));
@@ -222,23 +245,23 @@ function drawPdfFooter(ctx, {
   ctx.fillStyle = COLORS.gold;
   ctx.fillRect(0, y, PAGE.width, 5);
 
-  const leftCenter = 310;
+  const leftCenter = 332;
   const partnerCenter = 960;
 
   if (faviconImage) {
     ctx.save();
-    roundedRectPath(ctx, 82, y + 28, 58, 58, 12);
+    roundedRectPath(ctx, 104, y + 28, 58, 58, 12);
     ctx.clip();
-    ctx.drawImage(faviconImage, 82, y + 28, 58, 58);
+    ctx.drawImage(faviconImage, 104, y + 28, 58, 58);
     ctx.restore();
   }
 
   ctx.fillStyle = COLORS.white;
   ctx.font = '800 21px Arial, sans-serif';
-  ctx.fillText('Amy Blandón', 158, y + 50);
+  ctx.fillText('Amy Blandón', 180, y + 50);
   ctx.fillStyle = COLORS.goldLight;
   ctx.font = '700 11px Arial, sans-serif';
-  ctx.fillText('ASESORÍA INMOBILIARIA · SEGUROS · INVERSIONES', 158, y + 75);
+  ctx.fillText('ASESORÍA INMOBILIARIA · SEGUROS · INVERSIONES', 180, y + 75);
 
   ctx.textAlign = 'center';
   ctx.fillStyle = 'rgba(255,255,255,.82)';
@@ -634,10 +657,16 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
   ctx.fillText('Descripción', 70, descriptionY + 45);
   ctx.fillStyle = COLORS.muted;
   ctx.font = '500 18px Arial, sans-serif';
-  const descriptionLines = wrapLines(ctx, property.description || 'Información descriptiva pendiente.', 1100, 5);
+  ctx.textAlign = 'left';
+  const descriptionLines = wrapDescriptionLines(
+    ctx,
+    property.description || 'Información descriptiva pendiente.',
+    1100,
+    11,
+  );
   drawLines(ctx, descriptionLines, 70, descriptionY + 86, 29, COLORS.muted);
 
-  const sectionY = 1050;
+  const sectionY = 1230;
   const columnWidth = 532;
   const columnGap = 36;
   const amenities = [...asList(property.features), ...asList(property.services), ...asList(property.amenities)]

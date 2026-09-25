@@ -130,9 +130,6 @@ export default function Footer() {
           <span aria-hidden="true">·</span>
           <Link to="/condiciones-de-uso">Condiciones de uso</Link>
         </nav>
-        {isRealEstateContext && (
-          <span className="public-footer__legal-license">Carnet inmobiliario · 0153-2026-A-1</span>
-        )}
       </div>
 
       <small className="content-preserve-format">

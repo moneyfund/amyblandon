@@ -476,35 +476,24 @@ function drawDetailsPage(ctx, property, faviconImage, partnerLogoImage, descript
   let cursorY = 82;
 
   if (descriptionOverflowLines.length) {
-    ctx.fillStyle = COLORS.gold;
-    ctx.font = '800 13px Arial, sans-serif';
-    ctx.fillText('PRESENTACIÓN DE LA PROPIEDAD', 70, cursorY);
-
-    ctx.fillStyle = COLORS.navy;
-    ctx.font = '800 30px Arial, sans-serif';
-    ctx.fillText('Descripción · continuación', 70, cursorY + 42);
-
-    ctx.fillStyle = COLORS.gold;
-    ctx.fillRect(70, cursorY + 57, 82, 4);
-
-    const maxDescriptionHeight = 410;
-    const availableLines = Math.max(descriptionOverflowLines.length, 1);
-    const descriptionLineHeight = Math.max(16, Math.min(25, Math.floor(maxDescriptionHeight / availableLines)));
-    const descriptionFontSize = Math.max(11, Math.min(17, descriptionLineHeight - 5));
+    const descriptionStartY = 72;
+    const descriptionLineHeight = 29;
 
     ctx.fillStyle = COLORS.muted;
-    ctx.font = `500 ${descriptionFontSize}px Arial, sans-serif`;
+    ctx.font = '500 18px Arial, sans-serif';
     ctx.textAlign = 'left';
     drawLines(
       ctx,
       descriptionOverflowLines,
       70,
-      cursorY + 92,
+      descriptionStartY,
       descriptionLineHeight,
       COLORS.muted,
     );
 
-    cursorY += 112 + (descriptionOverflowLines.length * descriptionLineHeight);
+    const descriptionEndY = descriptionStartY
+      + (Math.max(descriptionOverflowLines.length - 1, 0) * descriptionLineHeight);
+    cursorY = Math.max(500, descriptionEndY + 64);
   } else {
     ctx.fillStyle = COLORS.gold;
     ctx.font = '800 14px Arial, sans-serif';
@@ -536,8 +525,8 @@ function drawDetailsPage(ctx, property, faviconImage, partnerLogoImage, descript
   const detailColumnGap = 26;
   const detailWidth = (1100 - (detailColumnGap * (detailColumns - 1))) / detailColumns;
   const detailTop = detailsTitleY + 44;
-  const detailRowHeight = 66;
-  const detailRowGap = 10;
+  const detailRowHeight = 62;
+  const detailRowGap = 8;
 
   technicalDetails.forEach((item, index) => {
     const column = index % detailColumns;
@@ -559,7 +548,7 @@ function drawDetailsPage(ctx, property, faviconImage, partnerLogoImage, descript
   });
 
   const detailRows = Math.max(1, Math.ceil(technicalDetails.length / detailColumns));
-  const amenitiesTitleY = detailTop + (detailRows * (detailRowHeight + detailRowGap)) + 34;
+  const amenitiesTitleY = detailTop + (detailRows * (detailRowHeight + detailRowGap)) + 28;
 
   ctx.fillStyle = COLORS.navy;
   ctx.font = '800 23px Arial, sans-serif';

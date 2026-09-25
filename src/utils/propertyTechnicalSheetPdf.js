@@ -297,6 +297,137 @@ function drawPdfFooter(ctx, {
   ctx.textAlign = 'left';
 }
 
+function drawDetailsPage(ctx, property, faviconImage, partnerLogoImage) {
+  ctx.fillStyle = COLORS.ivory;
+  ctx.fillRect(0, 0, PAGE.width, PAGE.height);
+
+  ctx.fillStyle = COLORS.navy;
+  ctx.fillRect(0, 0, PAGE.width, 18);
+
+  ctx.fillStyle = COLORS.gold;
+  ctx.font = '800 14px Arial, sans-serif';
+  ctx.fillText('FICHA TÉCNICA · DETALLES', 70, 88);
+
+  ctx.fillStyle = COLORS.navy;
+  ctx.font = '800 42px Arial, sans-serif';
+  ctx.fillText('Áreas y características', 70, 142);
+
+  ctx.fillStyle = COLORS.muted;
+  ctx.font = '500 16px Arial, sans-serif';
+  const subtitle = cleanText(property.title || 'Propiedad');
+  drawLines(ctx, wrapLines(ctx, subtitle, 1000, 1), 70, 180, 24, COLORS.muted);
+
+  ctx.fillStyle = COLORS.gold;
+  ctx.fillRect(70, 205, 92, 4);
+
+  const amenities = buildPublicAmenities(property);
+  const amenityTop = 278;
+  const amenityLeft = 72;
+  const amenityColumnGap = 54;
+  const amenityColumnWidth = 520;
+  const amenityRows = Math.max(1, Math.ceil(amenities.length / 2));
+  const amenityRowStep = Math.max(38, Math.min(58, 500 / amenityRows));
+
+  ctx.fillStyle = COLORS.navy;
+  ctx.font = '800 22px Arial, sans-serif';
+  ctx.fillText('ÁREAS Y CARACTERÍSTICAS', 70, 250);
+  ctx.fillStyle = COLORS.gold;
+  ctx.fillRect(70, 262, 66, 4);
+
+  if (!amenities.length) {
+    ctx.fillStyle = COLORS.muted;
+    ctx.font = '500 16px Arial, sans-serif';
+    ctx.fillText('No hay características adicionales registradas para esta propiedad.', 70, amenityTop + 32);
+  } else {
+    amenities.slice(0, 28).forEach((amenity, index) => {
+      const column = index % 2;
+      const row = Math.floor(index / 2);
+      const x = amenityLeft + (column * (amenityColumnWidth + amenityColumnGap));
+      const y = amenityTop + (row * amenityRowStep);
+
+      ctx.beginPath();
+      ctx.arc(x + 15, y + 15, 14, 0, Math.PI * 2);
+      ctx.fillStyle = '#FCFAF4';
+      ctx.fill();
+      ctx.strokeStyle = COLORS.goldLight;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.strokeStyle = COLORS.gold;
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(x + 9, y + 15);
+      ctx.lineTo(x + 13, y + 19);
+      ctx.lineTo(x + 21, y + 10);
+      ctx.stroke();
+
+      ctx.fillStyle = COLORS.muted;
+      ctx.font = '500 16px Arial, sans-serif';
+      const lines = wrapLines(ctx, cleanText(amenity), amenityColumnWidth - 54, 2);
+      drawLines(ctx, lines, x + 44, y + 20, 19, COLORS.muted);
+    });
+
+    if (amenities.length > 28) {
+      ctx.fillStyle = COLORS.gold;
+      ctx.font = '700 12px Arial, sans-serif';
+      ctx.fillText(`+${amenities.length - 28} características adicionales`, 70, 818);
+    }
+  }
+
+  const details = buildDynamicDetails(property);
+  const detailsTop = 890;
+
+  ctx.fillStyle = COLORS.navy;
+  ctx.font = '800 24px Arial, sans-serif';
+  ctx.fillText('Detalles adicionales de la propiedad', 70, 850);
+  ctx.fillStyle = COLORS.gold;
+  ctx.fillRect(70, 865, 82, 4);
+
+  if (!details.length) {
+    ctx.fillStyle = COLORS.muted;
+    ctx.font = '500 16px Arial, sans-serif';
+    ctx.fillText('No hay detalles específicos adicionales registrados.', 70, detailsTop + 30);
+  } else {
+    const detailWidth = 532;
+    const detailGap = 36;
+    const detailHeight = 66;
+    const detailRowGap = 10;
+
+    details.slice(0, 16).forEach((item, index) => {
+      const column = index % 2;
+      const row = Math.floor(index / 2);
+      const x = 70 + (column * (detailWidth + detailGap));
+      const y = detailsTop + (row * (detailHeight + detailRowGap));
+
+      fillRoundedRect(ctx, x, y, detailWidth, detailHeight, 12, COLORS.white);
+      strokeRoundedRect(ctx, x, y, detailWidth, detailHeight, 12, COLORS.border, 1.2);
+
+      ctx.fillStyle = COLORS.gold;
+      ctx.font = '700 11px Arial, sans-serif';
+      ctx.fillText(cleanText(item.label).toUpperCase().slice(0, 52), x + 20, y + 22);
+
+      ctx.fillStyle = COLORS.text;
+      ctx.font = '700 15px Arial, sans-serif';
+      const valueLines = wrapLines(ctx, cleanText(item.value), detailWidth - 40, 2);
+      drawLines(ctx, valueLines, x + 20, y + 46, 17, COLORS.text);
+    });
+
+    if (details.length > 16) {
+      ctx.fillStyle = COLORS.gold;
+      ctx.font = '700 11px Arial, sans-serif';
+      ctx.fillText(`+${details.length - 16} detalles adicionales registrados`, 70, 1515);
+    }
+  }
+
+  drawPdfFooter(ctx, {
+    y: 1545,
+    faviconImage,
+    partnerLogoImage,
+    rightNote: 'Página 2 de 3',
+  });
+}
+
 function drawGalleryPage(ctx, images, property, faviconImage, partnerLogoImage) {
   ctx.fillStyle = COLORS.ivory;
   ctx.fillRect(0, 0, PAGE.width, PAGE.height);
@@ -366,7 +497,7 @@ function drawGalleryPage(ctx, images, property, faviconImage, partnerLogoImage) 
     y: 1545,
     faviconImage,
     partnerLogoImage,
-    rightNote: 'Página 2 de 2',
+    rightNote: 'Página 3 de 3',
   });
 }
 
@@ -435,11 +566,22 @@ function buildDynamicDetails(property) {
   return getDynamicFields(property.propertyType)
     .map((definition) => {
       const value = property.propertyDetails?.[definition.key];
-      if (value === undefined || value === null || value === '' || value === 'no') return null;
+      if (value === undefined || value === null || value === '' || Number(value) === 0) return null;
       return { label: definition.label, value: cleanText(optionLabel(definition, value)) };
     })
-    .filter(Boolean)
-    .slice(0, 5);
+    .filter(Boolean);
+}
+
+function buildPublicAmenities(property) {
+  const structuredAmenities = [
+    ...asList(property.features),
+    ...asList(property.services),
+  ].filter((item, index, values) => values.indexOf(item) === index);
+
+  return (property._hasStructuredAmenities
+    ? structuredAmenities
+    : [...asList(property.amenities), ...structuredAmenities])
+    .filter((item, index, values) => item && values.indexOf(item) === index);
 }
 
 function canvasToJpegBlob(canvas) {
@@ -662,79 +804,24 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
     ctx,
     property.description || 'Información descriptiva pendiente.',
     1100,
-    11,
+    22,
   );
   drawLines(ctx, descriptionLines, 70, descriptionY + 86, 29, COLORS.muted);
-
-  const sectionY = 1230;
-  const columnWidth = 532;
-  const columnGap = 36;
-  const amenities = [...asList(property.features), ...asList(property.services), ...asList(property.amenities)]
-    .filter((item, index, values) => values.indexOf(item) === index)
-    .slice(0, 6);
-  const details = buildDynamicDetails(property);
-
-  fillRoundedRect(ctx, 70, sectionY, columnWidth, 300, 20, COLORS.white);
-  strokeRoundedRect(ctx, 70, sectionY, columnWidth, 300, 20, COLORS.border, 1.5);
-  ctx.fillStyle = COLORS.navy;
-  ctx.font = '800 24px Arial, sans-serif';
-  ctx.fillText('Características', 100, sectionY + 48);
-  ctx.fillStyle = COLORS.gold;
-  ctx.fillRect(100, sectionY + 66, 70, 4);
-  ctx.font = '600 17px Arial, sans-serif';
-  const featureItems = amenities.length ? amenities : ['Información disponible bajo consulta'];
-  featureItems.forEach((item, index) => {
-    const y = sectionY + 112 + (index * 31);
-    ctx.fillStyle = COLORS.gold;
-    ctx.beginPath(); ctx.arc(108, y - 5, 5, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = COLORS.text;
-    ctx.fillText(cleanText(item).slice(0, 44), 127, y);
-  });
-
-  const detailsX = 70 + columnWidth + columnGap;
-  fillRoundedRect(ctx, detailsX, sectionY, columnWidth, 300, 20, COLORS.navy);
-  strokeRoundedRect(ctx, detailsX, sectionY, columnWidth, 300, 20, COLORS.gold, 1.5);
-  ctx.fillStyle = COLORS.goldLight;
-  ctx.font = '800 24px Arial, sans-serif';
-  ctx.fillText('Información clave', detailsX + 30, sectionY + 48);
-  ctx.fillStyle = COLORS.gold;
-  ctx.fillRect(detailsX + 30, sectionY + 66, 70, 4);
-  const detailItems = details.length ? details : [
-    { label: 'Tipo', value: typeLabel },
-    { label: 'Operación', value: operationLabel },
-    { label: 'Ubicación', value: location },
-  ];
-  const isLandOrLot = property.propertyType === 'land' || property.propertyType === 'lot';
-  detailItems.slice(0, 5).forEach((item, index) => {
-    const y = sectionY + 111 + (index * 38);
-
-    if (isLandOrLot) {
-      const valueOffset = 264;
-      ctx.fillStyle = 'rgba(255,255,255,.62)';
-      ctx.font = '600 14px Arial, sans-serif';
-      ctx.fillText(`${cleanText(item.label).toUpperCase()}:`, detailsX + 30, y);
-
-      ctx.fillStyle = COLORS.white;
-      ctx.font = '600 15px Arial, sans-serif';
-      const valueLines = wrapLines(ctx, cleanText(item.value), columnWidth - valueOffset - 30, 1);
-      drawLines(ctx, valueLines, detailsX + valueOffset, y, 20, COLORS.white);
-      return;
-    }
-
-    ctx.font = '600 16px Arial, sans-serif';
-    ctx.fillStyle = 'rgba(255,255,255,.62)';
-    ctx.fillText(`${cleanText(item.label).toUpperCase()}:`, detailsX + 30, y);
-    ctx.fillStyle = COLORS.white;
-    ctx.fillText(cleanText(item.value).slice(0, 36), detailsX + 188, y);
-  });
 
   drawPdfFooter(ctx, {
     y: 1550,
     faviconImage,
     partnerLogoImage,
     leftNote: 'Ficha comercial informativa · Datos sujetos a verificación y disponibilidad.',
-    rightNote: `Generada ${new Date().toLocaleDateString('es-NI')}`,
+    rightNote: `Página 1 de 3 · Generada ${new Date().toLocaleDateString('es-NI')}`,
   });
+
+  const detailsCanvas = document.createElement('canvas');
+  detailsCanvas.width = PAGE.width;
+  detailsCanvas.height = PAGE.height;
+  const detailsCtx = detailsCanvas.getContext('2d');
+  if (!detailsCtx) throw new Error('El navegador no pudo preparar la página de detalles.');
+  drawDetailsPage(detailsCtx, property, faviconImage, partnerLogoImage);
 
   const galleryCanvas = document.createElement('canvas');
   galleryCanvas.width = PAGE.width;
@@ -743,7 +830,7 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
   if (!galleryCtx) throw new Error('El navegador no pudo preparar la galería del documento.');
   drawGalleryPage(galleryCtx, galleryImages.slice(0, 8), property, faviconImage, partnerLogoImage);
 
-  const pdfBlob = await multiPagePdfFromCanvases([canvas, galleryCanvas]);
+  const pdfBlob = await multiPagePdfFromCanvases([canvas, detailsCanvas, galleryCanvas]);
   const objectUrl = URL.createObjectURL(pdfBlob);
   const anchor = document.createElement('a');
   anchor.href = objectUrl;

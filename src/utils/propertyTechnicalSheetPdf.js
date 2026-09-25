@@ -466,131 +466,139 @@ function drawPdfFooter(ctx, {
   ctx.textAlign = 'left';
 }
 
-function drawDetailsPage(ctx, property, faviconImage, partnerLogoImage) {
+function drawDetailsPage(ctx, property, faviconImage, partnerLogoImage, descriptionOverflowLines = []) {
   ctx.fillStyle = COLORS.ivory;
   ctx.fillRect(0, 0, PAGE.width, PAGE.height);
 
   ctx.fillStyle = COLORS.navy;
   ctx.fillRect(0, 0, PAGE.width, 18);
 
-  ctx.fillStyle = COLORS.gold;
-  ctx.font = '800 14px Arial, sans-serif';
-  ctx.fillText('FICHA TÉCNICA · DETALLES', 70, 88);
+  let cursorY = 82;
+
+  if (descriptionOverflowLines.length) {
+    ctx.fillStyle = COLORS.gold;
+    ctx.font = '800 13px Arial, sans-serif';
+    ctx.fillText('PRESENTACIÓN DE LA PROPIEDAD', 70, cursorY);
+
+    ctx.fillStyle = COLORS.navy;
+    ctx.font = '800 30px Arial, sans-serif';
+    ctx.fillText('Descripción · continuación', 70, cursorY + 42);
+
+    ctx.fillStyle = COLORS.gold;
+    ctx.fillRect(70, cursorY + 57, 82, 4);
+
+    const maxDescriptionHeight = 410;
+    const availableLines = Math.max(descriptionOverflowLines.length, 1);
+    const descriptionLineHeight = Math.max(16, Math.min(25, Math.floor(maxDescriptionHeight / availableLines)));
+    const descriptionFontSize = Math.max(11, Math.min(17, descriptionLineHeight - 5));
+
+    ctx.fillStyle = COLORS.muted;
+    ctx.font = `500 ${descriptionFontSize}px Arial, sans-serif`;
+    ctx.textAlign = 'left';
+    drawLines(
+      ctx,
+      descriptionOverflowLines,
+      70,
+      cursorY + 92,
+      descriptionLineHeight,
+      COLORS.muted,
+    );
+
+    cursorY += 112 + (descriptionOverflowLines.length * descriptionLineHeight);
+  } else {
+    ctx.fillStyle = COLORS.gold;
+    ctx.font = '800 14px Arial, sans-serif';
+    ctx.fillText('FICHA TÉCNICA · DETALLES', 70, cursorY);
+
+    ctx.fillStyle = COLORS.navy;
+    ctx.font = '800 40px Arial, sans-serif';
+    ctx.fillText('Detalles de la propiedad', 70, cursorY + 54);
+
+    ctx.fillStyle = COLORS.muted;
+    ctx.font = '500 16px Arial, sans-serif';
+    drawLines(ctx, wrapLines(ctx, cleanText(property.title || 'Propiedad'), 1000, 1), 70, cursorY + 92, 24, COLORS.muted);
+
+    ctx.fillStyle = COLORS.gold;
+    ctx.fillRect(70, cursorY + 112, 92, 4);
+    cursorY += 150;
+  }
+
+  const technicalDetails = buildTechnicalDetails(property);
+  const detailsTitleY = cursorY + 18;
 
   ctx.fillStyle = COLORS.navy;
-  ctx.font = '800 42px Arial, sans-serif';
-  ctx.fillText('Áreas y características', 70, 142);
-
-  ctx.fillStyle = COLORS.muted;
-  ctx.font = '500 16px Arial, sans-serif';
-  const subtitle = cleanText(property.title || 'Propiedad');
-  drawLines(ctx, wrapLines(ctx, subtitle, 1000, 1), 70, 180, 24, COLORS.muted);
-
+  ctx.font = '800 23px Arial, sans-serif';
+  ctx.fillText('DETALLES DE LA PROPIEDAD', 70, detailsTitleY);
   ctx.fillStyle = COLORS.gold;
-  ctx.fillRect(70, 205, 92, 4);
+  ctx.fillRect(70, detailsTitleY + 13, 74, 4);
+
+  const detailColumns = 3;
+  const detailColumnGap = 26;
+  const detailWidth = (1100 - (detailColumnGap * (detailColumns - 1))) / detailColumns;
+  const detailTop = detailsTitleY + 44;
+  const detailRowHeight = 66;
+  const detailRowGap = 10;
+
+  technicalDetails.forEach((item, index) => {
+    const column = index % detailColumns;
+    const row = Math.floor(index / detailColumns);
+    const x = 70 + (column * (detailWidth + detailColumnGap));
+    const y = detailTop + (row * (detailRowHeight + detailRowGap));
+
+    fillRoundedRect(ctx, x, y, detailWidth, detailRowHeight, 12, COLORS.white);
+    strokeRoundedRect(ctx, x, y, detailWidth, detailRowHeight, 12, COLORS.border, 1.2);
+    drawContextIcon(ctx, item.label, x + 14, y + 15, 36);
+
+    ctx.fillStyle = COLORS.gold;
+    ctx.font = '700 10px Arial, sans-serif';
+    ctx.fillText(cleanText(item.label).toUpperCase().slice(0, 38), x + 62, y + 22);
+
+    ctx.fillStyle = COLORS.text;
+    ctx.font = '700 14px Arial, sans-serif';
+    drawLines(ctx, wrapLines(ctx, cleanText(item.value), detailWidth - 78, 2), x + 62, y + 46, 16, COLORS.text);
+  });
+
+  const detailRows = Math.max(1, Math.ceil(technicalDetails.length / detailColumns));
+  const amenitiesTitleY = detailTop + (detailRows * (detailRowHeight + detailRowGap)) + 34;
+
+  ctx.fillStyle = COLORS.navy;
+  ctx.font = '800 23px Arial, sans-serif';
+  ctx.fillText('ÁREAS Y CARACTERÍSTICAS', 70, amenitiesTitleY);
+  ctx.fillStyle = COLORS.gold;
+  ctx.fillRect(70, amenitiesTitleY + 13, 74, 4);
 
   const amenities = buildPublicAmenities(property);
-  const amenityTop = 278;
-  const amenityLeft = 72;
-  const amenityColumnGap = 54;
-  const amenityColumnWidth = 520;
-  const amenityRows = Math.max(1, Math.ceil(amenities.length / 2));
-  const amenityRowStep = Math.max(38, Math.min(58, 500 / amenityRows));
-
-  ctx.fillStyle = COLORS.navy;
-  ctx.font = '800 22px Arial, sans-serif';
-  ctx.fillText('ÁREAS Y CARACTERÍSTICAS', 70, 250);
-  ctx.fillStyle = COLORS.gold;
-  ctx.fillRect(70, 262, 66, 4);
+  const amenityTop = amenitiesTitleY + 44;
+  const amenityColumns = 3;
+  const amenityColumnGap = 34;
+  const amenityColumnWidth = (1100 - (amenityColumnGap * (amenityColumns - 1))) / amenityColumns;
+  const footerY = 1545;
+  const availableAmenityHeight = Math.max(180, footerY - amenityTop - 26);
+  const amenityRows = Math.max(1, Math.ceil(amenities.length / amenityColumns));
+  const amenityRowStep = Math.max(38, Math.min(56, availableAmenityHeight / amenityRows));
 
   if (!amenities.length) {
     ctx.fillStyle = COLORS.muted;
-    ctx.font = '500 16px Arial, sans-serif';
-    ctx.fillText('No hay características adicionales registradas para esta propiedad.', 70, amenityTop + 32);
+    ctx.font = '500 15px Arial, sans-serif';
+    ctx.fillText('No hay áreas o características adicionales registradas.', 70, amenityTop + 28);
   } else {
-    amenities.slice(0, 28).forEach((amenity, index) => {
-      const column = index % 2;
-      const row = Math.floor(index / 2);
-      const x = amenityLeft + (column * (amenityColumnWidth + amenityColumnGap));
+    amenities.forEach((amenity, index) => {
+      const column = index % amenityColumns;
+      const row = Math.floor(index / amenityColumns);
+      const x = 70 + (column * (amenityColumnWidth + amenityColumnGap));
       const y = amenityTop + (row * amenityRowStep);
 
-      ctx.beginPath();
-      ctx.arc(x + 15, y + 15, 14, 0, Math.PI * 2);
-      ctx.fillStyle = '#FCFAF4';
-      ctx.fill();
-      ctx.strokeStyle = COLORS.goldLight;
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      ctx.strokeStyle = COLORS.gold;
-      ctx.lineWidth = 2;
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(x + 9, y + 15);
-      ctx.lineTo(x + 13, y + 19);
-      ctx.lineTo(x + 21, y + 10);
-      ctx.stroke();
+      drawContextIcon(ctx, amenity, x, y, 34);
 
       ctx.fillStyle = COLORS.muted;
-      ctx.font = '500 16px Arial, sans-serif';
-      const lines = wrapLines(ctx, cleanText(amenity), amenityColumnWidth - 54, 2);
-      drawLines(ctx, lines, x + 44, y + 20, 19, COLORS.muted);
+      ctx.font = '500 14px Arial, sans-serif';
+      const lines = wrapLines(ctx, cleanText(amenity), amenityColumnWidth - 48, 2);
+      drawLines(ctx, lines, x + 46, y + 21, 17, COLORS.muted);
     });
-
-    if (amenities.length > 28) {
-      ctx.fillStyle = COLORS.gold;
-      ctx.font = '700 12px Arial, sans-serif';
-      ctx.fillText(`+${amenities.length - 28} características adicionales`, 70, 818);
-    }
-  }
-
-  const details = buildDynamicDetails(property);
-  const detailsTop = 890;
-
-  ctx.fillStyle = COLORS.navy;
-  ctx.font = '800 24px Arial, sans-serif';
-  ctx.fillText('Detalles adicionales de la propiedad', 70, 850);
-  ctx.fillStyle = COLORS.gold;
-  ctx.fillRect(70, 865, 82, 4);
-
-  if (!details.length) {
-    ctx.fillStyle = COLORS.muted;
-    ctx.font = '500 16px Arial, sans-serif';
-    ctx.fillText('No hay detalles específicos adicionales registrados.', 70, detailsTop + 30);
-  } else {
-    const detailWidth = 532;
-    const detailGap = 36;
-    const detailHeight = 66;
-    const detailRowGap = 10;
-
-    details.slice(0, 16).forEach((item, index) => {
-      const column = index % 2;
-      const row = Math.floor(index / 2);
-      const x = 70 + (column * (detailWidth + detailGap));
-      const y = detailsTop + (row * (detailHeight + detailRowGap));
-
-      fillRoundedRect(ctx, x, y, detailWidth, detailHeight, 12, COLORS.white);
-      strokeRoundedRect(ctx, x, y, detailWidth, detailHeight, 12, COLORS.border, 1.2);
-
-      ctx.fillStyle = COLORS.gold;
-      ctx.font = '700 11px Arial, sans-serif';
-      ctx.fillText(cleanText(item.label).toUpperCase().slice(0, 52), x + 20, y + 22);
-
-      ctx.fillStyle = COLORS.text;
-      ctx.font = '700 15px Arial, sans-serif';
-      const valueLines = wrapLines(ctx, cleanText(item.value), detailWidth - 40, 2);
-      drawLines(ctx, valueLines, x + 20, y + 46, 17, COLORS.text);
-    });
-
-    if (details.length > 16) {
-      ctx.fillStyle = COLORS.gold;
-      ctx.font = '700 11px Arial, sans-serif';
-      ctx.fillText(`+${details.length - 16} detalles adicionales registrados`, 70, 1515);
-    }
   }
 
   drawPdfFooter(ctx, {
-    y: 1545,
+    y: footerY,
     faviconImage,
     partnerLogoImage,
     rightNote: 'Página 2 de 3',
@@ -969,13 +977,17 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
   ctx.fillStyle = COLORS.muted;
   ctx.font = '500 18px Arial, sans-serif';
   ctx.textAlign = 'left';
-  const descriptionLines = wrapDescriptionLines(
+
+  const allDescriptionLines = wrapDescriptionAllLines(
     ctx,
     property.description || 'Información descriptiva pendiente.',
     1100,
-    22,
   );
-  drawLines(ctx, descriptionLines, 70, descriptionY + 86, 29, COLORS.muted);
+  const pageOneDescriptionCapacity = 22;
+  const pageOneDescriptionLines = allDescriptionLines.slice(0, pageOneDescriptionCapacity);
+  const descriptionOverflowLines = allDescriptionLines.slice(pageOneDescriptionCapacity);
+
+  drawLines(ctx, pageOneDescriptionLines, 70, descriptionY + 86, 29, COLORS.muted);
 
   drawPdfFooter(ctx, {
     y: 1550,
@@ -990,7 +1002,7 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
   detailsCanvas.height = PAGE.height;
   const detailsCtx = detailsCanvas.getContext('2d');
   if (!detailsCtx) throw new Error('El navegador no pudo preparar la página de detalles.');
-  drawDetailsPage(detailsCtx, property, faviconImage, partnerLogoImage);
+  drawDetailsPage(detailsCtx, property, faviconImage, partnerLogoImage, descriptionOverflowLines);
 
   const galleryCanvas = document.createElement('canvas');
   galleryCanvas.width = PAGE.width;

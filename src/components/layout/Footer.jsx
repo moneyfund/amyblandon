@@ -1,5 +1,6 @@
 import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import RevealOnScroll from '../common/RevealOnScroll';
 import BrandLogo from './BrandLogo';
 import SocialIcons from './SocialIcons';
@@ -14,6 +15,7 @@ function mapLink(address) {
 }
 
 export default function Footer() {
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('idle');
   const [contact, setContact] = useState(defaultSiteContent.contact);
@@ -49,12 +51,20 @@ export default function Footer() {
   const whatsapp = contact.whatsapp || phone;
   const address = contact.address || amyContact.location;
   const contactEmail = PROFESSIONAL_EMAIL;
+  const isRealEstateContext = location.pathname === '/propiedades'
+    || location.pathname === '/properties'
+    || location.pathname === '/real-estate'
+    || location.pathname === '/bienes-raices'
+    || location.pathname.startsWith('/properties/');
 
   return (
     <footer className="public-footer">
       <div className="public-footer__grid">
         <RevealOnScroll as="div" className="public-footer__col" delay={0}>
           <BrandLogo className="brand-logo--footer" image />
+          {isRealEstateContext && (
+            <span className="public-footer__license">Carnet inmobiliario · 0153-2026-A-1</span>
+          )}
           <a className="public-footer__line" href={mapLink(address)} target="_blank" rel="noreferrer">
             <MapPin size={18} />
             <span className="content-preserve-format">{address}</span>
@@ -112,6 +122,19 @@ export default function Footer() {
           </p>
         </RevealOnScroll>
       </div>
+
+      <div className="public-footer__legal">
+        <strong>Legal</strong>
+        <nav aria-label="Información legal">
+          <Link to="/politica-de-privacidad">Política de privacidad</Link>
+          <span aria-hidden="true">·</span>
+          <Link to="/condiciones-de-uso">Condiciones de uso</Link>
+        </nav>
+        {isRealEstateContext && (
+          <span className="public-footer__legal-license">Carnet inmobiliario · 0153-2026-A-1</span>
+        )}
+      </div>
+
       <small className="content-preserve-format">
         © 2026 - Amy Blandón.com | Powered by{' '}
         <a href="https://xarcon-creative.vercel.app/" target="_blank" rel="noopener noreferrer">Xarcon</a>

@@ -3,6 +3,7 @@ import { getDynamicFields } from '../config/propertyWorkspace.es';
 import {
   labelFor,
   operationTypeOptions,
+  propertyStatusOptions,
   propertyTypeOptions,
 } from '../config/adminLabels.es';
 
@@ -131,6 +132,174 @@ function wrapDescriptionLines(ctx, value, maxWidth, maxLines = Infinity) {
 function drawLines(ctx, lines, x, y, lineHeight, color) {
   ctx.fillStyle = color;
   lines.forEach((line, index) => ctx.fillText(line, x, y + (index * lineHeight)));
+}
+
+function wrapDescriptionAllLines(ctx, value, maxWidth) {
+  const paragraphs = String(value || 'Información descriptiva pendiente.')
+    .replace(/\r\n?/g, '\n')
+    .split('\n');
+
+  const lines = [];
+  paragraphs.forEach((rawParagraph) => {
+    const paragraph = rawParagraph.trim();
+    if (!paragraph) {
+      if (lines.length) lines.push('');
+      return;
+    }
+    lines.push(...wrapLines(ctx, paragraph, maxWidth));
+  });
+
+  return lines.length ? lines : ['Información descriptiva pendiente.'];
+}
+
+const normalizeIconLabel = (value) => String(value || '')
+  .toLocaleLowerCase('es')
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g, '');
+
+function iconNameForLabel(label) {
+  const text = normalizeIconLabel(label);
+  if (/piscina|alberca|jacuzzi|agua/.test(text)) return 'waves';
+  if (/jardin|patio|area verde|terraza verde/.test(text)) return 'tree';
+  if (/cocina|comedor|desayunador/.test(text)) return 'utensils';
+  if (/sala|living|estar familiar/.test(text)) return 'sofa';
+  if (/oficina|estudio|despacho/.test(text)) return 'briefcase';
+  if (/lavander|lavado/.test(text)) return 'laundry';
+  if (/deposito|bodega|almacen/.test(text)) return 'box';
+  if (/terraza|balcon|azotea|solarium/.test(text)) return 'sun';
+  if (/closet|vestidor|walk-in/.test(text)) return 'shirt';
+  if (/seguridad|vigilancia|garita|cerca electrica/.test(text)) return 'shield';
+  if (/internet|wifi|senal/.test(text)) return 'wifi';
+  if (/aire acondicionado|climatizacion/.test(text)) return 'snow';
+  if (/electricidad|generador|planta electrica|energia/.test(text)) return 'zap';
+  if (/habitacion|dormitorio|cuarto/.test(text)) return 'bed';
+  if (/bano|sanitario/.test(text)) return 'bath';
+  if (/parqueo|estacionamiento|garaje|garage/.test(text)) return 'car';
+  if (/area|construccion|terreno|lote|tamano|medida|frente|fondo/.test(text)) return 'ruler';
+  if (/ano|fecha/.test(text)) return 'calendar';
+  if (/tipo de propiedad|estado|propiedad|residencial|casa|apartamento/.test(text)) return 'home';
+  return 'check';
+}
+
+function drawContextIcon(ctx, label, x, y, size = 36) {
+  const name = iconNameForLabel(label);
+  const cx = x + (size / 2);
+  const cy = y + (size / 2);
+  const r = size / 2;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r - 1, 0, Math.PI * 2);
+  ctx.fillStyle = '#FCFAF4';
+  ctx.fill();
+  ctx.strokeStyle = COLORS.goldLight;
+  ctx.lineWidth = 1.4;
+  ctx.stroke();
+
+  ctx.strokeStyle = COLORS.gold;
+  ctx.fillStyle = COLORS.gold;
+  ctx.lineWidth = 1.7;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  const left = x + 9;
+  const right = x + size - 9;
+  const top = y + 9;
+  const bottom = y + size - 9;
+
+  if (name === 'bed') {
+    ctx.beginPath();
+    ctx.moveTo(left, bottom); ctx.lineTo(left, top + 4); ctx.moveTo(left, cy); ctx.lineTo(right, cy);
+    ctx.moveTo(left + 5, cy); ctx.lineTo(left + 5, top + 7); ctx.lineTo(cx, top + 7); ctx.lineTo(cx, cy);
+    ctx.moveTo(right, cy); ctx.lineTo(right, bottom);
+    ctx.stroke();
+  } else if (name === 'bath') {
+    ctx.beginPath();
+    ctx.moveTo(left, cy); ctx.lineTo(right, cy);
+    ctx.moveTo(left + 2, cy); ctx.quadraticCurveTo(left + 4, bottom, cx, bottom);
+    ctx.quadraticCurveTo(right - 4, bottom, right - 2, cy);
+    ctx.moveTo(left + 5, cy); ctx.lineTo(left + 5, top + 4); ctx.quadraticCurveTo(left + 5, top, left + 10, top);
+    ctx.stroke();
+  } else if (name === 'car') {
+    ctx.strokeRect(left + 1, cy - 4, right - left - 2, 9);
+    ctx.beginPath(); ctx.arc(left + 6, bottom - 1, 2, 0, Math.PI * 2); ctx.arc(right - 6, bottom - 1, 2, 0, Math.PI * 2); ctx.stroke();
+  } else if (name === 'waves') {
+    [cy - 6, cy, cy + 6].forEach((waveY) => {
+      ctx.beginPath();
+      ctx.moveTo(left, waveY);
+      ctx.bezierCurveTo(left + 4, waveY - 4, left + 7, waveY + 4, cx, waveY);
+      ctx.bezierCurveTo(cx + 3, waveY - 4, right - 4, waveY + 4, right, waveY);
+      ctx.stroke();
+    });
+  } else if (name === 'tree') {
+    ctx.beginPath(); ctx.moveTo(cx, bottom); ctx.lineTo(cx, cy + 2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx, top); ctx.lineTo(left + 3, cy + 4); ctx.lineTo(cx - 4, cy + 4); ctx.lineTo(left + 1, bottom - 3); ctx.lineTo(right - 1, bottom - 3); ctx.lineTo(cx + 4, cy + 4); ctx.lineTo(right - 3, cy + 4); ctx.closePath(); ctx.stroke();
+  } else if (name === 'utensils') {
+    ctx.beginPath(); ctx.moveTo(left + 4, top); ctx.lineTo(left + 4, bottom); ctx.moveTo(left, top); ctx.lineTo(left, cy - 2); ctx.quadraticCurveTo(left + 4, cy + 2, left + 8, cy - 2); ctx.lineTo(left + 8, top); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(right - 4, top); ctx.lineTo(right - 4, bottom); ctx.moveTo(right - 4, top); ctx.quadraticCurveTo(right + 1, cy - 3, right - 4, cy + 1); ctx.stroke();
+  } else if (name === 'sofa') {
+    ctx.strokeRect(left + 2, cy, right - left - 4, bottom - cy - 2);
+    ctx.beginPath(); ctx.moveTo(left + 5, cy); ctx.lineTo(left + 5, top + 5); ctx.quadraticCurveTo(cx, top, right - 5, top + 5); ctx.lineTo(right - 5, cy); ctx.stroke();
+  } else if (name === 'briefcase') {
+    ctx.strokeRect(left, cy - 4, right - left, bottom - cy + 4);
+    ctx.beginPath(); ctx.moveTo(cx - 5, cy - 4); ctx.lineTo(cx - 5, top + 3); ctx.lineTo(cx + 5, top + 3); ctx.lineTo(cx + 5, cy - 4); ctx.stroke();
+  } else if (name === 'laundry') {
+    ctx.strokeRect(left + 2, top, right - left - 4, bottom - top);
+    ctx.beginPath(); ctx.arc(cx, cy + 3, 6, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(left + 6, top + 5, 1, 0, Math.PI * 2); ctx.fill();
+  } else if (name === 'box') {
+    ctx.beginPath(); ctx.moveTo(cx, top); ctx.lineTo(right, top + 5); ctx.lineTo(cx, cy); ctx.lineTo(left, top + 5); ctx.closePath();
+    ctx.moveTo(left, top + 5); ctx.lineTo(left, bottom - 2); ctx.lineTo(cx, bottom + 2); ctx.lineTo(right, bottom - 2); ctx.lineTo(right, top + 5); ctx.moveTo(cx, cy); ctx.lineTo(cx, bottom + 2); ctx.stroke();
+  } else if (name === 'sun') {
+    ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI * 2); ctx.stroke();
+    [[0,-10],[0,10],[-10,0],[10,0],[-7,-7],[7,7],[-7,7],[7,-7]].forEach(([dx,dy]) => { ctx.beginPath(); ctx.moveTo(cx + dx*.7, cy + dy*.7); ctx.lineTo(cx + dx, cy + dy); ctx.stroke(); });
+  } else if (name === 'shield') {
+    ctx.beginPath(); ctx.moveTo(cx, top); ctx.lineTo(right, top + 4); ctx.lineTo(right - 2, cy + 5); ctx.quadraticCurveTo(cx, bottom + 2, left + 2, cy + 5); ctx.lineTo(left, top + 4); ctx.closePath(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx - 4, cy); ctx.lineTo(cx - 1, cy + 3); ctx.lineTo(cx + 5, cy - 4); ctx.stroke();
+  } else if (name === 'wifi') {
+    [10,7,4].forEach((radius, index) => { ctx.beginPath(); ctx.arc(cx, bottom, radius, Math.PI * 1.15, Math.PI * 1.85); ctx.stroke(); });
+    ctx.beginPath(); ctx.arc(cx, bottom - 1, 1.5, 0, Math.PI * 2); ctx.fill();
+  } else if (name === 'snow') {
+    ctx.beginPath(); ctx.moveTo(cx, top); ctx.lineTo(cx, bottom); ctx.moveTo(left, cy); ctx.lineTo(right, cy); ctx.moveTo(left + 2, top + 2); ctx.lineTo(right - 2, bottom - 2); ctx.moveTo(right - 2, top + 2); ctx.lineTo(left + 2, bottom - 2); ctx.stroke();
+  } else if (name === 'zap') {
+    ctx.beginPath(); ctx.moveTo(cx + 2, top); ctx.lineTo(left + 3, cy + 2); ctx.lineTo(cx, cy + 2); ctx.lineTo(cx - 2, bottom); ctx.lineTo(right - 3, cy - 2); ctx.lineTo(cx, cy - 2); ctx.closePath(); ctx.stroke();
+  } else if (name === 'calendar') {
+    ctx.strokeRect(left, top + 3, right - left, bottom - top - 3);
+    ctx.beginPath(); ctx.moveTo(left, top + 9); ctx.lineTo(right, top + 9); ctx.moveTo(left + 5, top); ctx.lineTo(left + 5, top + 6); ctx.moveTo(right - 5, top); ctx.lineTo(right - 5, top + 6); ctx.stroke();
+  } else if (name === 'home') {
+    ctx.beginPath(); ctx.moveTo(left, cy); ctx.lineTo(cx, top); ctx.lineTo(right, cy); ctx.moveTo(left + 3, cy - 2); ctx.lineTo(left + 3, bottom); ctx.lineTo(right - 3, bottom); ctx.lineTo(right - 3, cy - 2); ctx.stroke();
+  } else if (name === 'ruler') {
+    ctx.beginPath(); ctx.moveTo(left + 1, bottom - 2); ctx.lineTo(right - 2, top + 1); ctx.lineTo(right + 1, top + 4); ctx.lineTo(left + 4, bottom + 1); ctx.closePath(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx - 4, cy + 1); ctx.lineTo(cx - 1, cy + 4); ctx.moveTo(cx + 1, cy - 4); ctx.lineTo(cx + 4, cy - 1); ctx.stroke();
+  } else {
+    ctx.beginPath(); ctx.moveTo(left + 2, cy); ctx.lineTo(cx - 2, bottom - 4); ctx.lineTo(right - 1, top + 4); ctx.stroke();
+  }
+
+  ctx.restore();
+}
+
+function buildTechnicalDetails(property) {
+  const unit = property.areaUnit || 'm²';
+  const typeLabel = labelFor(propertyTypeOptions, property.propertyType, 'Propiedad');
+  const operationLabel = labelFor(operationTypeOptions, normalizeOperation(property.operationType || property.transactionType), 'Operación');
+  const statusLabel = labelFor(propertyStatusOptions, property.status || 'available', 'Disponible');
+
+  return [
+    { label: 'Tipo de propiedad', value: typeLabel },
+    { label: 'Operación', value: operationLabel },
+    { label: 'Estado', value: statusLabel },
+    (property.constructionArea || property.builtArea) && {
+      label: 'Área de construcción',
+      value: `${property.constructionArea || property.builtArea} ${unit}`,
+    },
+    property.landArea && { label: 'Tamaño del terreno', value: `${property.landArea} ${unit}` },
+    property.bedrooms && { label: 'Dormitorios', value: String(property.bedrooms) },
+    property.bathrooms && { label: 'Baños', value: String(property.bathrooms) },
+    property.parkingSpaces && { label: 'Estacionamientos', value: String(property.parkingSpaces) },
+    property.yearBuilt && { label: 'Año de construcción', value: String(property.yearBuilt) },
+    ...buildDynamicDetails(property),
+  ].filter(Boolean)
+    .filter((item, index, values) => values.findIndex((candidate) => candidate.label === item.label) === index);
 }
 
 async function blobToImage(blob) {

@@ -210,7 +210,71 @@ function drawPremiumGallery(ctx, images, width, height) {
   return true;
 }
 
-function drawGalleryPage(ctx, images, property, faviconImage) {
+function drawPdfFooter(ctx, {
+  y,
+  faviconImage,
+  partnerLogoImage,
+  leftNote = '',
+  rightNote = '',
+}) {
+  ctx.fillStyle = COLORS.navy;
+  ctx.fillRect(0, y, PAGE.width, PAGE.height - y);
+  ctx.fillStyle = COLORS.gold;
+  ctx.fillRect(0, y, PAGE.width, 5);
+
+  const leftCenter = 355;
+  const partnerCenter = 960;
+
+  if (faviconImage) {
+    ctx.save();
+    roundedRectPath(ctx, 82, y + 28, 58, 58, 12);
+    ctx.clip();
+    ctx.drawImage(faviconImage, 82, y + 28, 58, 58);
+    ctx.restore();
+  }
+
+  ctx.fillStyle = COLORS.white;
+  ctx.font = '800 21px Arial, sans-serif';
+  ctx.fillText('Amy Blandón', 158, y + 50);
+  ctx.fillStyle = COLORS.goldLight;
+  ctx.font = '700 11px Arial, sans-serif';
+  ctx.fillText('ASESORÍA INMOBILIARIA · SEGUROS · INVERSIONES', 158, y + 75);
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255,255,255,.82)';
+  ctx.font = '600 11px Arial, sans-serif';
+  ctx.fillText(
+    `${amyContact.phone}   ·   ${amyContact.email}   ·   amyblandon.com`,
+    leftCenter,
+    y + 126,
+  );
+
+  if (partnerLogoImage) {
+    const logoWidth = 190;
+    const logoHeight = 124;
+    ctx.drawImage(
+      partnerLogoImage,
+      partnerCenter - (logoWidth / 2),
+      y + 16,
+      logoWidth,
+      logoHeight,
+    );
+  }
+
+  ctx.fillStyle = COLORS.goldLight;
+  ctx.font = '700 11px Arial, sans-serif';
+  ctx.fillText('CARNET INMOBILIARIO · 0153-2026-A-1', partnerCenter, y + 158);
+
+  ctx.fillStyle = 'rgba(255,255,255,.38)';
+  ctx.font = '500 10px Arial, sans-serif';
+  ctx.textAlign = 'left';
+  if (leftNote) ctx.fillText(leftNote, 70, PAGE.height - 22);
+  ctx.textAlign = 'right';
+  if (rightNote) ctx.fillText(rightNote, 1170, PAGE.height - 22);
+  ctx.textAlign = 'left';
+}
+
+function drawGalleryPage(ctx, images, property, faviconImage, partnerLogoImage) {
   ctx.fillStyle = COLORS.ivory;
   ctx.fillRect(0, 0, PAGE.width, PAGE.height);
 
@@ -275,39 +339,12 @@ function drawGalleryPage(ctx, images, property, faviconImage) {
     ctx.strokeRect(x, y, frameWidth, frameHeight);
   }
 
-  const footerY = 1545;
-  ctx.fillStyle = COLORS.navy;
-  ctx.fillRect(0, footerY, PAGE.width, PAGE.height - footerY);
-  ctx.fillStyle = COLORS.gold;
-  ctx.fillRect(0, footerY, PAGE.width, 5);
-
-  if (faviconImage) {
-    ctx.save();
-    roundedRectPath(ctx, 70, footerY + 28, 58, 58, 12);
-    ctx.clip();
-    ctx.drawImage(faviconImage, 70, footerY + 28, 58, 58);
-    ctx.restore();
-  }
-
-  ctx.fillStyle = COLORS.white;
-  ctx.font = '800 21px Arial, sans-serif';
-  ctx.fillText('Amy Blandón', 150, footerY + 50);
-  ctx.fillStyle = COLORS.goldLight;
-  ctx.font = '700 11px Arial, sans-serif';
-  ctx.fillText('ASESORÍA INMOBILIARIA · SEGUROS · INVERSIONES', 150, footerY + 75);
-
-  ctx.fillStyle = 'rgba(255,255,255,.76)';
-  ctx.font = '600 13px Arial, sans-serif';
-  ctx.fillText(amyContact.phone, 70, footerY + 126);
-  ctx.fillText(amyContact.email, 285, footerY + 126);
-
-  ctx.textAlign = 'right';
-  ctx.fillStyle = COLORS.goldLight;
-  ctx.fillText('amyblandon.com', 1170, footerY + 126);
-  ctx.fillStyle = 'rgba(255,255,255,.38)';
-  ctx.font = '500 10px Arial, sans-serif';
-  ctx.fillText('Página 2 de 2', 1170, PAGE.height - 22);
-  ctx.textAlign = 'left';
+  drawPdfFooter(ctx, {
+    y: 1545,
+    faviconImage,
+    partnerLogoImage,
+    rightNote: 'Página 2 de 2',
+  });
 }
 
 function drawMetricIcon(ctx, kind, x, y, size = 54) {
@@ -493,6 +530,7 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
     ? document.querySelector('link[rel~="icon"]')?.href
     : '';
   const faviconImage = await loadImage(configuredFavicon || `${import.meta.env.BASE_URL}favicon-amy.svg`);
+  const partnerLogoImage = await loadImage(`${import.meta.env.BASE_URL}images/diamantes-realty-group-logo.svg`);
   const heroHeight = 560;
   const hasCover = drawPremiumGallery(ctx, galleryImages.slice(0, 3), PAGE.width, heroHeight);
 
@@ -661,51 +699,20 @@ export async function downloadPropertyTechnicalSheetPdf(property) {
     ctx.fillText(cleanText(item.value).slice(0, 36), detailsX + 188, y);
   });
 
-  // Footer compacto: conserva contacto y marca sin ocupar un cuarto de página.
-  const contactY = 1550;
-  ctx.fillStyle = COLORS.navy;
-  ctx.fillRect(0, contactY, PAGE.width, PAGE.height - contactY);
-  ctx.fillStyle = COLORS.gold;
-  ctx.fillRect(0, contactY, PAGE.width, 5);
-
-  if (faviconImage) {
-    ctx.save();
-    roundedRectPath(ctx, 70, contactY + 30, 66, 66, 14);
-    ctx.clip();
-    ctx.drawImage(faviconImage, 70, contactY + 30, 66, 66);
-    ctx.restore();
-  }
-
-  ctx.fillStyle = COLORS.white;
-  ctx.font = '800 24px Arial, sans-serif';
-  ctx.fillText('Amy Blandón', 160, contactY + 53);
-  ctx.fillStyle = COLORS.goldLight;
-  ctx.font = '700 12px Arial, sans-serif';
-  ctx.fillText('ASESORÍA INMOBILIARIA · SEGUROS · INVERSIONES', 160, contactY + 80);
-
-  ctx.fillStyle = 'rgba(255,255,255,.8)';
-  ctx.font = '600 14px Arial, sans-serif';
-  ctx.fillText(amyContact.phone, 70, contactY + 130);
-  ctx.fillText(amyContact.email, 295, contactY + 130);
-  ctx.fillText(amyContact.location, 625, contactY + 130);
-  ctx.textAlign = 'right';
-  ctx.fillStyle = COLORS.goldLight;
-  ctx.fillText('amyblandon.com', 1170, contactY + 130);
-  ctx.textAlign = 'left';
-
-  ctx.fillStyle = 'rgba(255,255,255,.38)';
-  ctx.font = '500 10px Arial, sans-serif';
-  ctx.fillText('Ficha comercial informativa · Datos sujetos a verificación y disponibilidad.', 70, PAGE.height - 22);
-  ctx.textAlign = 'right';
-  ctx.fillText(`Generada ${new Date().toLocaleDateString('es-NI')}`, 1170, PAGE.height - 22);
-  ctx.textAlign = 'left';
+  drawPdfFooter(ctx, {
+    y: 1550,
+    faviconImage,
+    partnerLogoImage,
+    leftNote: 'Ficha comercial informativa · Datos sujetos a verificación y disponibilidad.',
+    rightNote: `Generada ${new Date().toLocaleDateString('es-NI')}`,
+  });
 
   const galleryCanvas = document.createElement('canvas');
   galleryCanvas.width = PAGE.width;
   galleryCanvas.height = PAGE.height;
   const galleryCtx = galleryCanvas.getContext('2d');
   if (!galleryCtx) throw new Error('El navegador no pudo preparar la galería del documento.');
-  drawGalleryPage(galleryCtx, galleryImages.slice(0, 8), property, faviconImage);
+  drawGalleryPage(galleryCtx, galleryImages.slice(0, 8), property, faviconImage, partnerLogoImage);
 
   const pdfBlob = await multiPagePdfFromCanvases([canvas, galleryCanvas]);
   const objectUrl = URL.createObjectURL(pdfBlob);

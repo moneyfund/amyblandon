@@ -24,6 +24,7 @@ import SellWithAmy from '../pages/public/SellWithAmy';
 import { Resources, Article, Contact, NotFound } from '../pages/public/BasicPages';
 import About from '../pages/public/About';
 import Recognitions from '../pages/public/Recognitions';
+import { PrivacyPolicy, TermsOfUse } from '../pages/public/LegalPages';
 
 export default function AppRoutes() {
   return (
@@ -53,6 +54,8 @@ export default function AppRoutes() {
         <Route path="resources/:slug" element={<Article />} />
         <Route path="contacto" element={<Contact />} />
         <Route path="contact" element={<Navigate to="/contacto" replace />} />
+        <Route path="politica-de-privacidad" element={<PrivacyPolicy />} />
+        <Route path="condiciones-de-uso" element={<TermsOfUse />} />
         <Route path="*" element={<NotFound />} />
       </Route>
 

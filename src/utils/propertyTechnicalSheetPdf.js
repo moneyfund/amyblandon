@@ -222,7 +222,7 @@ function drawPdfFooter(ctx, {
   ctx.fillStyle = COLORS.gold;
   ctx.fillRect(0, y, PAGE.width, 5);
 
-  const leftCenter = 355;
+  const leftCenter = 310;
   const partnerCenter = 960;
 
   if (faviconImage) {

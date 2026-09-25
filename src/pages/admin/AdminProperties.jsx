@@ -244,7 +244,7 @@ export default function AdminProperties() {
     let decodedImages = [];
 
     try {
-      const candidates = getPdfImageCandidates(property).slice(0, 6);
+      const candidates = getPdfImageCandidates(property).slice(0, 8);
       if (!candidates.length) {
         throw new Error('Esta propiedad no tiene fotografías disponibles para la ficha técnica.');
       }
@@ -257,7 +257,7 @@ export default function AdminProperties() {
       decodedImages = results
         .filter((result) => result.status === 'fulfilled')
         .map((result) => result.value)
-        .slice(0, 3);
+        .slice(0, 8);
 
       results
         .filter((result) => result.status === 'rejected')

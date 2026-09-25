@@ -1,14 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
 import { Menu, Phone, X } from 'lucide-react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import BrandLogo from './BrandLogo';
 import { amyContact, homePageContent } from '../../content/homePage.es';
 import { whatsappLink } from '../../utils/whatsapp';
 
 export default function Navbar() {
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const headerRef = useRef(null);
+  const isRealEstateContext = location.pathname === '/propiedades'
+    || location.pathname === '/properties'
+    || location.pathname === '/real-estate'
+    || location.pathname === '/bienes-raices'
+    || location.pathname.startsWith('/properties/');
 
   useEffect(() => {
     const updateScrolled = () => setScrolled(window.scrollY > 44);
@@ -36,7 +42,12 @@ export default function Navbar() {
 
   return <header ref={headerRef} className={`public-navbar ${scrolled ? 'public-navbar--scrolled' : ''} ${open ? 'public-navbar--open' : ''}`}>
     <div className="public-navbar__inner">
-      <BrandLogo image />
+      <div className="public-navbar__brand-block">
+        <BrandLogo image />
+        {isRealEstateContext && (
+          <span className="public-navbar__license">Carnet inmobiliario · 0153-2026-A-1</span>
+        )}
+      </div>
       <nav id="public-menu" className={`public-navbar__menu ${open ? 'is-open' : ''}`} aria-label="Navegación principal">
         {homePageContent.nav.map(item => <NavLink key={item.to} to={item.to} end={item.to === '/'} onClick={() => setOpen(false)}>{item.label}</NavLink>)}
         <a className="public-navbar__phone" href={whatsappLink(amyContact.whatsappMessage, amyContact.phone)} onClick={() => setOpen(false)}>

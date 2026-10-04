@@ -132,9 +132,18 @@ export default function Footer() {
         </nav>
       </div>
 
-      <small className="content-preserve-format">
+      <small className="content-preserve-format public-footer__credit">
         © 2026 - Amy Blandón.com | Powered by{' '}
-        <a href="https://xarcon-creative.vercel.app/" target="_blank" rel="noopener noreferrer">Xarcon</a>
+        <a
+          className="public-footer__creator-link"
+          href="https://xarcon-creative.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Visitar XARCON Creative, creadores del sitio"
+        >
+          <strong>XARCON</strong>
+          <span className="public-footer__creator-arrow" aria-hidden="true">↗</span>
+        </a>
       </small>
     </footer>
   );

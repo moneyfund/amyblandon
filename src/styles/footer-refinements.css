@@ -124,3 +124,39 @@
     font-size: 5.7px;
   }
 }
+
+
+/* Firma del creador: hace evidente que XARCON es un enlace visitable sin romper la estética del footer. */
+.public-footer__creator-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  color: #fff !important;
+  font-weight: 800;
+  letter-spacing: .045em;
+  text-decoration: underline;
+  text-decoration-color: var(--amy-gold);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+  transition: color .2s ease, text-decoration-color .2s ease, transform .2s ease;
+}
+
+.public-footer__creator-arrow {
+  display: inline-block;
+  color: var(--amy-gold);
+  font-size: .85em;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform .2s ease;
+}
+
+.public-footer__creator-link:hover,
+.public-footer__creator-link:focus-visible {
+  color: var(--amy-gold) !important;
+  text-decoration-color: currentColor;
+}
+
+.public-footer__creator-link:hover .public-footer__creator-arrow,
+.public-footer__creator-link:focus-visible .public-footer__creator-arrow {
+  transform: translate(2px, -2px);
+}
